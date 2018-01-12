@@ -11,8 +11,8 @@ baseurl: "" # apply repo nameif use it under gh-pages branch
 google_analytics: UA-XXXXX-XX
 repo: http://github.com/heiswayi/thinkspace
 #disqus_shortname: "hnbloggithub"
-twitter_username: "HeiswayiNrird"
-comments: true
+twitter_username: "RafalJacyna"
+comments: false
 
 # Build settings
 permalink   : /:year/:title/
@@ -53,8 +53,6 @@ gems:
 navbar:
   - slug : about
     title: About
-  - slug : current_project
-    title: Current Project
   - slug : blog
     title: Blog
 
