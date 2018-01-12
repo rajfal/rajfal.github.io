@@ -26,7 +26,7 @@ There will be some URL's references that I will place as footnotes at the bottom
 
 This is an example for the footnote number one [[^1]]. You can even add more footnotes, with link! [[^2]]
 
-Also, another footnote, or a pointer to section of text, [[^3, see section C]] 
+Also, another footnote, or a pointer to section of text, [[^3], see section C] 
 
 <div class="divider">Code block examples</div>
 
@@ -48,7 +48,7 @@ MERGE (c:Contractor {c_id: line.Contractor, name: 'contra_' + line.Contractor});
 start n = node(*) MATCH (n)-[r]-() RETURN DISTINCT labels(n), type(r), count(r) as rel_count ORDER BY rel_count DESC;
 ```
 
-#### a subsection
+#### a subsection C
 [^3]: 3: A section you can focus on - [return to topic menu!](#)
 
 #### Table 1: With Alignment
