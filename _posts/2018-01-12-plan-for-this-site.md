@@ -7,9 +7,9 @@ categories: [neo4j docker paperwork]
 keywords: "neo4j, docker, csv"
 ---
 
-## Objective 1: import a denormalized CSV data into Neo4j
+### Objective 1: import a denormalized CSV data into Neo4j
 
-### Run Neo4j in two separate environments 
+#### Run Neo4j in two separate environments 
 
 1. as a local laptop install
 2. as a Docker container
@@ -20,11 +20,13 @@ keywords: "neo4j, docker, csv"
 - use neo4-shell utility to import data
 - mention gotchas, such as Neo4j Browser after removing graph data but leaving node labels and key properties still visible
 
-### Footnote
+#### Footnote
 
 There will be some URL's references that I will place as footnotes at the bottom of the page...I think! 
 
 This is an example for the footnote number one [[^1]]. You can even add more footnotes, with link! [[^2]]
+
+Also, another footnote, or a pointer to section of text, [[^1]look here] 
 
 <div class="divider">Code block examples</div>
 
