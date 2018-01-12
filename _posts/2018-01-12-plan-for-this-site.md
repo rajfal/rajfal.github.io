@@ -51,17 +51,11 @@ SELECT * FROM soil_survey_sample INTO OUTFILE '/var/lib/mysql-files/soil_survey_
 ithilien@moon-shadow:~$ sudo mv /var/lib/mysql-files/soil_survey_sample.csv neo4j/import/
 ithilien@moon-shadow:~$ sed -i '1i Hort_Client,Contractor,Region,Locality,Soil_Service,Solution,Soil_Issue,Date_Reported,Date_Actioned,DaysToAction' neo4j/import/soil_survey_sample.csv 
 ithilien@moon-shadow:~$ head -3 neo4j/import/soil_survey_sample.csv 
+Hort_Client,Contractor,Region,Locality,Soil_Service,Solution,Soil_Issue,Date_Reported,Date_Actioned,DaysToAction
+159,1091,Northbury,3656,54593,5397,Erosion,2007-05-07,2008-02-18,287
+159,1091,Northbury,1516,22644,5397,Erosion,2007-05-07,2008-03-18,316
 ```
 
-```cypher
-USING PERIODIC COMMIT 1000
-LOAD CSV WITH HEADERS FROM "file:///med-train-set.txt" AS line
-WITH line LIMIT 10000
-MERGE (c:Contractor {c_id: line.Contractor, name: 'contra_' + line.Contractor});
-
-//count rels by node label
-start n = node(*) MATCH (n)-[r]-() RETURN DISTINCT labels(n), type(r), count(r) as rel_count ORDER BY rel_count DESC;
-```
 #### Table 1: With Alignment
 
 | Location Reference        | Local install          | Docker container  |
