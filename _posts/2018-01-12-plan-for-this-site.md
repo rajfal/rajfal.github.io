@@ -26,7 +26,7 @@ There will be some URL's references that I will place as footnotes at the bottom
 
 This is an example for the footnote number one [[^1]]. You can even add more footnotes, with link! [[^2]]
 
-Also, another footnote, or a pointer to section of text, [[^1]look here] 
+Also, another footnote, or a pointer to section of text, [[^3] look here] 
 
 <div class="divider">Code block examples</div>
 
