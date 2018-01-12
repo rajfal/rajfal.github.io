@@ -31,13 +31,15 @@ Also, another footnote, or a pointer to section of text, [[^3]], see section C.
 <div class="divider">Code block examples</div>
 
 ```sql
-SELECT DISTINCT Region FROM soil_survey;
-UPDATE soil_survey SET Region='Westshire' WHERE Region='NT';
+SELECT * FROM soil_survey_sample INTO OUTFILE '/var/lib/mysql-files/soil_survey_sample.csv' FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n';
 ```
 
 ```bash
-head soil_survey
+ithilien@moon-shadow:~$ sudo mv /var/lib/mysql-files/soil_survey_sample.csv neo4j/import/
+ithilien@moon-shadow:~$ sed -i '1i Hort_Client,Contractor,Region,Locality,Soil_Service,Solution,Soil_Issue,Date_Reported,Date_Actioned,DaysToAction' neo4j/import/soil_survey_sample.csv 
+ithilien@moon-shadow:~$ head -3 neo4j/import/soil_survey_sample.csv 
 ```
+
 ```cypher
 USING PERIODIC COMMIT 1000
 LOAD CSV WITH HEADERS FROM "file:///med-train-set.txt" AS line
