@@ -48,7 +48,10 @@ MERGE (c:Contractor {c_id: line.Contractor, name: 'contra_' + line.Contractor});
 start n = node(*) MATCH (n)-[r]-() RETURN DISTINCT labels(n), type(r), count(r) as rel_count ORDER BY rel_count DESC;
 ```
 
-### Table 1: With Alignment
+#### a subsection
+[^3]: 3: A section you can focus on - [click here!](#)
+
+#### Table 1: With Alignment
 
 | Location Reference        | Local install          | Docker container  |
 | ------------------------- |:----------------------:| -----------------:|
