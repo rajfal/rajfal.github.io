@@ -1,11 +1,11 @@
 
 # SEO settings
-title: <span style="color:red">"Graph"</span>
+title: <span style="color:red">Graph</span>
 title2: "space" # default: ""
 description: "Working with connected data and Neo4j graph databases."
 keywords: "Neo4j, neo4j, graph, graph database, data import, data conversion, graphspace, semantic databases, connected data"
 url: http://rajfal.github.io/ # site url
-baseurl: "" # apply repo name if use it under gh-pages branch
+baseurl: "" # apply repo nameif use it under gh-pages branch
 # baseurl: null # apply null if repo name is something like username.github.io
 
 google_analytics: UA-XXXXX-XX
