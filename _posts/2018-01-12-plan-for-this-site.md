@@ -3,7 +3,7 @@ layout: post
 title: "Site's layout and content"
 comments: false
 description: "Plan for running data into Neo4j..."
-categories: neo4j docker paperwork
+categories: [neo4j docker paperwork]
 keywords: "neo4j, docker, csv"
 ---
 
