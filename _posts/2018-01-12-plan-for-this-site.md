@@ -19,6 +19,12 @@ keywords: "neo4j, docker, csv"
 - use neo4-shell utility to import data
 - mention gotchas, such as Neo4j Browser after removing graph data but leaving node labels and key properties still visible
 
+### Footnote
+
+There will be some URL's references that I will place as footnotes at the bottom of the page...I think! 
+
+This is an example for the footnote number one [[^1]]. You can even add more footnotes, with link! [[^2]]
+
 <div class="divider">Code block examples</div>
 
 ```sql
@@ -38,14 +44,14 @@ MERGE (c:Contractor {c_id: line.Contractor, name: 'contra_' + line.Contractor});
 //count rels by node label
 start n = node(*) MATCH (n)-[r]-() RETURN DISTINCT labels(n), type(r), count(r) as rel_count ORDER BY rel_count DESC;
 ```
-### Footnote
 
-There will be some URL's references that I will place as footnotes at the bottom of the page...I think! 
+### Table 1: With Alignment
 
-This is an example for the footnote number one [[^1]]. You can even add more footnotes, with link! [[^2]]
-
-
-
+| Location Reference        | Local install          | Docker container  |
+| ------------------------- |:----------------------:| -----------------:|
+| col 3 is      | right-aligned | $1600 |
+| col 2 is      | centered      |   $12 |
+| zebra stripes | are neat      |    $1 |
 
 ---
 Footnote:
