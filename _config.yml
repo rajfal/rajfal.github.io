@@ -29,9 +29,9 @@ sass:
 
 # Author settings
 author:
-  name     : "Rafał Jacyna"
+  name     : "Rafał"
   job      : "Graph Data Engineer"
-  bio      : "Connected is always more meaningful in my world than Related, something I learned after twenty years."
+  bio      : "Connected is always more meaningful in my world than Related, something I picked up after twenty years."
   thumb    : /images/author.jpg
   #email    : hnrird@gmail.com
   url      : http://rajfal.github.io
