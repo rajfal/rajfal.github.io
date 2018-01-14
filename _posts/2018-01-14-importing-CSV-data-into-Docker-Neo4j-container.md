@@ -10,7 +10,7 @@ keywords: "neo4j, docker, csv, data import, docker container"
 ## Prerequisites:
 
 > - preferably a -nix OS, I run a lot of command line statements
-> - a Neo4j image inside Docker ready to run as a container, see [Neo4j setup with Docker](2018-01-13-Docker-Neo4j-container-setup.md)
+> - a Neo4j image inside Docker ready to run as a container, see [Neo4j setup with Docker](/2018-01-13-Docker-Neo4j-container-setup.md)
 > - 
 
 ### Objective 1: import a denormalized CSV data into Neo4j
@@ -20,7 +20,7 @@ keywords: "neo4j, docker, csv, data import, docker container"
 1. as a local laptop install
 2. as a Docker container
 
-* prepare MySQL data exports
+* prepare MySQL data exports/
 - use bash to format and inspect files and add file header row
 + create a Cypher import file, \*.cql
 - use neo4-shell utility to import data
