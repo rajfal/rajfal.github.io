@@ -10,7 +10,7 @@ keywords: "neo4j, docker, csv, data import, docker container"
 ## Prerequisites:
 
 > - preferably a -nix OS, I run a lot of command line statements
-> - a Neo4j image inside Docker ready to run as a container, see [Neo4j setup with Docker](/2018-01-13-Docker-Neo4j-container-setup.md)
+> - a Neo4j image inside Docker ready to run as a container, see [Neo4j setup within Docker](/2018/Docker-Neo4j-container-setup/)
 > - 
 
 ### Objective 1: import a denormalized CSV data into Neo4j
