@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Import [CSV] data into Docker Neo4j container"
+title: "Import CSV data into Docker Neo4j container"
 comments: false
 description: "step by step guide on pushing data into a Neo4j container in Docker - Ubuntu environment"
 categories: neo4j docker CSV import
