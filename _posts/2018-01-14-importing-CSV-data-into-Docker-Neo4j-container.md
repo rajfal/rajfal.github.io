@@ -9,7 +9,7 @@ keywords: "neo4j, docker, csv, data import, docker container"
 
 ## Prerequisites:
 
-> - preferably a -nix OS, I run a lot of command line statements
+> - preferably a -nix OS, I use Kubuntu 16.04
 > - a Neo4j image inside Docker ready to run as a container, see [Neo4j setup within Docker](/2018/Docker-Neo4j-container-setup/)
 > - a CSV file of denormalized data from a relational database, see [Get CSV data from MySQL](/2018/Get-CSV-data-from-MySQL/) 
 
