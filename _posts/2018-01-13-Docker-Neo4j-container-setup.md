@@ -77,17 +77,33 @@ sudo docker ps
 CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                                                      NAMES
 5667d59932ce        neo4j:3.3           "/docker-entrypoin..."   9 minutes ago       Up 9 minutes        0.0.0.0:7474->7474/tcp, 7473/tcp, 0.0.0.0:7687->7687/tcp   nifty_yalow
 ```
-Also:  
-  : - OR a faster solution
+Also:
+  : - in this instance you are wanting nifty_yalow as the name of this container. This reference will be used in other Docker container operations
+  : - OR a faster solution, if you only have a single container running inside Docker
   ```bash
   echo $(sudo docker ps) | awk '{print $NF}'
   nifty_yalow
   ```
-  : - note that connecting /conf directories must be linked, if you want the container utilize specific settings inside a customized neo4j.conf configuration file. This we will do shortly
-
-4. Make a customised neo4j.conf configuration file
+  
+4. Copy and open a new neo4j.conf configuration file
 ```bash
-sed -i '1i Hort_Client,Contractor,Region,Locality,Soil_Service,Solution,Soil_Issue,Date_Reported,Date_Actioned,DaysToAction' data-import-directory/soil_survey.csv
+sudo docker exec --interactive nifty_yalow cat /var/lib/neo4j/conf/neo4j.conf > neo4j/import/docker_neo4j.conf
+sudo nano neo4j/import/docker_neo4j.conf
+```
+
+5. Ensure the following dbms.\* references are not commented out any more and save the file
+```bash
+# Enable a remote shell server which Neo4j Shell clients can log in to.
+dbms.shell.enabled=true
+# The network interface IP the shell will listen on (use 0.0.0.0 for all interfaces).
+dbms.shell.host=0.0.0.0
+# The port the shell will listen on, default is 1337.
+dbms.shell.port=1337
+```
+```bash
+cp neo4j/import/docker_neo4j.conf neo4j/conf/neo4j.conf
+ls neo4j/conf/
+neo4j.conf
 ```
 
 5. Stop Docker container, upload file, and restart 
