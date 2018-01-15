@@ -33,7 +33,7 @@ mysql> select * from soil_survey order by rand() limit 3;
 
 #### Instructions
 
-- 1. quickly dump selected table to a CSV text file
+1. quickly dump selected table to a CSV text file
 
 ```sql
 SELECT * FROM soil_survey INTO OUTFILE '/var/lib/mysql-files/soil_survey.csv' FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n';
@@ -47,7 +47,7 @@ Notes:
   
   : resulting CSV will NOT have any headers included. We will fix this shortly
 
-- 2. as a Docker container
+2. as a Docker container
 
 More notes:
 : prepare MySQL data exports/
