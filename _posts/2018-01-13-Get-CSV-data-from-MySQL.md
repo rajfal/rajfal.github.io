@@ -34,7 +34,6 @@ mysql> select * from soil_survey order by rand() limit 3;
 #### Instructions
 
 1. Dump selected table to a CSV text file
-
 ```sql
 SELECT * FROM soil_survey INTO OUTFILE '/var/lib/mysql-files/soil_survey.csv' FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n';
 ```
@@ -46,13 +45,11 @@ Also:
   : - resulting CSV will NOT have any headers included, these will be added next
 
 2. Move CSV file to data-import-directory/
-
 ```bash
 sudo mv /var/lib/mysql-files/soil_survey.csv data-import-directory/
 ```
 
 3. Insert 1 file headers line at the top, and save the CSV file
-
 ```bash
 sed -i '1i Hort_Client,Contractor,Region,Locality,Soil_Service,Solution,Soil_Issue,Date_Reported,Date_Actioned,DaysToAction' data-import-directory/soil_survey.csv
 ```
