@@ -66,8 +66,8 @@ Starting Neo4j.
 Also:  
   : - wherever you see a --volume parameter, Docker is instructed to connect the directory on your local file system with its equivalent inside the Neo4j Docker container
   : - note that connecting /conf directories must be linked, if you want the container utilize specific settings inside a customized neo4j.conf configuration file. This we will do shortly
-  : - parameter neo4j:x.x.x refers to the version of Neo4j image you wish to run. If that version is not yet available in your local Docker repository, Docker will download[[^1]] it from its [Docker Neo4j Repository](https://hub.docker.com/_/neo4j/)
-  : - publishing of the two ports, 7474 and 7687 will allow you to interact with the graph data via [Neo4j Browser](http://localhost:7474)
+  : - parameter neo4j:x.x.x refers to the version of Neo4j image you wish to run. If that version is not yet available in your local Docker repository, Docker will download it from the Docker Neo4j Repository[[^1]] 
+  : - publishing of the two ports, 7474 and 7687 will allow you to interact with the graph data via your [Neo4j Browser](http://localhost:7474)
 
 3. Find name of the currently running Neo4j container
 ```bash
@@ -79,7 +79,7 @@ CONTAINER ID        IMAGE               COMMAND                  CREATED        
 ```
 Also:
   : - in this instance you are wanting nifty_yalow as the name of this container. This reference will be used in other Docker container operations
-  : - OR a faster solution, if you only have a single container running inside Docker
+  : - OR a faster solution, if you only have a single container running inside Docker[[^2]]
   ```bash
   echo $(sudo docker ps) | awk '{print $NF}'
   nifty_yalow
@@ -117,10 +117,11 @@ sudo docker run --rm --publish=7474:7474 --publish=7687:7687 --volume=$HOME/neo4
 ```
 
 ---
-***You now have a workable Neo4j Docker container with mapped local file system directories and customized neo4j.conf configuration file***{: style="color: green"}
+***You now have a workable Neo4j Docker container with mapped file system directories and customized neo4j.conf configuration file***{: style="color: green"}
 
 ---
 [Back to top of page](#)
 
 ---
-[^1]: 1: Footnote number one to be expanded
+[^1]: 1: [Docker Neo4j Repository](https://hub.docker.com/_/neo4j/)
+[^2]: 2: StackOverFlow tip: [Extract last part of string in bash](https://stackoverflow.com/questions/12426659/how-extract-last-part-of-string-in-bash)
