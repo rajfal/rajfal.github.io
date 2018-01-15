@@ -17,28 +17,11 @@ Docker version 1.13.1, build 092cba3
 
 While Docker runs on your local machine, you want to apply configuration settings that will enable containerized Neo4j inside Docker to interact with files and persist data on your local file system.
 
+Unless all you need is a throw away container session, then the Neo4j Docker image will require access to selected parts of your filesystem. The changes you will make are specifically located in `~/neo4j/` directory.
 
+#### How to configure a Neo4j Docker container:
 
-The idea here is to export records from a relational database, such as MySQL, into a CSV (comma separated values) file format that will then be used to import into a Neo4j graph.
-
-An example of a denormalized dataset sourced from several tables by combining selected fields
-
-```sql
-mysql> select * from soil_survey order by rand() limit 3;
-+-------------+------------+-----------+----------+--------------+----------+---------------+---------------+---------------+--------------+
-| Hort_Client | Contractor | Region    | Locality | Soil_Service | Solution | Soil_Issue    | Date_Reported | Date_Actioned | DaysToAction |
-+-------------+------------+-----------+----------+--------------+----------+---------------+---------------+---------------+--------------+
-|         168 |       2245 | Swifford  | 2130     |        51277 |     2118 | Compaction    | 2010-12-27    | 2011-03-14    |           77 |
-|         164 |       2503 | Northbury | 502      |          545 |     7866 | Acidification | 2010-06-28    | 2010-12-06    |          161 |
-|         157 |        777 | Swifford  | 22       |           67 |     5739 | Erosion       | 2013-12-23    | 2014-04-14    |          112 |
-+-------------+------------+-----------+----------+--------------+----------+---------------+---------------+---------------+--------------+
-3 rows in set (0.01 sec)
-
-```
-
-#### How to generate a CSV data file:
-
-1. Dump selected table to a CSV text file
+1. Prepare the file system
 ```sql
 SELECT * FROM soil_survey INTO OUTFILE '/var/lib/mysql-files/soil_survey.csv' FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n';
 ```
