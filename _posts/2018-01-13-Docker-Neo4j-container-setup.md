@@ -78,7 +78,11 @@ CONTAINER ID        IMAGE               COMMAND                  CREATED        
 5667d59932ce        neo4j:3.3           "/docker-entrypoin..."   9 minutes ago       Up 9 minutes        0.0.0.0:7474->7474/tcp, 7473/tcp, 0.0.0.0:7687->7687/tcp   nifty_yalow
 ```
 Also:  
-  : - wherever you see a --volume parameter, Docker is instructed to connect the directory on your local file system with its equivalent inside the Neo4j Docker container
+  : - OR a faster solution
+  ```bash
+  echo $(sudo docker ps) | awk '{print $NF}'
+  nifty_yalow
+  ```
   : - note that connecting /conf directories must be linked, if you want the container utilize specific settings inside a customized neo4j.conf configuration file. This we will do shortly
 
 4. Make a customised neo4j.conf configuration file
