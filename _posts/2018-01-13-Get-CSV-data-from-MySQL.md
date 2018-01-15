@@ -40,11 +40,11 @@ SELECT * FROM soil_survey INTO OUTFILE '/var/lib/mysql-files/soil_survey.csv' FI
 ```
 
 Notes:  
-  : ensure fields are separated with a comma ','
+  : - ensure fields are separated with a comma ','
   
-  : database will write the file to a location that you will require root access, such as sudo, in order to move to a more suitable location for further processing
+  : - database will write the file to a location requiring a root access, such as sudo, in order to move it to another location, such as neo4j/import/
   
-  : resulting CSV will NOT have any headers included. We will fix this shortly
+  : - resulting CSV will NOT have any headers included, these will be added next
 
 2. as a Docker container
 
