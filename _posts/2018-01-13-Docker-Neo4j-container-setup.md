@@ -7,15 +7,22 @@ categories: Neo4j Docker
 keywords: "neo4j, Docker, docker container, Neo4j graph"
 ---
 
-#### *Prerequisites:*{: style="color: red"}
-> - SQL compliant relational database, such as MySQL
-> - an existing database schema where you can, or already have combined data from tables to obtain a dataset of denormalized data
-
+> #### *Prerequisites:*{: style="color: red"}
+> - ensure you have a working Docker environment on GNU/Linux platform
+> ```bash
+docker --version
+Docker version 1.13.1, build 092cba3
+```
 ---
 
-The idea of this step is to extract a dataset from a relational database, such as MySQL, into a CSV (comma separated values) format which will then be used to import its data into a Neo4j graph.
+While Docker runs on your local machine, you want to apply configuration settings that will enable containerized Neo4j inside Docker to interact with files and persist data on your local file system.
 
-Here is an example of an already denormalized MySQL table obtained from several source tables
+
+
+The idea here is to export records from a relational database, such as MySQL, into a CSV (comma separated values) file format that will then be used to import into a Neo4j graph.
+
+An example of a denormalized dataset sourced from several tables by combining selected fields
+
 ```sql
 mysql> select * from soil_survey order by rand() limit 3;
 +-------------+------------+-----------+----------+--------------+----------+---------------+---------------+---------------+--------------+
@@ -29,17 +36,15 @@ mysql> select * from soil_survey order by rand() limit 3;
 
 ```
 
-#### Instructions to generate a CSV data file:
+#### How to generate a CSV data file:
 
 1. Dump selected table to a CSV text file
 ```sql
 SELECT * FROM soil_survey INTO OUTFILE '/var/lib/mysql-files/soil_survey.csv' FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n';
 ```
 Also:  
-  : - ensure fields are separated with a comma ','
-  
-  : - database will write the file to a location requiring a root access, such as sudo, in order to move it to another location, such as your data-import-directory/
-  
+  : - ensure fields are separated with a comma ','  
+  : - database will write the file to a location requiring a root access, such as sudo, in order to move it to another location, such as your data-import-directory/  
   : - resulting CSV will NOT have any headers included, these will be added next
 
 2. Move CSV file to data-import-directory/
@@ -66,9 +71,7 @@ Hort_Client,Contractor,Region,Locality,Soil_Service,Solution,Soil_Issue,Date_Rep
 ```
 
 ---
+***You now have a workable CSV data file that you can import into a Neo4j graph***{: style="color: green"}
 
-**You now have a workable CSV data file that you can use to import into a Neo4j graph**
-
-
-
-**_COMING SOON TO A BROWSER NEAR YOU_**
+---
+[Back to top of page](#)
