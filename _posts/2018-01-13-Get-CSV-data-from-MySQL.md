@@ -27,29 +27,44 @@ mysql> select * from soil_survey order by rand() limit 3;
 |         164 |       2503 | Northbury | 502      |          545 |     7866 | Acidification | 2010-06-28    | 2010-12-06    |          161 |
 |         157 |        777 | Swifford  | 22       |           67 |     5739 | Erosion       | 2013-12-23    | 2014-04-14    |          112 |
 +-------------+------------+-----------+----------+--------------+----------+---------------+---------------+---------------+--------------+
-5 rows in set (0.02 sec)
+3 rows in set (0.01 sec)
 
 ```
 
 #### Instructions
 
-1. quickly dump selected table to a CSV text file
+1. Dump selected table to a CSV text file
 
 ```sql
 SELECT * FROM soil_survey INTO OUTFILE '/var/lib/mysql-files/soil_survey.csv' FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n';
 ```
-
 Notes:  
   : - ensure fields are separated with a comma ','
   
-  : - database will write the file to a location requiring a root access, such as sudo, in order to move it to another location, such as neo4j/import/
+  : - database will write the file to a location requiring a root access, such as sudo, in order to move it to another location, such as your data-import-directory/
   
   : - resulting CSV will NOT have any headers included, these will be added next
 
-2. as a Docker container
+2. Move CSV file to data-import-directory/
 
-More notes:
-: prepare MySQL data exports/
+```bash
+sudo mv /var/lib/mysql-files/soil_survey.csv data-import-directory/
+```
+
+3. Insert 1 file headers line at the top, and save the CSV file
+
+```bash
+sed -i '1i Hort_Client,Contractor,Region,Locality,Soil_Service,Solution,Soil_Issue,Date_Reported,Date_Actioned,DaysToAction' data-import-directory/soil_survey.csv
+```
+
+4. Preview first 3 lines
+head -3  import-directory/soil_survey.csv
+
+Notes:
+: if you make a mistake, delete the added line 
+```bash
+sed -i '1d' import-directory/soil_survey.csv
+```
 
 :  use bash to format and inspect files and add file header row
 
