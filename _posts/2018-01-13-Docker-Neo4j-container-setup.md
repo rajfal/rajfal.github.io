@@ -48,25 +48,25 @@ sudo docker run --rm --publish=7474:7474 --publish=7687:7687 --volume=$HOME/neo4
 Also:  
   : - wherever you see a --volume parameter, Docker is instructed to connect the directory on your local file system with its equivalent inside the Neo4j Docker container
   : - note that connecting /conf directories must be linked, if you want the container utilize specific settings inside a customized neo4j.conf configuration file. This we will do shortly
-  : - parameter neo4j:x.x.x refers to the version of Neo4j image you wish to run. If that version is not yet available in your local Docker repository, Docker will download it from [[^1]Docker Hub]
+  : - parameter neo4j:x.x.x refers to the version of Neo4j image you wish to run. If that version is not yet available in your local Docker repository, Docker will download it from its Neo4j Repository [[^1]]
   : - publishing of the two ports, 7474 and 7687 will allow you to interact with the graph data via Neo4j Browser
 
-3. Make a customised neo4j.conf configuration file
+3. Find image reference to the running Neo4j container
 ```bash
 sudo mv /var/lib/mysql-files/soil_survey.csv data-import-directory/
 ```
 
-3. Insert 1 file headers line at the top, and save the CSV file
+3. Make a customised neo4j.conf configuration file
 ```bash
 sed -i '1i Hort_Client,Contractor,Region,Locality,Soil_Service,Solution,Soil_Issue,Date_Reported,Date_Actioned,DaysToAction' data-import-directory/soil_survey.csv
 ```
 
-4. If you make a mistake, delete the added line 
+4. Stop Docker container, upload file, and restart 
 ```bash
 sed -i '1d' import-directory/soil_survey.csv
 ```
 
-5. Preview first 3 lines
+5. Output after restarting the container
 ```bash
 head -3  import-directory/soil_survey.csv
 Hort_Client,Contractor,Region,Locality,Soil_Service,Solution,Soil_Issue,Date_Reported,Date_Actioned,DaysToAction
@@ -80,6 +80,6 @@ Hort_Client,Contractor,Region,Locality,Soil_Service,Solution,Soil_Issue,Date_Rep
 ---
 [Back to top of page](#)
 
----
+--- 
 Footnotes:
-[^1]: 1: Find latest Neo4j version [Official Docker Neo4j Repository](https://hub.docker.com/_/neo4j/)
+[^1]: 1. [For latest Neo4j version see, Docker Neo4j Repository](https://hub.docker.com/_/neo4j/)
