@@ -16,7 +16,7 @@ keywords: "neo4j, MySQL, csv, , CSV, data export, relational database, denormali
 
 The objective of this step is to extract a dataset from a relational database, such as MySQL, into a CSV (comma separated values) format which will be used to import into Neo4j graph.
 
-Here is an example of a MySQL table with already denormalized.
+Here is an example of an already denormalized MySQL table, which I obtained from several source tables
 
 ```sql
 mysql> select * from soil_survey order by rand() limit 5;
@@ -33,13 +33,17 @@ mysql> select * from soil_survey order by rand() limit 5;
 
 ```
 
-#### Instructions: 
+#### Instructions
 
 1. quickly dump selected table to a CSV text file
 
 ```sql
 SELECT * FROM soil_survey INTO OUTFILE '/var/lib/mysql-files/soil_survey.csv' FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n';
 ```
+notes:
+- ensure fields are separated with a comma ','
+- database will write the file to a location that you will require root access, such as sudo, in order to move to a more suitable location for further processing
+- resulting CSV will NOT have any headers included. We will fix this shortly
 
 2. as a Docker container
 
