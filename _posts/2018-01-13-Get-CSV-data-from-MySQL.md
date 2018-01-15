@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Getting denormalized data in a CSV file format from MySQL"
+title: "Generate denormalized data from MySQL database into a CSV file format"
 comments: false
 description: "step by step guide on extracting denormalized data in CSV format from MySQL"
 categories: data MySQL CSV SQL
@@ -8,8 +8,8 @@ keywords: "neo4j, MySQL, csv, , CSV, data export, relational database, denormali
 ---
 
 #### *Prerequisites:*{: style="color: red"}
-> - a SQL compliant relational database, such as MySQL
-> - an existing database schema where you can or already have combined data from tables to obtain a dataset of denormalized data
+> - SQL compliant relational database, such as MySQL
+> - an existing database schema where you can, or already have combined data from tables to obtain a dataset of denormalized data
 
 ---
 
@@ -67,4 +67,4 @@ Hort_Client,Contractor,Region,Locality,Soil_Service,Solution,Soil_Issue,Date_Rep
 
 ---
 
-**You now have a workable CSV data file that you can use to import into Neo4j graph**
+**You now have a workable CSV data file that you can use to import into a Neo4j graph**
