@@ -37,7 +37,6 @@ mysql> select * from soil_survey order by rand() limit 3;
 SELECT * FROM soil_survey INTO OUTFILE '/var/lib/mysql-files/soil_survey.csv' FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n';
 ```
 Also:  
-
   : - ensure fields are separated with a comma ','  
   : - database will write the file to a location requiring a root access, such as sudo, in order to move it to another location, such as your data-import-directory/  
   : - resulting CSV will NOT have any headers included, these will be added next
@@ -67,6 +66,6 @@ Hort_Client,Contractor,Region,Locality,Soil_Service,Solution,Soil_Issue,Date_Rep
 
 ---
 ***You now have a workable CSV data file that you can import into a Neo4j graph***{: style="color: green"}
----
 
+---
 [Back to top of page](#)
