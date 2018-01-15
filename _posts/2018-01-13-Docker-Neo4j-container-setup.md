@@ -22,13 +22,24 @@ Unless all you need is a throw away container session, then the Neo4j Docker ima
 #### How to configure a Neo4j Docker container:
 
 1. Prepare the file system
-```sql
-SELECT * FROM soil_survey INTO OUTFILE '/var/lib/mysql-files/soil_survey.csv' FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n';
+```bash
+cd ~
+mkdir neo4j
+cd neo4j
+mkdir logs
+mkdir data
+mkdir import
+mkdir conf
+
+ls neo4j/
+conf  data  import  logs
+
 ```
 Also:  
-  : - ensure fields are separated with a comma ','  
-  : - database will write the file to a location requiring a root access, such as sudo, in order to move it to another location, such as your data-import-directory/  
-  : - resulting CSV will NOT have any headers included, these will be added next
+  : - data/ stores Neo4j graph databases. The default is graph.db, but you can make others, too  
+  : - logs/ stores database activity logs. You can specify how often you want these to rotate
+  : - import/ stores files, such as Json or CSV, that you can import to graph. I also put my Cypher scripts in here. More on that later
+  : - conf/ stores a customised neo4j.conf file. More later about modifying specific settings
 
 2. Move CSV file to data-import-directory/
 ```bash
