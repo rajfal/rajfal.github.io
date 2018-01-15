@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "Import CSV data into Docker Neo4j container"
+title: "Import [CSV] data into Docker Neo4j container"
 comments: false
 description: "step by step guide on pushing data into a Neo4j container in Docker - Ubuntu environment"
 categories: neo4j docker CSV import
 keywords: "neo4j, docker, csv, data import, docker container"
 ---
 
-## Prerequisites:
+## *Prerequisites:*{: style="color: red"}
 
 > - preferably a -nix OS, I use Kubuntu 16.04
 > - a Neo4j image inside Docker ready to run as a container, see [Neo4j setup within Docker](/2018/Docker-Neo4j-container-setup/)
