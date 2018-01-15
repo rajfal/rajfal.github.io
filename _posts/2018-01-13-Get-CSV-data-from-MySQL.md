@@ -49,6 +49,7 @@ SELECT * FROM soil_survey INTO OUTFILE '/var/lib/mysql-files/soil_survey.csv' FI
 2. as a Docker container
 
 : prepare MySQL data exports/
+
 :  use bash to format and inspect files and add file header row
 
 **_COMING SOON TO A BROWSER NEAR YOU_**
