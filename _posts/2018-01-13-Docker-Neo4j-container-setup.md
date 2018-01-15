@@ -66,7 +66,7 @@ Starting Neo4j.
 Also:  
   : - wherever you see a --volume parameter, Docker is instructed to connect the directory on your local file system with its equivalent inside the Neo4j Docker container
   : - note that connecting /conf directories must be linked, if you want the container utilize specific settings inside a customized neo4j.conf configuration file. This we will do shortly
-  : - parameter neo4j:x.x.x refers to the version of Neo4j image you wish to run. If that version is not yet available in your local Docker repository, Docker will download it from its [Docker Neo4j Repository](https://hub.docker.com/_/neo4j/)
+  : - parameter neo4j:x.x.x refers to the version of Neo4j image you wish to run. If that version is not yet available in your local Docker repository, Docker will download[[^1]] it from its [Docker Neo4j Repository](https://hub.docker.com/_/neo4j/)
   : - publishing of the two ports, 7474 and 7687 will allow you to interact with the graph data via [Neo4j Browser](http://localhost:7474)
 
 3. Find name of the currently running Neo4j container
@@ -106,7 +106,7 @@ dbms.shell.port=1337
 2018-01-15 06:42:47.581+0000 INFO  Stopping...
 2018-01-15 06:42:47.820+0000 INFO  Stopped.
 ```
-7. Upload the new neo4j.conf file, list 'neo4j/conf/' directory, and restart the Neo4j Docker container 
+7. Upload the new neo4j.conf file, confirm contents of `~/neo4j/conf/` directory, and restart the Neo4j Docker container 
 ```bash
 cp neo4j/import/docker_neo4j.conf neo4j/conf/neo4j.conf
 ls neo4j/conf/
@@ -122,3 +122,5 @@ sudo docker run --rm --publish=7474:7474 --publish=7687:7687 --volume=$HOME/neo4
 ---
 [Back to top of page](#)
 
+---
+[^1]: 1: Footnote number one to be expanded
