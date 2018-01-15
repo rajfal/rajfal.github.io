@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Generate denormalized data from MySQL database into a CSV file format"
+title: "Extract data from a MySQL database into a CSV file format"
 comments: false
 description: "step by step guide on extracting denormalized data in CSV format from MySQL"
 categories: data MySQL CSV SQL
