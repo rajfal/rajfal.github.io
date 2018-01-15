@@ -40,10 +40,10 @@ mysql> select * from soil_survey order by rand() limit 5;
 ```sql
 SELECT * FROM soil_survey INTO OUTFILE '/var/lib/mysql-files/soil_survey.csv' FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n';
 ```
-notes:
-- ensure fields are separated with a comma ','
-- database will write the file to a location that you will require root access, such as sudo, in order to move to a more suitable location for further processing
-- resulting CSV will NOT have any headers included. We will fix this shortly
+  notes:
+  - ensure fields are separated with a comma ','
+  - database will write the file to a location that you will require root access, such as sudo, in order to move to a more suitable location for further processing
+  - resulting CSV will NOT have any headers included. We will fix this shortly
 
 2. as a Docker container
 
