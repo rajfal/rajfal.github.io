@@ -1,7 +1,7 @@
 
 # SEO settings
-# title: "<span style='color:red'>Graph</span>"
-title: "*Graph*{: style="color: red"}"
+title: "<span style='color:red'>Graph</span>"
+#title: "*Graph*{: style="color: red"}"
 title2: "space" # default: ""
 description: "Working with connected data and Neo4j graph databases."
 keywords: "Neo4j, neo4j, graph, graph database, data import, data conversion, graphspace, semantic databases, connected data"
