@@ -77,6 +77,8 @@ Hort_Client,Contractor,Region,Locality,Soil_Service,Solution,Soil_Issue,Date_Rep
 ---
 ***You now have a workable CSV data file that you can import into a Neo4j graph***{: style="color: green"}
 
+This is an example for the footnote number one [[^1]]. You can even add more footnotes, with link! [[^2]]
+
 ---
 [Back to top of page](#)
 
