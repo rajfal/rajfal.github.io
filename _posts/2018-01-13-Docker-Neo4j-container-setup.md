@@ -67,12 +67,19 @@ Also:
   : - wherever you see a --volume parameter, Docker is instructed to connect the directory on your local file system with its equivalent inside the Neo4j Docker container
   : - note that connecting /conf directories must be linked, if you want the container utilize specific settings inside a customized neo4j.conf configuration file. This we will do shortly
   : - parameter neo4j:x.x.x refers to the version of Neo4j image you wish to run. If that version is not yet available in your local Docker repository, Docker will download it from its [Docker Neo4j Repository](https://hub.docker.com/_/neo4j/)
-  : - publishing of the two ports, 7474 and 7687 will allow you to interact with the graph data via Neo4j Browser
+  : - publishing of the two ports, 7474 and 7687 will allow you to interact with the graph data via [Neo4j Browser](http://localhost:7474)
 
-3. Find image reference to the running Neo4j container
+3. Find name of the currently running Neo4j container
 ```bash
-sudo mv /var/lib/mysql-files/soil_survey.csv data-import-directory/
+sudo docker ps
 ```
+```bash
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                                                      NAMES
+5667d59932ce        neo4j:3.3           "/docker-entrypoin..."   9 minutes ago       Up 9 minutes        0.0.0.0:7474->7474/tcp, 7473/tcp, 0.0.0.0:7687->7687/tcp   nifty_yalow
+```
+Also:  
+  : - wherever you see a --volume parameter, Docker is instructed to connect the directory on your local file system with its equivalent inside the Neo4j Docker container
+  : - note that connecting /conf directories must be linked, if you want the container utilize specific settings inside a customized neo4j.conf configuration file. This we will do shortly
 
 4. Make a customised neo4j.conf configuration file
 ```bash
