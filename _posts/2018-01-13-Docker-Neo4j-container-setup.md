@@ -56,17 +56,17 @@ Also:
 sudo mv /var/lib/mysql-files/soil_survey.csv data-import-directory/
 ```
 
-3. Make a customised neo4j.conf configuration file
+4. Make a customised neo4j.conf configuration file
 ```bash
 sed -i '1i Hort_Client,Contractor,Region,Locality,Soil_Service,Solution,Soil_Issue,Date_Reported,Date_Actioned,DaysToAction' data-import-directory/soil_survey.csv
 ```
 
-4. Stop Docker container, upload file, and restart 
+5. Stop Docker container, upload file, and restart 
 ```bash
 sed -i '1d' import-directory/soil_survey.csv
 ```
 
-5. Output after restarting the container
+6. Output after restarting the container
 ```bash
 head -3  import-directory/soil_survey.csv
 Hort_Client,Contractor,Region,Locality,Soil_Service,Solution,Soil_Issue,Date_Reported,Date_Actioned,DaysToAction
@@ -81,6 +81,6 @@ Hort_Client,Contractor,Region,Locality,Soil_Service,Solution,Soil_Issue,Date_Rep
 [Back to top of page](#)
 
 --- 
-Footnotes:
-[^1]For latest version of Neo4j see,[Docker Neo4j Repository](https://hub.docker.com/_/neo4j/)
+Footnote:
+[^1]: 1: For latest version of Neo4j see,[Docker Neo4j Repository](https://hub.docker.com/_/neo4j/)
 [^2]: 2: A footnote you can link to - [click here!](#)
