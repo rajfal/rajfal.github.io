@@ -38,7 +38,7 @@ mysql> select * from soil_survey order by rand() limit 3;
 ```sql
 SELECT * FROM soil_survey INTO OUTFILE '/var/lib/mysql-files/soil_survey.csv' FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n';
 ```
-Notes:  
+Also:  
   : - ensure fields are separated with a comma ','
   
   : - database will write the file to a location requiring a root access, such as sudo, in order to move it to another location, such as your data-import-directory/
@@ -57,15 +57,15 @@ sudo mv /var/lib/mysql-files/soil_survey.csv data-import-directory/
 sed -i '1i Hort_Client,Contractor,Region,Locality,Soil_Service,Solution,Soil_Issue,Date_Reported,Date_Actioned,DaysToAction' data-import-directory/soil_survey.csv
 ```
 
-4. Preview first 3 lines
-head -3  import-directory/soil_survey.csv
-
-Notes:
-: if you make a mistake, delete the added line 
+4. If you make a mistake, delete the added line 
 ```bash
 sed -i '1d' import-directory/soil_survey.csv
 ```
 
-:  use bash to format and inspect files and add file header row
-
-**_COMING SOON TO A BROWSER NEAR YOU_**
+5. Preview first 3 lines
+```bash
+head -3  import-directory/soil_survey.csv
+Hort_Client,Contractor,Region,Locality,Soil_Service,Solution,Soil_Issue,Date_Reported,Date_Actioned,DaysToAction
+159,1091,Northbury,3656,54593,5397,Erosion,2007-05-07,2008-02-18,287
+159,1091,Northbury,1516,22644,5397,Erosion,2007-05-07,2008-03-18,316
+```
