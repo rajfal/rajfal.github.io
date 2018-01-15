@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Setup a Neo4j container inside Docker"
+title: "Configure a setup of Neo4j container inside Docker"
 comments: false
 description: "step by step guide on spinnning up a Neo4j database container within Docker environment"
 categories: Neo4j Docker 
