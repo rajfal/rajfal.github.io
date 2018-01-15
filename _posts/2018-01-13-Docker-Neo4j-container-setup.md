@@ -45,13 +45,31 @@ Also:
 ```bash
 sudo docker run --rm --publish=7474:7474 --publish=7687:7687 --volume=$HOME/neo4j/data:/data --volume=$HOME/neo4j/logs:/logs --volume=$HOME/neo4j/import:/var/lib/neo4j/import --volume=$HOME/neo4j/conf:/var/lib/neo4j/conf neo4j:3.3
 ```
+```bash
+Active database: graph.db
+Directories in use:
+  home:         /var/lib/neo4j
+  config:       /var/lib/neo4j/conf
+  logs:         /logs
+  plugins:      /var/lib/neo4j/plugins
+  import:       /var/lib/neo4j/import
+  data:         /var/lib/neo4j/data
+  certificates: /var/lib/neo4j/certificates
+  run:          /var/lib/neo4j/run
+Starting Neo4j.
+2018-01-15 06:12:35.597+0000 INFO  ======== Neo4j 3.3.1 ========
+2018-01-15 06:12:35.620+0000 INFO  Starting...
+2018-01-15 06:12:36.802+0000 INFO  Bolt enabled on 0.0.0.0:7687.
+2018-01-15 06:12:40.324+0000 INFO  Started.
+2018-01-15 06:12:41.041+0000 INFO  Remote interface available at http://localhost:7474/
+```
 Also:  
   : - wherever you see a --volume parameter, Docker is instructed to connect the directory on your local file system with its equivalent inside the Neo4j Docker container
   : - note that connecting /conf directories must be linked, if you want the container utilize specific settings inside a customized neo4j.conf configuration file. This we will do shortly
-  : - parameter neo4j:x.x.x refers to the version of Neo4j image you wish to run. If that version is not yet available in your local Docker repository, Docker will download it from its Neo4j Repository [[^1]]
+  : - parameter neo4j:x.x.x refers to the version of Neo4j image you wish to run. If that version is not yet available in your local Docker repository, Docker will download it from its Neo4j Repository[^1]
   : - publishing of the two ports, 7474 and 7687 will allow you to interact with the graph data via Neo4j Browser
 
-3. Find image reference to the running Neo4j container [[^2]]
+3. Find image reference to the running Neo4j container[^2]
 ```bash
 sudo mv /var/lib/mysql-files/soil_survey.csv data-import-directory/
 ```
