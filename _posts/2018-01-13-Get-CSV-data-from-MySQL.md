@@ -9,13 +9,13 @@ keywords: "neo4j, MySQL, csv, , CSV, data export, relational database, denormali
 
 #### *Prerequisites:*{: style="color: red"}
 > - SQL compliant relational database, such as MySQL
-> - an existing database schema where you can, or already have combined data from tables to obtain a dataset of denormalized data
+> - an existing database schema where you can, or already have combined data from tables to obtain a denormalized dataset
 
 ---
 
-The idea of this step is to extract a dataset from a relational database, such as MySQL, into a CSV (comma separated values) format which will then be used to import its data into a Neo4j graph.
+The idea here is to exort records from a relational database, such as MySQL, into a CSV (comma separated values) file format that will then be used to import into a Neo4j graph.
 
-Here is an example of an already denormalized MySQL table obtained from several source tables
+Here is an example of a denormalized MySQL dataset obtained from several source tables
 ```sql
 mysql> select * from soil_survey order by rand() limit 3;
 +-------------+------------+-----------+----------+--------------+----------+---------------+---------------+---------------+--------------+
@@ -67,4 +67,4 @@ Hort_Client,Contractor,Region,Locality,Soil_Service,Solution,Soil_Issue,Date_Rep
 
 ---
 
-**You now have a workable CSV data file that you can use to import into a Neo4j graph**
+***You now have a workable CSV data file that you can use to import into a Neo4j graph***{: style="color: red"}
