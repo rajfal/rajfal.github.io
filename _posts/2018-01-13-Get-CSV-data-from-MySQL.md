@@ -9,7 +9,7 @@ keywords: "neo4j, MySQL, csv, , CSV, data export, relational database, denormali
 
 ## Goal: to prepare a denormalized CSV data file
 
-### *Prerequisites:*{: style="color: red"}
+#### *Prerequisites:*{: style="color: red"}
 
 > - a SQL compliant relational database, such as MySQL
 > - an existing database schema where you can or already have combined data from tables to obtain a dataset of denormalized data
@@ -19,7 +19,7 @@ The objective of this step is to extract a dataset from a relational database, s
 Here is an example of a MySQL table with already denormalized.
 
 ```sql
-mysql> select * from soil_survey_sample order by rand() limit 5;
+mysql> select * from soil_survey order by rand() limit 5;
 +-------------+------------+-----------+----------+--------------+----------+---------------+---------------+---------------+--------------+
 | Hort_Client | Contractor | Region    | Locality | Soil_Service | Solution | Soil_Issue    | Date_Reported | Date_Actioned | DaysToAction |
 +-------------+------------+-----------+----------+--------------+----------+---------------+---------------+---------------+--------------+
@@ -33,9 +33,14 @@ mysql> select * from soil_survey_sample order by rand() limit 5;
 
 ```
 
-#### Run Neo4j in two separate environments 
+#### Instructions: 
 
-1. as a local laptop install
+1. quickly dump selected table to a CSV text file
+
+```sql
+SELECT * FROM soil_survey INTO OUTFILE '/var/lib/mysql-files/soil_survey.csv' FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n';
+```
+
 2. as a Docker container
 
 * prepare MySQL data exports/
