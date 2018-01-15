@@ -33,7 +33,6 @@ mkdir conf
 
 ls neo4j/
 conf  data  import  logs
-
 ```
 Also:  
   : - data/ stores Neo4j graph databases. The default is graph.db, but you can make others, too  
