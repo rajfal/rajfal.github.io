@@ -39,17 +39,16 @@ mysql> select * from soil_survey order by rand() limit 3;
 SELECT * FROM soil_survey INTO OUTFILE '/var/lib/mysql-files/soil_survey.csv' FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n';
 ```
   notes:
+  
   1. ensure fields are separated with a comma ','
+  
   2. database will write the file to a location that you will require root access, such as sudo, in order to move to a more suitable location for further processing
+  
   3. resulting CSV will NOT have any headers included. We will fix this shortly
 
 2. as a Docker container
 
-* prepare MySQL data exports/
-- use bash to format and inspect files and add file header row
-+ create a Cypher import file, \*.cql
-- use neo4-shell utility to import data
-- mention gotchas, such as Neo4j Browser after removing graph data but leaving node labels and key properties still visible
-
+: prepare MySQL data exports/
+:  use bash to format and inspect files and add file header row
 
 **_COMING SOON TO A BROWSER NEAR YOU_**
