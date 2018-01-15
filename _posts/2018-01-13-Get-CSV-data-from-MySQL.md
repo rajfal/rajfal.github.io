@@ -13,7 +13,7 @@ keywords: "neo4j, MySQL, csv, , CSV, data export, relational database, denormali
 
 ---
 
-The idea here is to exort records from a relational database, such as MySQL, into a CSV (comma separated values) file format that will then be used to import into a Neo4j graph.
+The idea here is to export records from a relational database, such as MySQL, into a CSV (comma separated values) file format that will then be used to import into a Neo4j graph.
 
 An example of a denormalized dataset sourced from several tables by combining selected fields
 
