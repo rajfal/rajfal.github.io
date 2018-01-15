@@ -30,7 +30,8 @@ mkdir logs
 mkdir data
 mkdir import
 mkdir conf
-
+```
+```bash
 ls neo4j/
 conf  data  import  logs
 ```
