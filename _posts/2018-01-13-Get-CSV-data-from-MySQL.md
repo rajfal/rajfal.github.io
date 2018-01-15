@@ -1,1 +1,48 @@
+---
+layout: post
+title: "Getting denormalized data in a CSV file format from MySQL"
+comments: false
+description: "step by step guide on extracting denormalized data in CSV format from MySQL"
+categories: data MySQL CSV SQL
+keywords: "neo4j, MySQL, csv, , CSV, data export, relational database, denormalized"
+---
+
+## Goal: to prepare a denormalized CSV data file
+
+### *Prerequisites:*{: style="color: red"}
+
+> - a SQL compliant relational database, such as MySQL
+> - an existing database schema where you can or already have combined data from tables to obtain a dataset of denormalized data
+
+The objective of this step is to extract a dataset from a relational database, such as MySQL, into a CSV (comma separated values) format which will be used to import into Neo4j graph.
+
+Here is an example of a MySQL table with already denormalized.
+
+```sql
+mysql> select * from soil_survey_sample order by rand() limit 5;
++-------------+------------+-----------+----------+--------------+----------+---------------+---------------+---------------+--------------+
+| Hort_Client | Contractor | Region    | Locality | Soil_Service | Solution | Soil_Issue    | Date_Reported | Date_Actioned | DaysToAction |
++-------------+------------+-----------+----------+--------------+----------+---------------+---------------+---------------+--------------+
+|         168 |       2245 | Swifford  | 2130     |        51277 |     2118 | Compaction    | 2010-12-27    | 2011-03-14    |           77 |
+|         165 |        485 | Swifford  | 134      |         3380 |      585 | Erosion       | 2008-01-07    | 2008-04-29    |          113 |
+|         164 |       2503 | Northbury | 502      |          545 |     7866 | Acidification | 2010-06-28    | 2010-12-06    |          161 |
+|         174 |       2615 | Northbury | 2652     |        39922 |    12094 | Erosion       | 2012-03-20    | 2012-06-05    |           77 |
+|         157 |        777 | Swifford  | 22       |           67 |     5739 | Erosion       | 2013-12-23    | 2014-04-14    |          112 |
++-------------+------------+-----------+----------+--------------+----------+---------------+---------------+---------------+--------------+
+5 rows in set (0.02 sec)
+
+```
+
+#### Run Neo4j in two separate environments 
+
+1. as a local laptop install
+2. as a Docker container
+
+* prepare MySQL data exports/
+- use bash to format and inspect files and add file header row
++ create a Cypher import file, \*.cql
+- use neo4-shell utility to import data
+- mention gotchas, such as Neo4j Browser after removing graph data but leaving node labels and key properties still visible
+
+
 **_COMING SOON TO A BROWSER NEAR YOU_**
