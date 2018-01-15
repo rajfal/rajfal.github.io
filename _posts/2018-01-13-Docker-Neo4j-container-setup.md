@@ -48,10 +48,10 @@ sudo docker run --rm --publish=7474:7474 --publish=7687:7687 --volume=$HOME/neo4
 Also:  
   : - wherever you see a --volume parameter, Docker is instructed to connect the directory on your local file system with its equivalent inside the Neo4j Docker container
   : - note that connecting /conf directories must be linked, if you want the container utilize specific settings inside a customized neo4j.conf configuration file. This we will do shortly
-  : - parameter neo4j:x.x.x refers to the version of Neo4j image you wish to run. If that version is not yet available in your local Docker repository, Docker will download it from its Neo4j Repository[[^1]]
+  : - parameter neo4j:x.x.x refers to the version of Neo4j image you wish to run. If that version is not yet available in your local Docker repository, Docker will download it from its Neo4j Repository [[^1]]
   : - publishing of the two ports, 7474 and 7687 will allow you to interact with the graph data via Neo4j Browser
 
-3. Find image reference to the running Neo4j container
+3. Find image reference to the running Neo4j container [[^2]]
 ```bash
 sudo mv /var/lib/mysql-files/soil_survey.csv data-import-directory/
 ```
@@ -83,3 +83,4 @@ Hort_Client,Contractor,Region,Locality,Soil_Service,Solution,Soil_Issue,Date_Rep
 --- 
 Footnotes:
 [^1]For latest version of Neo4j see,[Docker Neo4j Repository](https://hub.docker.com/_/neo4j/)
+[^2]: 2: A footnote you can link to - [click here!](#)
