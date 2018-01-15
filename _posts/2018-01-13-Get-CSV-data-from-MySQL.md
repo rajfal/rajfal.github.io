@@ -19,14 +19,12 @@ The objective of this step is to extract a dataset from a relational database, s
 Here is an example of an already denormalized MySQL table, which I obtained from several source tables
 
 ```sql
-mysql> select * from soil_survey order by rand() limit 5;
+mysql> select * from soil_survey order by rand() limit 3;
 +-------------+------------+-----------+----------+--------------+----------+---------------+---------------+---------------+--------------+
 | Hort_Client | Contractor | Region    | Locality | Soil_Service | Solution | Soil_Issue    | Date_Reported | Date_Actioned | DaysToAction |
 +-------------+------------+-----------+----------+--------------+----------+---------------+---------------+---------------+--------------+
 |         168 |       2245 | Swifford  | 2130     |        51277 |     2118 | Compaction    | 2010-12-27    | 2011-03-14    |           77 |
-|         165 |        485 | Swifford  | 134      |         3380 |      585 | Erosion       | 2008-01-07    | 2008-04-29    |          113 |
 |         164 |       2503 | Northbury | 502      |          545 |     7866 | Acidification | 2010-06-28    | 2010-12-06    |          161 |
-|         174 |       2615 | Northbury | 2652     |        39922 |    12094 | Erosion       | 2012-03-20    | 2012-06-05    |           77 |
 |         157 |        777 | Swifford  | 22       |           67 |     5739 | Erosion       | 2013-12-23    | 2014-04-14    |          112 |
 +-------------+------------+-----------+----------+--------------+----------+---------------+---------------+---------------+--------------+
 5 rows in set (0.02 sec)
@@ -41,9 +39,9 @@ mysql> select * from soil_survey order by rand() limit 5;
 SELECT * FROM soil_survey INTO OUTFILE '/var/lib/mysql-files/soil_survey.csv' FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n';
 ```
   notes:
-  - ensure fields are separated with a comma ','
-  - database will write the file to a location that you will require root access, such as sudo, in order to move to a more suitable location for further processing
-  - resulting CSV will NOT have any headers included. We will fix this shortly
+  1. ensure fields are separated with a comma ','
+  2. database will write the file to a location that you will require root access, such as sudo, in order to move to a more suitable location for further processing
+  3. resulting CSV will NOT have any headers included. We will fix this shortly
 
 2. as a Docker container
 
