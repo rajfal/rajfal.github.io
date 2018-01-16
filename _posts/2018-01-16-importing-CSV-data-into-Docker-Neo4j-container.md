@@ -46,7 +46,7 @@ LOAD CSV WITH HEADERS FROM "file:///soil_survey.csv" AS line
 WITH line LIMIT 10000
 MERGE (hc:Hort_Client {client: line.Hort_Client, name: 'hc_' + line.Hort_Client});
 ```
-```xml
+```java
 // import Hort_Client nodes
 CREATE INDEX ON :Hort_Client(client);
 CREATE INDEX ON :Hort_Client(name);
@@ -63,8 +63,15 @@ Also:
   : - conf/ stores a customised neo4j.conf file. More later about modifying specific settings
 
 2. Start Neo4j in a Docker container
-```bash
-sudo docker run --rm --publish=7474:7474 --publish=7687:7687 --volume=$HOME/neo4j/data:/data --volume=$HOME/neo4j/logs:/logs --volume=$HOME/neo4j/import:/var/lib/neo4j/import --volume=$HOME/neo4j/conf:/var/lib/neo4j/conf neo4j:3.3
+```scala
+// import Hort_Client nodes
+CREATE INDEX ON :Hort_Client(client);
+CREATE INDEX ON :Hort_Client(name);
+
+USING PERIODIC COMMIT 1000
+LOAD CSV WITH HEADERS FROM "file:///soil_survey.csv" AS line
+WITH line LIMIT 10000
+MERGE (hc:Hort_Client {client: line.Hort_Client, name: 'hc_' + line.Hort_Client});
 ```
 ```bash
 Active database: graph.db
