@@ -37,7 +37,7 @@ Anomaly is basically an event, or pattern of action that strays from what is exp
 
 #### Proposed Data Model for Soil Survey Graph
 
-![Soil Survey nodes and relationships](https://github.com/rajfal/rajfal.github.io/assets/images/IMAG6654.jpg)
+![Soil Survey nodes and relationships](rajfal.github.io/assets/images/IMAG6654.jpg)
 
 #### How to configure a Neo4j Docker container:
 
