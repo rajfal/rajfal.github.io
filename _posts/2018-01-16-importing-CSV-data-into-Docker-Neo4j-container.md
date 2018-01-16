@@ -21,35 +21,42 @@ keywords: "neo4j, Docker, csv, graph database, CSV, data import, Docker containe
 - run the data import using **neo4j-shell**. This is a command line client that communicates directly with your Neo4j database
 - confirm that all records are in and generate a meta-graph that should be exactly like the data model we created[[^1]]
 
-There are a number of tools with which we can import external data into a Neo4j graph:
+There are a number of tools that we can import external data into a Neo4j graph:
 - _Neo4j Browser_ which can use LOAD CSV statements, **one at a time**
 - neo4j-shell utility that will accept Cypher scripts to run against an graph database
 - neo4j-import utility that will accept specifically formatted CSV files to import records in excess of 10 million records
 - an online web app called, LazyWebCypher, where you can run multi-statement Cypher scripts even against your own local Neo4j instance[[^1]]
 - cycli or Cypher command-line interface[[^2]]
 
-In this exercise, we will use **neo4j-shell** that is part of the Neo4j installation.
+In this exercise, we will use **neo4j-shell** which comes with the Neo4j installation.
 
 
 #### How to configure a Neo4j Docker container:
 
 1. Prepare the file system
-```bash
-cd ~
-mkdir neo4
-cd neo4j
-mkdir logs
-mkdir data
-mkdir import
-mkdir conf
+```sql
+// import Hort_Client nodes
+CREATE INDEX ON :Hort_Client(client);
+CREATE INDEX ON :Hort_Client(name);
+
+USING PERIODIC COMMIT 1000
+LOAD CSV WITH HEADERS FROM "file:///soil_survey.csv" AS line
+WITH line LIMIT 10000
+MERGE (hc:Hort_Client {client: line.Hort_Client, name: 'hc_' + line.Hort_Client});
 ```
-```bash
-ls neo4j/
-conf  data  import  logs
+```coffee
+// import Hort_Client nodes
+CREATE INDEX ON :Hort_Client(client);
+CREATE INDEX ON :Hort_Client(name);
+
+USING PERIODIC COMMIT 1000
+LOAD CSV WITH HEADERS FROM "file:///soil_survey.csv" AS line
+WITH line LIMIT 10000
+MERGE (hc:Hort_Client {client: line.Hort_Client, name: 'hc_' + line.Hort_Client});
 ```
 Also:  
   : - data/ stores Neo4j graph databases. The default is graph.db, but you can make others, too  
-  : - logs/ stores database activity logs. You can specify how often you want these to rotate
+  : - logs/ stores database activity logs. You can specify  often you want these to rotate
   : - import/ stores files, such as Json or CSV, that you can import to graph. I also put my Cypher scripts in here. More on that later
   : - conf/ stores a customised neo4j.conf file. More later about modifying specific settings
 
