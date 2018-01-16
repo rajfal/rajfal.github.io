@@ -27,7 +27,9 @@ There are a number of tools that we can use to import external data into a Neo4j
 **neo4j-shell** - is a command line utility that comes with Neo4j and will run multi-statement Cypher scripts to run against a graph database. Each statement must be terminated with a semicolon, `**;**`
 
 **neo4j-import** - is a command line utility that comes with Neo4j and designed for bulk loading massive datasets that exceed 10 million records. You can also use this tool to test far smaller datasets. However, note that your CSV files must follow a very specific format[[^1]]
+
 **LazyWebCypher** - an online web app that will run multi-statement Cypher scripts even against your own local Neo4j instance[[^2]]
+
 **cycli** - Cypher command-line interface[[^3]]
 
 #### How to import data into Neo4j using neo4j-shell:
@@ -44,7 +46,7 @@ LOAD CSV WITH HEADERS FROM "file:///soil_survey.csv" AS line
 WITH line LIMIT 10000
 MERGE (hc:Hort_Client {client: line.Hort_Client, name: 'hc_' + line.Hort_Client});
 ```
-```coffee
+```xml
 // import Hort_Client nodes
 CREATE INDEX ON :Hort_Client(client);
 CREATE INDEX ON :Hort_Client(name);
