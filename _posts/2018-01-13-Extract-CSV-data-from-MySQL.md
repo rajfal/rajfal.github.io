@@ -2,7 +2,7 @@
 layout: post
 title: "Extract data from a MySQL database into a CSV file format"
 comments: false
-description: "step by step guide on extracting denormalized data in CSV format from MySQL"
+description: "step by step guide on extracting denormalized data in CSV format from a MySQL database"
 categories: data MySQL CSV SQL
 keywords: "neo4j, MySQL, csv, , CSV, data export, relational database, denormalized"
 ---
