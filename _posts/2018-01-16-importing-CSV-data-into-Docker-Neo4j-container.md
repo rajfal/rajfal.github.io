@@ -26,7 +26,7 @@ keywords: "neo4j, Docker, csv, graph database, CSV, data import, Docker containe
 There are a number of tools that we can use to import external data into a Neo4j graph:
 **Neo4j Browser** - it will run LOAD CSV statements one at a time
 
-**neo4j-shell** - is a command line utility that comes with Neo4j and will run multi-statement Cypher scripts to run against a graph database. Each statement must be terminated with a semicolon, `**;**`
+**neo4j-shell** - is a command line utility that comes with Neo4j and will run multi-statement Cypher scripts to run against a graph database. Each statement must be terminated with a semicolon, ` ; `
 
 **neo4j-import** - is a command line utility that comes with Neo4j and designed for bulk loading massive datasets that exceed 10 million records. You can also use this tool to test far smaller datasets. However, note that your CSV files must follow a very specific format[[^1]]
 
@@ -37,7 +37,9 @@ There are a number of tools that we can use to import external data into a Neo4j
 How to import data into Neo4j using neo4j-shell:
 
 #### Snippets of Cypher code for creating nodes and relationships
+
 1. Cypher is the language for querying and manipulating Neo4j graph databases 
+
 ```sql
 // import Hort_Client nodes
 CREATE INDEX ON :Hort_Client(client);
