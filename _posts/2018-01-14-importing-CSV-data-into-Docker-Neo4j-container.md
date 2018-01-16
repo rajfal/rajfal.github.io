@@ -11,30 +11,15 @@ keywords: "neo4j, Docker, csv, graph database, CSV, data import, Docker containe
 > #### *Prerequisites:*{: style="color: red"}
 > - [a working Docker Neo4j container](/2018/Docker-Neo4j-container-setup/)
 > - [a CSV file of denormalized data sourced from a relational database](/2018/Extract-CSV-data-from-MySQL/) 
+> - [a graph database model derived from your relational schema data](/2018/Convert-relational-schema-to-graph-database-model/) 
 
 ---
 
-### Soil Survey Data Modelling
-
-The CSV file, soil_survey.csv, contains denormalized data that came from a relational database. Next, we will transform table-based relational model into a graph data model that will consist of nodes and relationships between them.
-
-The resulting model will be more intuitive and easier to understand. It will express different aspects of the graph not in terms of how data is stored but how different entities are related to one another, as in how they affect one another - very much like objects in real life.
-
-So what does the data found in soil_survey.csv represent in essence?
-
-Firstly, we start with `Hort_Client`, a horticultural enterprise that is perhaps a cherry orchard, a family apple farm, or a grape vineyard. The Hort_Client requests a comprehensive soil test,`Soil_Service` from a soil testing consultant. The consultant visits the property and identifies a number of `Soil_Issue` problems. The consultant goes back to the office, has a look at the results and being the expert in soil science puts forward a `Solution` for each `Soil_Issue` it finds on the property. A `Soil_Report` addresses individual `Soil_Issue` with its corresponding `Solution`.
-
-The relational/CSV data does not explicitly define the existence of a `Soil_Report` object/table, so we will need to create it in the graph. We do have several properties that can be used to create this node, such as `Date_Reported`, `Date_Actioned`, and `DaysToAction`.
-
-Once the `Hort_Client` receives a `Soil_Report`, then it engages a `Contractor` who hails from `Locality` and is licensed to operate anywhere within its `Region`.
-
-`Date_Actioned` refers to the date that a `Contractor` successfully implemented the `Solution` for a given `Soil_Issue` at the property of `Hort_Client`. `DaysToAction` is a counter of the delay between `Date_Reported` and `Date_Actioned`. There are some issues which have higher priority then others and a greater need of urgency than others. We will use this property to benchmark `Contractor`'s performance and take note of recurring anomalies. 
-
-Anomaly is basically an event, or pattern of action that strays from what is expected. Once the data is in the graph, we can investigate these kinds of behaviours in more details.
-
-#### Proposed Data Model for Soil Survey Graph
-
-![Soil Survey nodes and relationships](/assets/images/IMAG6654.jpg)
+#### *What's next?*{: style="color: black"}
+- prepare a Cypher script, docker_soil_survey_import.cql, that will instruct Neo4j to create required nodes and relationships
+- ensure that survey.csv and docker_soil_survey_import.cql files are moved to `~/neo4j/import` directory
+- run the data import using **neo4j-shell**. This is a command line client that communicates directly with your Neo4j database
+- confirm that all records are in and generate a meta-graph that should be exactly like the data model we created[[^1]]
 
 #### How to configure a Neo4j Docker container:
 
@@ -140,6 +125,6 @@ sudo docker run --rm --publish=7474:7474 --publish=7687:7687 --volume=$HOME/neo4
 [Back to top of page](#)
 
 ---
-[^1]: 1: [Docker Neo4j Repository](https://hub.docker.com/_/neo4j/)
-[^2]: 2: StackOverFlow tip: [Extract last part of string in bash](https://stackoverflow.com/questions/12426659/how-extract-last-part-of-string-in-bash)
+[^1]: 1: [Soil survey graph database model](/2018/Convert-relational-schema-to-graph-database-model/)
+
 
