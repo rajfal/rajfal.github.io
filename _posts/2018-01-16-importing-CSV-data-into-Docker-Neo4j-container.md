@@ -21,6 +21,16 @@ keywords: "neo4j, Docker, csv, graph database, CSV, data import, Docker containe
 - run the data import using **neo4j-shell**. This is a command line client that communicates directly with your Neo4j database
 - confirm that all records are in and generate a meta-graph that should be exactly like the data model we created[[^1]]
 
+There are a number of tools with which we can import external data into a Neo4j graph:
+- _Neo4j Browser_ which can use LOAD CSV statements, **one at a time**
+- neo4j-shell utility that will accept Cypher scripts to run against an graph database
+- neo4j-import utility that will accept specifically formatted CSV files to import records in excess of 10 million records
+- an online web app called, LazyWebCypher, where you can run multi-statement Cypher scripts even against your own local Neo4j instance[[^1]]
+- cycli or Cypher command-line interface[[^2]]
+
+In this exercise, we will use **neo4j-shell** that is part of the Neo4j installation.
+
+
 #### How to configure a Neo4j Docker container:
 
 1. Prepare the file system
@@ -125,4 +135,6 @@ sudo docker run --rm --publish=7474:7474 --publish=7687:7687 --volume=$HOME/neo4
 [Back to top of page](#)
 
 ---
-[^1]: 1: [Soil survey graph database model](/2018/Convert-relational-schema-to-graph-database-model/)
+[^1]: 1: [LazyWebCypher](http://www.lyonwj.com/LazyWebCypher/)
+[^2]: 2: [Nicole White's Cycli](https://github.com/nicolewhite/cycli)
+
