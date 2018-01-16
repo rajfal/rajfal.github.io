@@ -34,11 +34,10 @@ There are a number of tools that we can use to import external data into a Neo4j
 
 **cycli** - Cypher command-line interface[[^3]]
 
-#### How to import data into Neo4j using neo4j-shell:
+How to import data into Neo4j using neo4j-shell:
 
-
-1. #### Snippets of Cypher code for creating nodes and relationships
-Cypher is the language for querying and manipulating Neo4j graph databases 
+#### Snippets of Cypher code for creating nodes and relationships
+1. Cypher is the language for querying and manipulating Neo4j graph databases 
 ```sql
 // import Hort_Client nodes
 CREATE INDEX ON :Hort_Client(client);
