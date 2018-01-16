@@ -8,9 +8,6 @@ tags: [neo4j, docker, data import]
 keywords: "neo4j, Docker, csv, graph database, CSV, data import, Docker container, denormalized"
 ---
 
-### *Prerequisites:*{: style="color: red"}
-> - preferably a -nix OS, I use Kubuntu 16.04
-
 > #### *Prerequisites:*{: style="color: red"}
 > - [a working Docker Neo4j container](/2018/Docker-Neo4j-container-setup/)
 > - [a CSV file of denormalized data sourced from a relational database](/2018/Extract-CSV-data-from-MySQL/) 
