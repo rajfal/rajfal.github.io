@@ -34,7 +34,7 @@ There are a number of tools that we can use to import external data into a Neo4j
 
 #### How to import data into Neo4j using neo4j-shell:
 
-1. Prepare the file system
+1. Snippets of Cypher code for creating nodes and relationships
 
 ```sql
 // import Hort_Client nodes
@@ -46,32 +46,48 @@ LOAD CSV WITH HEADERS FROM "file:///soil_survey.csv" AS line
 WITH line LIMIT 10000
 MERGE (hc:Hort_Client {client: line.Hort_Client, name: 'hc_' + line.Hort_Client});
 ```
-```java
-// import Hort_Client nodes
-CREATE INDEX ON :Hort_Client(client);
-CREATE INDEX ON :Hort_Client(name);
+Also:  
+  : - importing `Hort_Client` nodes
+  : - `CREATE INDEX` - adds an index for each property of the node. Note that we have two, *client* and *name*
+  : -`USING PERIODIC COMMIT 1000` - every 1000 records/lines are treated as a single transaction
+  : -`LOAD CSV WITH HEADERS FROM` - 'soil\_survey.csv' file has headers that we added manually using `sed`
+  : -`LIMIT 10000` - a maximum number of lines that you wish to import. Even if there are more lines in the file, the import will stop at the limit. This is also good for testing, if you don't want to load that 200M+ record file just yet
+  : -`MERGE` - since there are many instances of the `Hort_Client` inside the import file, we only want to create a single unique node
+
+```sql
+// import Soil_Service nodes
+CREATE INDEX ON :Soil_Service(ss_id);
+CREATE INDEX ON :Soil_Service(name);
 
 USING PERIODIC COMMIT 1000
 LOAD CSV WITH HEADERS FROM "file:///soil_survey.csv" AS line
 WITH line LIMIT 10000
-MERGE (hc:Hort_Client {client: line.Hort_Client, name: 'hc_' + line.Hort_Client});
+MERGE (ss:Soil_Service {ss_id: line.Soil_Service, name: '_' + line.Soil_Service});
+```
+Also:
+  : - as above but import `Soil_Service` nodes
+
+```sql
+// Hort_Client-->Soil_Service
+
+USING PERIODIC COMMIT 1000
+LOAD CSV WITH HEADERS FROM "file:///soil_survey.csv" AS line
+WITH line LIMIT 10000
+MATCH (hc:Hort_Client {client: line.Hort_Client})
+MATCH (ss:Soil_Service {ss_id: line.Soil_Service})
+MERGE (hc)-[:REQUESTS]->(ss);
 ```
 Also:  
-  : - data/ stores Neo4j graph databases. The default is graph.db, but you can make others, too  
-  : - logs/ stores database activity logs. You can specify  often you want these to rotate
+  : - `MATCH` - locate `Hort_Client` and `Soil_Service` nodes whose properties match the values of the current file line being read in  
+  : - `MERGE (hc)-[:REQUESTS]->(ss)` - once the two above nodes are found, create a relationship between them, labelled `REQUESTS`
   : - import/ stores files, such as Json or CSV, that you can import to graph. I also put my Cypher scripts in here. More on that later
   : - conf/ stores a customised neo4j.conf file. More later about modifying specific settings
+  
+The resulting Cypher file will be a series of statements that will index node properties, create nodes and build relationships between them.  
 
-2. Start Neo4j in a Docker container
-```scala
-// import Hort_Client nodes
-CREATE INDEX ON :Hort_Client(client);
-CREATE INDEX ON :Hort_Client(name);
+2. Running basic data exploration on **soil_survey.csv**
+```bash
 
-USING PERIODIC COMMIT 1000
-LOAD CSV WITH HEADERS FROM "file:///soil_survey.csv" AS line
-WITH line LIMIT 10000
-MERGE (hc:Hort_Client {client: line.Hort_Client, name: 'hc_' + line.Hort_Client});
 ```
 ```bash
 Active database: graph.db
