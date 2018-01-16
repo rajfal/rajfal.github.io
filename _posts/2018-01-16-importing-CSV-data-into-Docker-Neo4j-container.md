@@ -126,5 +126,3 @@ sudo docker run --rm --publish=7474:7474 --publish=7687:7687 --volume=$HOME/neo4
 
 ---
 [^1]: 1: [Soil survey graph database model](/2018/Convert-relational-schema-to-graph-database-model/)
-
-
