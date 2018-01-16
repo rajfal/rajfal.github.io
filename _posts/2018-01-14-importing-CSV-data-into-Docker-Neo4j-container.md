@@ -17,7 +17,7 @@ keywords: "neo4j, Docker, csv, graph database, CSV, data import, Docker containe
 
 ---
 
-### Data Modelling
+### Soil Survey Data Modelling
 
 The CSV file, soil_survey.csv, contains denormalized data that came from a relational database. Next, we will transform table-based relational model into a graph data model that will consist of nodes and relationships between them.
 
@@ -35,12 +35,9 @@ Once the `Hort_Client` receives a `Soil_Report`, then it engages a `Contractor` 
 
 Anomaly is basically an event, or pattern of action that strays from what is expected. Once the data is in the graph, we can investigate these kinds of behaviours in more details.
 
+#### Proposed Data Model for Soil Survey Graph
 
-
-
-
-
-Unless all you need is a throw away container session, then the Neo4j Docker image will require access to selected parts of your filesystem. The changes you will make are specifically located in `~/neo4j/` directory.
+![Soil Survey nodes and relationships](../assets/images/IMAG6654.jpg)
 
 #### How to configure a Neo4j Docker container:
 
