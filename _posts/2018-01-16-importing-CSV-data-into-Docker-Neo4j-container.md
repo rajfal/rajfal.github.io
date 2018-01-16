@@ -21,6 +21,8 @@ keywords: "neo4j, Docker, csv, graph database, CSV, data import, Docker containe
 - run the data import using **neo4j-shell**. This is a command line client that communicates directly with your Neo4j database
 - confirm that all records are in and generate a meta-graph that should be exactly like the data model we created[[^1]]
 
+#### Available tools for importing data into Neo4j
+
 There are a number of tools that we can use to import external data into a Neo4j graph:
 **Neo4j Browser** - it will run LOAD CSV statements one at a time
 
@@ -34,8 +36,9 @@ There are a number of tools that we can use to import external data into a Neo4j
 
 #### How to import data into Neo4j using neo4j-shell:
 
-1. Snippets of Cypher code for creating nodes and relationships
 
+1. #### Snippets of Cypher code for creating nodes and relationships
+Cypher is the language for querying and manipulating Neo4j graph databases 
 ```sql
 // import Hort_Client nodes
 CREATE INDEX ON :Hort_Client(client);
@@ -49,7 +52,7 @@ MERGE (hc:Hort_Client {client: line.Hort_Client, name: 'hc_' + line.Hort_Client}
 Also:  
   : - importing `Hort_Client` nodes
   : - `CREATE INDEX` - adds an index for each property of the node. Note that we have two, *client* and *name*
-  : -`USING PERIODIC COMMIT 1000` - every 1000 records/lines are treated as a single transaction
+  : -`USING PERIODIC COMMIT 1000` - every 1000 records/lines are treated as a single transaction after which those records will be written to disk
   : -`LOAD CSV WITH HEADERS FROM` - 'soil\_survey.csv' file has headers that we added manually using `sed`
   : -`LIMIT 10000` - a maximum number of lines that you wish to import. Even if there are more lines in the file, the import will stop at the limit. This is also good for testing, if you don't want to load that 200M+ record file just yet
   : -`MERGE` - since there are many instances of the `Hort_Client` inside the import file, we only want to create a single unique node
@@ -85,7 +88,7 @@ Also:
   
 The resulting Cypher file will be a series of statements that will index node properties, create nodes and build relationships between them.  
 
-2. Running basic data exploration on **soil_survey.csv**
+2. Running sample data exploration on **soil_survey.csv**
 ```bash
 
 ```
@@ -113,7 +116,7 @@ Also:
   : - parameter neo4j:x.x.x refers to the version of Neo4j image you wish to run. If that version is not yet available in your local Docker repository, Docker will download it from the Docker Neo4j Repository[[^1]] 
   : - publishing of the two ports, 7474 and 7687 will allow you to interact with the graph data via your [Neo4j Browser](http://localhost:7474)
 
-3. Find name of the currently running Neo4j container
+3. Find name of the currently running Neo4j container ++ How to import data into Neo4j using neo4j-shell
 ```bash
 sudo docker ps
 ```
