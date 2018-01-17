@@ -12,6 +12,7 @@ keywords: "neo4j, Docker, csv, graph database, CSV, data import, Docker containe
 > - [a working Docker Neo4j container](/2018/Docker-Neo4j-container-setup/)
 > - [a CSV file of denormalized data sourced from a relational database](/2018/Extract-CSV-data-from-MySQL/) 
 > - [a graph database model derived from your relational schema data](/2018/Convert-relational-schema-to-graph-database-model/) 
+> - [you have a prepared Cypher script that will push CSV data into Neo4j](/2018/Use-Cypher-for-data-modeling-and-CSV-analysis/)
 
 ---
 
@@ -21,23 +22,23 @@ keywords: "neo4j, Docker, csv, graph database, CSV, data import, Docker containe
 - run the data import using **neo4j-shell**. This is a command line client that communicates directly with your Neo4j database
 - confirm that all records are in and generate a meta-graph that should be exactly like the data model we created[[^1]]
 
-#### Available tools for importing data into Neo4j
+#### What tool should I use for importing data into Neo4j?
 
 There are a number of tools that we can use to import external data into a Neo4j graph:
 
-**Neo4j Browser** - it will run LOAD CSV statements one at a time
+**Neo4j Browser** - it will run LOAD CSV statements but only one at a time
 
-**neo4j-shell** - is a command line utility that comes with Neo4j and will run multi-statement Cypher scripts to run against a graph database. Each statement must be terminated with a semicolon, ` ; `
+**neo4j-shell** - is a command line utility that comes pre-installed with Neo4j and will run multi-statement Cypher scripts to run against a graph database. Each statement must be terminated with a semicolon, **(;)**
 
-**neo4j-import** - is a command line utility that comes with Neo4j and designed for bulk loading massive datasets that exceed 10 million records. You can also use this tool to test far smaller datasets. However, note that your CSV files must follow a very specific format[[^1]]
+**neo4j-import** - is a command line utility that comes pre-installed with Neo4j and is designed for bulk loading massive datasets that exceed 10 million records. You can also use this tool to test far smaller datasets. However, note that your CSV files must follow a very specific format[[^1]]
 
 **LazyWebCypher** - an online web app that will run multi-statement Cypher scripts even against your own local Neo4j instance[[^2]]
 
 **cycli** - Cypher command-line interface[[^3]]
 
-How to import data into Neo4j using neo4j-shell:
 
-#### Snippets of Cypher code for creating nodes and relationships
+
+#### How to import data into Neo4j using neo4j-shell
 
 1. Cypher is the language for querying and manipulating Neo4j graph databases[[^4]] 
 
