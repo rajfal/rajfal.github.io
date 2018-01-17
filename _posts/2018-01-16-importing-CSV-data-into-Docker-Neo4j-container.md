@@ -50,9 +50,9 @@ LOAD CSV WITH HEADERS FROM "file:///soil_survey.csv" AS line
 WITH line LIMIT 10000
 MERGE (hc:Hort_Client {client: line.Hort_Client, name: 'hc_' + line.Hort_Client});
 ```
-Also:  
-  : - importing `Hort_Client` nodes
-  : - `CREATE INDEX` - adds an index for each property of the node. Note that we have two, *client* and *name*
+Also:
+  : - importing `Hort_Client` nodes  
+  : - `CREATE INDEX` - adds an index for each property of the node. Note that we have two, `client` and `name`  
   : -`USING PERIODIC COMMIT 1000` - every 1000 records/lines are treated as a single transaction after which those records will be written to disk
   : -`LOAD CSV WITH HEADERS FROM` - 'soil\_survey.csv' file has headers that we added manually using `sed`
   : -`LIMIT 10000` - a maximum number of lines that you wish to import. Even if there are more lines in the file, the import will stop at the limit. This is also good for testing, if you don't want to load that 200M+ record file just yet
