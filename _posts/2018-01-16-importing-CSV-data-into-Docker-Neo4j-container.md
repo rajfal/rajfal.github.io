@@ -195,18 +195,10 @@ RETURN line.Hort_Client as Hort_Client, line.Soil_Service as Soil_Service, line.
 │"160"        │"6241"        │"Erosion"       │"8775"    │"2008-02-25"   │"2008-04-15"   │"50"          │"1250"      │"2777"    │"Eastling" │
 └─────────────┴──────────────┴────────────────┴──────────┴───────────────┴───────────────┴──────────────┴────────────┴──────────┴───────────┘
 ```
-7. Upload the new neo4j.conf file, confirm contents of `~/neo4j/conf/` directory, and restart the Neo4j Docker container 
-```bash
-cp neo4j/import/docker_neo4j.conf neo4j/conf/neo4j.conf
-ls neo4j/conf/
-neo4j.conf
-```
-```bash
-sudo docker run --rm --publish=7474:7474 --publish=7687:7687 --volume=$HOME/neo4j/data:/data --volume=$HOME/neo4j/logs:/logs --volume=$HOME/neo4j/import:/var/lib/neo4j/import --volume=$HOME/neo4j/conf:/var/lib/neo4j/conf neo4j:3.3
-```
+
 
 ---
-***You now have a workable Neo4j Docker container with mapped file system directories and customized neo4j.conf configuration file***{: style="color: green"}
+***You have a background understanding of Cypher and how its statements related to the graph model, plus you have been able to get a preliminary peak at the structure of the CSV file you are about to import***{: style="color: green"}
 
 ---
 [Back to top of page](#)
