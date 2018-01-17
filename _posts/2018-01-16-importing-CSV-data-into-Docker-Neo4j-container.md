@@ -108,10 +108,10 @@ RETURN count(line);
 ```
 
 2. Get fields and values from a typical line
-```bash
+```sql
 LOAD CSV WITH HEADERS FROM "file:///soil_survey_sample.csv" AS line WITH line LIMIT 1 RETURN line as fields_and_values;
 ```
-```bash
+```sql
 ╒══════════════════════════════════════════════════════════════════════╕
 │"fields_and_values"                                                   │
 ╞══════════════════════════════════════════════════════════════════════╡
