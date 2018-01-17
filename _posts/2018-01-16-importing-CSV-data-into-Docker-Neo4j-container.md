@@ -112,7 +112,7 @@ RETURN count(line);
 LOAD CSV WITH HEADERS FROM "file:///soil_survey_sample.csv" AS line 
 WITH line LIMIT 1 RETURN line as fields_and_values;
 ```
-```sql
+```bash
 {
   "Solution": "5397",
   "Soil_Service": "54593",
@@ -132,7 +132,7 @@ LOAD CSV WITH HEADERS FROM "file:///soil_survey_sample.csv" AS line
 WITH line LIMIT 1
 RETURN line.Hort_Client as Hort_Client, line.Soil_Service as Soil_Service, line.Soil_Issue as Soil_Issue, line.Solution as Solution, line.Date_Reported as Date_Reported, line.Date_Actioned as Date_Actioned, line.DaysToAction as DaysToAction, line.Contractor as Contractor, line.Locality as Locality, line.Region as Region;
 ```
-```sql
+```bash
 ╒═════════════╤══════════════╤════════════╤══════════╤═══════════════╤═══════════════╤══════════════╤════════════╤══════════╤═══════════╕
 │"Hort_Client"│"Soil_Service"│"Soil_Issue"│"Solution"│"Date_Reported"│"Date_Actioned"│"DaysToAction"│"Contractor"│"Locality"│"Region"   │
 ╞═════════════╪══════════════╪════════════╪══════════╪═══════════════╪═══════════════╪══════════════╪════════════╪══════════╪═══════════╡
@@ -140,26 +140,59 @@ RETURN line.Hort_Client as Hort_Client, line.Soil_Service as Soil_Service, line.
 └─────────────┴──────────────┴────────────┴──────────┴───────────────┴───────────────┴──────────────┴────────────┴──────────┴───────────┘
 ```
   
-4. Copy and open a new neo4j.conf configuration file
+4. Get a count of unique values found in fields of interest
+```sql
+LOAD CSV WITH HEADERS FROM "file:///soil_survey_sample.csv" AS line
+WITH line
+WITH  line.Hort_Client as client, line.Soil_Service as service, line.Soil_Issue as issue, line.Solution as solution, line.Locality as locality, line.Region as region
+RETURN count(DISTINCT client) as Hort_Client, count(DISTINCT service) as Soil_Service, count(DISTINCT issue) as Soil_Issue, count(DISTINCT solution) as Solution, count(DISTINCT locality) as Locality, count(DISTINCT region) as Region;
+```
 ```bash
-sudo docker exec --interactive nifty_yalow cat /var/lib/neo4j/conf/neo4j.conf > neo4j/import/docker_neo4j.conf
-sudo nano neo4j/import/docker_neo4j.conf
+╒═════════════╤══════════════╤════════════╤══════════╤══════════╤════════╕
+│"Hort_Client"│"Soil_Service"│"Soil_Issue"│"Solution"│"Locality"│"Region"│
+╞═════════════╪══════════════╪════════════╪══════════╪══════════╪════════╡
+│21           │2670          │12          │255       │1925      │4       │
+└─────────────┴──────────────┴────────────┴──────────┴──────────┴────────┘
 ```
 
-5. Ensure the following dbms.\* references are not commented out any more and save the file
-```bash
-# Enable a remote shell server which Neo4j Shell clients can log in to.
-dbms.shell.enabled=true
-# The network interface IP the shell will listen on (use 0.0.0.0 for all interfaces).
-dbms.shell.host=0.0.0.0
-# The port the shell will listen on, default is 1337.
-dbms.shell.port=1337
+5. Derive statistics from a numerical field of interest, e.g. `DaysToAction`
+```sql
+LOAD CSV WITH HEADERS FROM "file:///soil_survey_sample.csv" AS line
+WITH line
+WITH  toInt(line.DaysToAction) as action_delay
+RETURN min(action_delay) as min_delay, max(action_delay) as max_delay, avg(action_delay) as mean_delay, stDev(action_delay) as std_dev,
+percentileDisc(action_delay, 0.25) as _25percentile, percentileDisc(action_delay, 0.5) as _50percentile, percentileDisc(action_delay, 0.75) as _75percentile, percentileDisc(action_delay, 0.9) as _90percentile;
 ```
-6. Stop Docker from the active terminal with Ctrl+C
 ```bash
-^C2018-01-15 06:42:47.555+0000 INFO  Neo4j Server shutdown initiated by request
-2018-01-15 06:42:47.581+0000 INFO  Stopping...
-2018-01-15 06:42:47.820+0000 INFO  Stopped.
+╒═══════════╤═══════════╤══════════════════╤═════════════════╤═══════════════╤═══════════════╤═══════════════╤═══════════════╕
+│"min_delay"│"max_delay"│"mean_delay"      │"std_dev"        │"_25percentile"│"_50percentile"│"_75percentile"│"_90percentile"│
+╞═══════════╪═══════════╪══════════════════╪═════════════════╪═══════════════╪═══════════════╪═══════════════╪═══════════════╡
+│-140       │365        │103.14698625308418│77.27355038508219│49             │84             │133            │216            │
+└───────────┴───────────┴──────────────────┴─────────────────┴───────────────┴───────────────┴───────────────┴───────────────┘
+```
+Also:  
+  : - Take note that the calculated field `min_delay` indicates an error in data, where `Date_Actioned` occurs before `Date_Reported`. How about inspecting the data and fixing this error before importing it into the graph?
+  
+6. View a random sample of five records from the file about to be imported
+```sql
+LOAD CSV WITH HEADERS FROM "file:///soil_survey_sample.csv" AS line
+WITH line SKIP toInteger(100*rand())+ 1 LIMIT 5
+RETURN line.Hort_Client as Hort_Client, line.Soil_Service as Soil_Service, line.Soil_Issue as Soil_Issue, line.Solution as Solution, line.Date_Reported as Date_Reported, line.Date_Actioned as Date_Actioned, line.DaysToAction as DaysToAction, line.Contractor as Contractor, line.Locality as Locality, line.Region as Region;
+```
+```bash
+╒═════════════╤══════════════╤════════════════╤══════════╤═══════════════╤═══════════════╤══════════════╤════════════╤══════════╤═══════════╕
+│"Hort_Client"│"Soil_Service"│"Soil_Issue"    │"Solution"│"Date_Reported"│"Date_Actioned"│"DaysToAction"│"Contractor"│"Locality"│"Region"   │
+╞═════════════╪══════════════╪════════════════╪══════════╪═══════════════╪═══════════════╪══════════════╪════════════╪══════════╪═══════════╡
+│"170"        │"3796"        │"HighAlkalinity"│"766"     │"2008-02-18"   │"2008-07-08"   │"141"         │"2295"      │"2616"    │"Eastling" │
+├─────────────┼──────────────┼────────────────┼──────────┼───────────────┼───────────────┼──────────────┼────────────┼──────────┼───────────┤
+│"170"        │"2135"        │"Erosion"       │"2104"    │"2008-02-18"   │"2008-11-18"   │"274"         │"2295"      │"1471"    │"Eastling" │
+├─────────────┼──────────────┼────────────────┼──────────┼───────────────┼───────────────┼──────────────┼────────────┼──────────┼───────────┤
+│"159"        │"52067"       │"HighAlkalinity"│"765"     │"2008-02-25"   │"2008-05-20"   │"85"          │"1091"      │"3487"    │"Northbury"│
+├─────────────┼──────────────┼────────────────┼──────────┼───────────────┼───────────────┼──────────────┼────────────┼──────────┼───────────┤
+│"159"        │"6116"        │"HighAlkalinity"│"765"     │"2008-02-25"   │"2008-06-24"   │"120"         │"1091"      │"409"     │"Northbury"│
+├─────────────┼──────────────┼────────────────┼──────────┼───────────────┼───────────────┼──────────────┼────────────┼──────────┼───────────┤
+│"160"        │"6241"        │"Erosion"       │"8775"    │"2008-02-25"   │"2008-04-15"   │"50"          │"1250"      │"2777"    │"Eastling" │
+└─────────────┴──────────────┴────────────────┴──────────┴───────────────┴───────────────┴──────────────┴────────────┴──────────┴───────────┘
 ```
 7. Upload the new neo4j.conf file, confirm contents of `~/neo4j/conf/` directory, and restart the Neo4j Docker container 
 ```bash
