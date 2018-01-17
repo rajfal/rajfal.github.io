@@ -1,11 +1,11 @@
 ---
 layout: post
-title: "Import CSV data into Neo4j graph database inside a Docker container"
+title: "Use Cypher to analyse CSV data and create import Cypher scripts"
 comments: false
-description: "step by step guide on pushing data into a Neo4j container in Docker"
-categories: [neo4j, docker, CSV import]
-tags: [neo4j, docker, data import]
-keywords: "neo4j, Docker, csv, graph database, CSV, data import, Docker container, denormalized"
+description: "examples of Cypher queries used for data modelling and inspecting CSV files"
+categories: [neo4j, cypher, CSV import]
+tags: [neo4j, cypher, data modelling, file analysis]
+keywords: "neo4j, Cypher, csv, graph database, CSV, data import, file analysis, Cypher queries"
 ---
 
 > #### *Prerequisites:*{: style="color: red"}
@@ -15,31 +15,13 @@ keywords: "neo4j, Docker, csv, graph database, CSV, data import, Docker containe
 
 ---
 
-#### *What's next?*{: style="color: black"}
-- prepare a Cypher script, docker_soil_survey_import.cql, that will instruct Neo4j to create required nodes and relationships
-- ensure that survey.csv and docker_soil_survey_import.cql files are moved to `~/neo4j/import` directory
-- run the data import using **neo4j-shell**. This is a command line client that communicates directly with your Neo4j database
-- confirm that all records are in and generate a meta-graph that should be exactly like the data model we created[[^1]]
+#### What is Cypher?
 
-#### Available tools for importing data into Neo4j
+Cypher is a declarative language for querying and manipulating Neo4j graph databases. Essentially, Cypher is to Neo4j graphs what SQL is to relational database systems. Cypher's functionality is expanding and improving with every version, so keep your eye on its Neo4j Cypher Refcard resource page[[^4]]
 
-There are a number of tools that we can use to import external data into a Neo4j graph:
+#### Snippets of Cypher code for creating Soil Survey nodes and relationships
 
-**Neo4j Browser** - it will run LOAD CSV statements one at a time
-
-**neo4j-shell** - is a command line utility that comes with Neo4j and will run multi-statement Cypher scripts to run against a graph database. Each statement must be terminated with a semicolon, ` ; `
-
-**neo4j-import** - is a command line utility that comes with Neo4j and designed for bulk loading massive datasets that exceed 10 million records. You can also use this tool to test far smaller datasets. However, note that your CSV files must follow a very specific format[[^1]]
-
-**LazyWebCypher** - an online web app that will run multi-statement Cypher scripts even against your own local Neo4j instance[[^2]]
-
-**cycli** - Cypher command-line interface[[^3]]
-
-How to import data into Neo4j using neo4j-shell:
-
-#### Snippets of Cypher code for creating nodes and relationships
-
-1. Cypher is the language for querying and manipulating Neo4j graph databases[[^4]] 
+1. Create `Hort_Client` nodes
 
 ```sql
 // import Hort_Client nodes
@@ -59,6 +41,7 @@ Also:
   : -`LIMIT 10000` - a maximum number of lines that you wish to import. Even if there are more lines in the file, the import will stop at the limit. This is also good for testing, if you don't want to load that 200M+ record file just yet
   : -`MERGE` - since there are many instances of the `Hort_Client` inside the import file, we only want to create a single unique node
 
+2. Create `Soil_Service` nodes
 ```sql
 // import Soil_Service nodes
 CREATE INDEX ON :Soil_Service(ss_id);
@@ -72,6 +55,7 @@ MERGE (ss:Soil_Service {ss_id: line.Soil_Service, name: '_' + line.Soil_Service}
 Also:
   : - as above but import `Soil_Service` nodes
 
+3. Create `REQUESTS` relationship between `Hort_Client` and `Soil_Service`
 ```sql
 // Hort_Client-->Soil_Service
 
@@ -93,6 +77,8 @@ The resulting Cypher file will be a series of statements that will index node pr
 #### Running preliminary data exploration on **soil_survey.csv** with your [Neo4j Browser](http://localhost:7474/)
 
 **NB:** *Ensure you've parked your CSV file in `~/neo4j/import` and Neo4j service is running*{: style="color: red"}
+
+Here we can explore different aspects of the CSV file about to be imported. You can use the following Cypher queries that you can execute inside your Neo4j Browser.
 
 1. Count total number of lines. 
 ```sql
@@ -195,7 +181,6 @@ RETURN line.Hort_Client as Hort_Client, line.Soil_Service as Soil_Service, line.
 │"160"        │"6241"        │"Erosion"       │"8775"    │"2008-02-25"   │"2008-04-15"   │"50"          │"1250"      │"2777"    │"Eastling" │
 └─────────────┴──────────────┴────────────────┴──────────┴───────────────┴───────────────┴──────────────┴────────────┴──────────┴───────────┘
 ```
-
 
 ---
 ***You have a background understanding of Cypher and how its statements related to the graph model, plus you have been able to get a preliminary peak at the structure of the CSV file you are about to import***{: style="color: green"}
