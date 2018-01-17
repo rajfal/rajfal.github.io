@@ -115,10 +115,10 @@ LOAD CSV WITH HEADERS FROM "file:///soil_survey_sample.csv" AS line WITH line LI
 ╒══════════════════════════════════════════════════════════════════════╕
 │"fields_and_values"                                                   │
 ╞══════════════════════════════════════════════════════════════════════╡
-│{"Solution":"5397","Soil_Service":"54593","Region":"Northbury","Contra│
+│"Solution":"5397","Soil_Service":"54593","Region":"Northbury","Contra│
 │ctor":"1091","Soil_Issue":"Erosion","Date_Reported":"2007-05-07","Days│
 │ToAction":"287","Date_Actioned":"2008-02-18","Locality":"3656","Hort_C│
-│lient":"159"}                                                         │
+│lient":"159"                                                         │
 └──────────────────────────────────────────────────────────────────────┘
 ```
 Also:
