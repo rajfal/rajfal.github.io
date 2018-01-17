@@ -39,7 +39,7 @@ How to import data into Neo4j using neo4j-shell:
 
 #### Snippets of Cypher code for creating nodes and relationships
 
-1. Cypher is the language for querying and manipulating Neo4j graph databases 
+1. Cypher is the language for querying and manipulating Neo4j graph databases[[^4]] 
 
 ```sql
 // import Hort_Client nodes
@@ -178,4 +178,5 @@ sudo docker run --rm --publish=7474:7474 --publish=7687:7687 --volume=$HOME/neo4
 [^1]: 1: [Using neo4j-import tool](https://neo4j.com/docs/operations-manual/current/tutorial/import-tool/)
 [^2]: 2: [LazyWebCypher](http://www.lyonwj.com/LazyWebCypher/)
 [^3]: 3: [Nicole White's Cycli](https://github.com/nicolewhite/cycli)
+[^4]: 4: [Neo4j Cypher Commands Refcard](https://neo4j.com/docs/cypher-refcard/current/)
 
