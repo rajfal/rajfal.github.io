@@ -24,6 +24,7 @@ keywords: "neo4j, Docker, csv, graph database, CSV, data import, Docker containe
 #### Available tools for importing data into Neo4j
 
 There are a number of tools that we can use to import external data into a Neo4j graph:
+
 **Neo4j Browser** - it will run LOAD CSV statements one at a time
 
 **neo4j-shell** - is a command line utility that comes with Neo4j and will run multi-statement Cypher scripts to run against a graph database. Each statement must be terminated with a semicolon, ` ; `
@@ -52,7 +53,7 @@ MERGE (hc:Hort_Client {client: line.Hort_Client, name: 'hc_' + line.Hort_Client}
 ```
 Also:
   : - importing `Hort_Client` nodes  
-  : - `CREATE INDEX` - adds an index for each property of the node. Note that we have two, `client` and `name`  
+  : - `CREATE INDEX` - adds an index for each property of the node. Note that we have two, `client` and `name`
   : -`USING PERIODIC COMMIT 1000` - every 1000 records/lines are treated as a single transaction after which those records will be written to disk
   : -`LOAD CSV WITH HEADERS FROM` - 'soil\_survey.csv' file has headers that we added manually using `sed`
   : -`LIMIT 10000` - a maximum number of lines that you wish to import. Even if there are more lines in the file, the import will stop at the limit. This is also good for testing, if you don't want to load that 200M+ record file just yet
@@ -89,7 +90,10 @@ Also:
   
 The resulting Cypher file will be a series of statements that will index node properties, create nodes and build relationships between them.  
 
-2. Running sample data exploration on **soil_survey.csv**
+#### Running preliminary data exploration on **soil_survey.csv**
+
+1. Running sample data exploration on **soil_survey.csv**
+
 ```bash
 
 ```
