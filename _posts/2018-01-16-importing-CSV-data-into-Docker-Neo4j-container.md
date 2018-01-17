@@ -93,7 +93,6 @@ The resulting Cypher file will be a series of statements that will index node pr
 #### Running preliminary data exploration on **soil_survey.csv** with your [Neo4j Browser](http://localhost:7474/)
 
 1. Count total number of lines. NB: *Make sure you've parked your CSV file in correct location and Neo4j service is running*{: style="color: red"}
-
 ```sql
 LOAD CSV WITH HEADERS FROM "file:///soil_survey_sample.csv" AS line
 WITH line
