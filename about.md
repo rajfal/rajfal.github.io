@@ -13,7 +13,7 @@ One of my key strengths is posing questions that uncover what drives business sy
 <b>However,</b>
 ... as of early 2017, I left the Relational world for good and I ventured out into the world of Connected semantic databases and graphs.
 
-The technology I am exploring right now is Neo4j, and hence this is what Graphspace is all about.
+<b>The technology I am exploring right now is Neo4j, and hence this is what Graphspace is all about.</b>
 
 Enjoy!
 
