@@ -92,7 +92,7 @@ The resulting Cypher file will be a series of statements that will index node pr
 
 #### Running preliminary data exploration on **soil_survey.csv** with your [Neo4j Browser](http://localhost:7474/)
 
-1. Count total number of lines
+1. Count total number of lines. NB: *Make sure you've parked your CSV file in correct location and Neo4j service is running*{: style="color: red"}
 
 ```sql
 LOAD CSV WITH HEADERS FROM "file:///soil_survey_sample.csv" AS line
@@ -109,25 +109,36 @@ RETURN count(line);
 
 2. Get fields and values from a typical line
 ```sql
-LOAD CSV WITH HEADERS FROM "file:///soil_survey_sample.csv" AS line WITH line LIMIT 1 RETURN line as fields_and_values;
+LOAD CSV WITH HEADERS FROM "file:///soil_survey_sample.csv" AS line 
+WITH line LIMIT 1 RETURN line as fields_and_values;
 ```
 ```sql
-╒══════════════════════════════════════════════════════════════════════╕
-│"fields_and_values"                                                   │
-╞══════════════════════════════════════════════════════════════════════╡
-│"Solution":"5397","Soil_Service":"54593","Region":"Northbury","Contra│
-│ctor":"1091","Soil_Issue":"Erosion","Date_Reported":"2007-05-07","Days│
-│ToAction":"287","Date_Actioned":"2008-02-18","Locality":"3656","Hort_C│
-│lient":"159"                                                         │
-└──────────────────────────────────────────────────────────────────────┘
+{
+  "Solution": "5397",
+  "Soil_Service": "54593",
+  "Region": "Northbury",
+  "Contractor": "1091",
+  "Soil_Issue": "Erosion",
+  "Date_Reported": "2007-05-07",
+  "DaysToAction": "287",
+  "Date_Actioned": "2008-02-18",
+  "Locality": "3656",
+  "Hort_Client": "159"
+}
 ```
-Also:
-  : - in this instance you are wanting nifty_yalow as the name of this container. This reference will be used in other Docker container operations
-  : - OR a faster solution, if you only have a single container running inside Docker[[^2]]
-  ```bash
-  echo $(sudo docker ps) | awk '{print $NF}'
-  nifty_yalow
-  ```
+3. Get fields and values from a typical line, nicely formatted
+```sql
+LOAD CSV WITH HEADERS FROM "file:///soil_survey_sample.csv" AS line
+WITH line LIMIT 1
+RETURN line.Hort_Client as Hort_Client, line.Soil_Service as Soil_Service, line.Soil_Issue as Soil_Issue, line.Solution as Solution, line.Date_Reported as Date_Reported, line.Date_Actioned as Date_Actioned, line.DaysToAction as DaysToAction, line.Contractor as Contractor, line.Locality as Locality, line.Region as Region;
+```
+```sql
+╒═════════════╤══════════════╤════════════╤══════════╤═══════════════╤═══════════════╤══════════════╤════════════╤══════════╤═══════════╕
+│"Hort_Client"│"Soil_Service"│"Soil_Issue"│"Solution"│"Date_Reported"│"Date_Actioned"│"DaysToAction"│"Contractor"│"Locality"│"Region"   │
+╞═════════════╪══════════════╪════════════╪══════════╪═══════════════╪═══════════════╪══════════════╪════════════╪══════════╪═══════════╡
+│"159"        │"54593"       │"Erosion"   │"5397"    │"2007-05-07"   │"2008-02-18"   │"287"         │"1091"      │"3656"    │"Northbury"│
+└─────────────┴──────────────┴────────────┴──────────┴───────────────┴───────────────┴──────────────┴────────────┴──────────┴───────────┘
+```
   
 4. Copy and open a new neo4j.conf configuration file
 ```bash
