@@ -100,7 +100,7 @@ Starting Neo4j.
 
 N.B.:
 
-We can also wrap all of the above commands inside a shell script adapted from here[[^1]]
+We can also wrap all of the above commands related to inside a shell script adapted from StackOverflow[[^1]]
 ```bash
 !/bin/sh
 # script for clearing local graph.db database linked to Docker Neo4j container     
@@ -113,13 +113,11 @@ echo Removing graph.db files
 
 sudo rm -rf neo4j/data/graph.db
 
-sudo docker run --rm --publish=7474:7474 --publish=7687:7687 --volume=$HOME/neo4j/data:/data --volume=$HOME/neo4j/logs:/logs --volume=$HOME/neo4j/import:/var/lib/neo4j/import --volume=$HOME/neo4j/conf:/var/lib/neo4j/conf neo4j$
-
-echo Now running Neo4j container: $(sudo docker ps --format '{{.ID}} named: {{.Names}}')
+sudo docker run --rm --publish=7474:7474 --publish=7687:7687 --volume=$HOME/neo4j/data:/data --volume=$HOME/neo4j/logs:/logs --volume=$HOME/neo4j/import:/var/lib/neo4j/import --volume=$HOME/neo4j/conf:/var/lib/neo4j/conf neo4j:3.3
 ```
 
 ---
-***You have overcome a perplexing Gotch related to `DETACH DELETE` Cypher command and got a graph.db database ready to receive your CSV data file***{: style="color: green"}
+***You have overcome a perplexing Gotch related to DETACH DELETE Cypher command and got a graph.db database ready to receive your CSV data file***{: style="color: green"}
 
 ---
 [Back to top of page](#)
