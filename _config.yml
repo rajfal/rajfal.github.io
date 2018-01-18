@@ -31,8 +31,8 @@ sass:
 # Author settings
 author:
   name     : "Rafał"
-  job      : "Graph Data Engineer and I explore a semantic database called Neo4j"
-  bio      : " ... where Connected is more meaningful than Related ..."
+  job      : "Graph Data Engineer"
+  bio      : "I explore a semantic database called Neo4j ... where Connected is more meaningful than Related ..."
   thumb    : /images/author.jpg
   #email    : hnrird@gmail.com
   url      : http://rajfal.github.io
