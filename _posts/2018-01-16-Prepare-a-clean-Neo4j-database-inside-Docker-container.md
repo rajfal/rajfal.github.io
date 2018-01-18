@@ -25,7 +25,7 @@ If that is the case then you don't need to read the rest of this post.
 However, if you either have already done some work inside the default `graph.db` database, or wish to use a different one 
 for your CSV data import then you will need to make some changes to make that possible.
 
-####Already played with Neo4j?####
+#### Already played with Neo4j? ####
 
 If you have already run some queries then you will notice that your Neo4j Browser's Database Information tab will display
 something like this:
@@ -44,10 +44,56 @@ Yes, the system does say the follow:
 ```bash
 Deleted 3320 nodes, deleted 12675 relationships, completed after 174 ms.
 ```
+#### The Gotcha ####
+
 But Neo4j Browser's Database Information tab displays something unexpected:
 
 ![Graph.db still contains node labels and node properties](/assets/images/labels_properties_still_there.png)
 
+You can also use these Cypher statements to confirm the above:
+```sql
+CALL db.labels();
+```
+```sql
+CALL db.propertyKeys();
+```
+
+#### The workaround
+
+So here's what we will do:
+
+1. Go to the terminal where you started Neo4j service inside the Docker container, and using Ctrl+C stop that service
+```bash
+...
+2018-01-11 09:33:09.218+0000 INFO  Neo4j Server shutdown initiated by request                                   
+2018-01-11 09:33:09.231+0000 INFO  Stopping...                                                                                               
+2018-01-11 09:33:09.492+0000 INFO  Stopped.
+```
+
+2. Remove files under `~/neo4j/data/databases/graph.db/` directory that refer to the above labels and property keys inside the `graph.db` database
+```bash
+sudo rm -rf neo4j/data/databases/graph.db/*.*
+```
+
+3. Restart the Neo4j Docker container and the response you expect to see is:
+```bash
+Active database: graph.db                                                                                                                  
+Directories in use:                                                                                                                        
+  home:         /var/lib/neo4j                                                                                                             
+  config:       /var/lib/neo4j/conf                                                                                                        
+  logs:         /logs                                                                                                                      
+  plugins:      /var/lib/neo4j/plugins                                                                                   
+  import:       /var/lib/neo4j/import                                                                                   
+  data:         /var/lib/neo4j/data                                                                             
+  certificates: /var/lib/neo4j/certificates                                                                     
+  run:          /var/lib/neo4j/run                                                                              
+Starting Neo4j.                                                                                                      
+2018-01-11 09:39:11.347+0000 INFO  ======== Neo4j 3.3.1 ========                                                
+2018-01-11 09:39:11.369+0000 INFO  Starting...                                                                  
+2018-01-11 09:39:12.302+0000 INFO  Bolt enabled on 0.0.0.0:7687.                                                
+2018-01-11 09:39:15.252+0000 INFO  Started.                                                                     
+2018-01-11 09:39:16.093+0000 INFO  Remote interface available at http://localhost:7474/
+```
 
 - prepare a Cypher script, docker_soil_survey_import.cql, that will instruct Neo4j to create required nodes and relationships
 - ensure that survey.csv and docker_soil_survey_import.cql files are moved to `~/neo4j/import` directory
