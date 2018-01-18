@@ -16,13 +16,11 @@ keywords: "neo4j, Docker, graph database, create database, delete database, Dock
 
 #### *Your options*{: style="color: black"}
 
-By default, once installed Neo4j CE comes with `graph.db` database that is awaiting to be populated with nodes, labels, properties
-and relationships. You will find this database at `~/neo4j/data/databases/graph.db/`. If you have not created any nodes or imported
-any data then `graph.db` remains empty or clean.
+By default, Neo4j CE comes with `graph.db` database that is awaiting to be populated with nodes, labels, properties and relationships. You will find this database at `~/neo4j/data/databases/graph.db/`. If you have not created any nodes or imported any data then `graph.db` remains empty or clean.
 
 If that is the case then you don't need to read the rest of this post.
 
-However, if you either have already done some work inside the default `graph.db` database then you will need to make some changes to the datbase before importing any CSV data.
+However, if you have already done some work inside`graph.db` then you will need to make some changes to the database before importing any CSV data.
 
 #### Already played with Neo4j? ####
 
@@ -39,11 +37,11 @@ MATCH (n) DETACH DELETE n;
 ```
 The command above is designed to remove all nodes and all the information related to it. However, that is not what happens in reality.
 
-Yes, the system does say the follow:
+Yes, the system does say the following:
 ```bash
 Deleted 3320 nodes, deleted 12675 relationships, completed after 174 ms.
 ```
-#### The Gotcha #### [[^1]]
+#### The Gotcha #### 
 
 But Neo4j Browser's Database Information tab displays something unexpected:
 
@@ -100,6 +98,25 @@ Starting Neo4j.
 
 ![Graph.db contain no objects](/assets/images/clean_graph_db_database.png)
 
+N.B.:
+
+We can also wrap all of the above commands inside a shell script adapted from here[[^1]]
+```bash
+!/bin/sh
+# script for clearing local graph.db database linked to Docker Neo4j container     
+
+echo Stopping Neo4j Docker container
+
+sudo docker stop $(sudo docker ps -q --filter ancestor=neo4j:3.3)
+
+echo Removing graph.db files
+
+sudo rm -rf neo4j/data/graph.db
+
+sudo docker run --rm --publish=7474:7474 --publish=7687:7687 --volume=$HOME/neo4j/data:/data --volume=$HOME/neo4j/logs:/logs --volume=$HOME/neo4j/import:/var/lib/neo4j/import --volume=$HOME/neo4j/conf:/var/lib/neo4j/conf neo4j$
+
+echo Now running Neo4j container: $(sudo docker ps --format '{{.ID}} named: {{.Names}}')
+```
 
 ---
 ***You have overcome a perplexing Gotch related to `DETACH DELETE` Cypher command and got a graph.db database ready to receive your CSV data file***{: style="color: green"}
@@ -108,8 +125,5 @@ Starting Neo4j.
 [Back to top of page](#)
 
 ---
-[^1]: 1: [Using neo4j-import tool](https://neo4j.com/docs/operations-manual/current/tutorial/import-tool/)
-[^2]: 2: [LazyWebCypher](http://www.lyonwj.com/LazyWebCypher/)
-[^3]: 3: [Nicole White's Cycli](https://github.com/nicolewhite/cycli)
-[^4]: 4: [Neo4j Cypher Commands Refcard](https://neo4j.com/docs/cypher-refcard/current/)
+[^1]: 1: [Delete nodes and relationships with Cypher](https://stackoverflow.com/questions/29711757/best-way-to-delete-all-nodes-and-relationships-in-cypher/29715865)
 
