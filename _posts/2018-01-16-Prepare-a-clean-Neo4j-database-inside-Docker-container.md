@@ -32,15 +32,21 @@ something like this:
 
 ![Graph.db already contains nodes and relationships](/assets/images/graph_nodes_present.png)
 
-Therefore, before you can import fresh data, you will need to clear out all nodes, labels, properties and relationships. On
-the surface this would appear to be very simple; and it should be but it's not.
+Therefore, before you can import fresh data, you will need to clear out all nodes, labels, properties and relationships. On the surface this would appear to be very simple; and it should be but it's not.
 
+You can go to your Neo4j Browser and run the following command:
 ```sql
 MATCH (n) DETACH DELETE n;
 ```
-The command above designed to remove all nodes and all the information related to it. However, that is not what happens in
-reality.
+The command above is designed to remove all nodes and all the information related to it. However, that is not what happens in reality.
 
+Yes, the system does say the follow:
+```bash
+Deleted 3320 nodes, deleted 12675 relationships, completed after 174 ms.
+```
+But Neo4j Browser's Database Information tab displays something unexpected:
+
+![Graph.db still contains node labels and node properties](/assets/images/labels_properties_still_there.png)
 
 
 - prepare a Cypher script, docker_soil_survey_import.cql, that will instruct Neo4j to create required nodes and relationships
