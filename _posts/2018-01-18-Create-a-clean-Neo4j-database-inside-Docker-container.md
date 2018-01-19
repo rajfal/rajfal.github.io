@@ -112,7 +112,7 @@ sudo docker exec -ti $(sudo docker ps --format '{% raw %}{{.Names}}{% endraw %}'
 
 echo Stopping Neo4j Docker container
 
-# could also use sudo docker ps --format ''{{'.ID'}}'' 
+# could also use sudo docker ps --format '{% raw %}{{.ID}}{% endraw %}' 
 # but that would assume that there is only a single Neo4j container running
 sudo docker stop $(sudo docker ps -q --filter ancestor=neo4j:3.3)
 
@@ -127,7 +127,7 @@ neo4j:3.3
 ```
 
 ---
-***You have overcome a perplexing Gotcha related to DETACH DELETE Cypher command and got a graph.db database ready to receive your CSV data file***{: style="color: green"}
+***You overcame a perplexing Gotcha related to DETACH DELETE Cypher command and got a graph.db database ready to receive your CSV data file***{: style="color: green"}
 
 ---
 [Back to top of page](#)
