@@ -12,7 +12,8 @@ keywords: "neo4j, Docker, csv, graph database, CSV, data import, Docker containe
 > - [a working Docker Neo4j container](/2018/Docker-Neo4j-container-setup/)
 > - [a CSV file of denormalized data sourced from a relational database](/2018/Extract-CSV-data-from-MySQL/) 
 > - [a graph database model derived from your relational schema data](/2018/Convert-relational-schema-to-graph-database-model/) 
-> - [you have a prepared Cypher script that will push CSV data into Neo4j](/2018/Use-Cypher-for-data-modeling-and-CSV-analysis/)
+> - [a prepared Cypher script that will push CSV data into Neo4j](/2018/Use-Cypher-for-data-modeling-and-CSV-analysis/)
+> - [a clean graph.db database](/2018/Create-a-clean-Neo4j-database-inside-Docker-container/)
 
 ---
 
@@ -40,25 +41,20 @@ There are a number of tools that we can use to import external data into a Neo4j
 
 #### How to import data into Neo4j using neo4j-shell
 
-1. Cypher is the language for querying and manipulating Neo4j graph databases[[^4]] 
-
-```sql
-// import Hort_Client nodes
-CREATE INDEX ON :Hort_Client(client);
-CREATE INDEX ON :Hort_Client(name);
-
-USING PERIODIC COMMIT 1000
-LOAD CSV WITH HEADERS FROM "file:///soil_survey.csv" AS line
-WITH line LIMIT 10000
-MERGE (hc:Hort_Client {client: line.Hort_Client, name: 'hc_' + line.Hort_Client});
+1. Confirm that your import CSV file is in place
+```bash
+sudo head -3 neo4j/import/soil_survey.csv 
+Hort_Client,Contractor,Region,Locality,Soil_Service,Solution,Soil_Issue,Date_Reported,Date_Actioned,DaysToAction
+159,1091,Northbury,3656,54593,5397,Erosion,2007-05-07,2008-02-18,287
+159,1091,Northbury,1516,22644,5397,Erosion,2007-05-07,2008-03-18,316
 ```
 Also:
   : - importing `Hort_Client` nodes  
-  : - `CREATE INDEX` - adds an index for each property of the node. Note that we have two, `client` and `name`
-  : -`USING PERIODIC COMMIT 1000` - every 1000 records/lines are treated as a single transaction after which those records will be written to disk
-  : -`LOAD CSV WITH HEADERS FROM` - 'soil\_survey.csv' file has headers that we added manually using `sed`
-  : -`LIMIT 10000` - a maximum number of lines that you wish to import. Even if there are more lines in the file, the import will stop at the limit. This is also good for testing, if you don't want to load that 200M+ record file just yet
-  : -`MERGE` - since there are many instances of the `Hort_Client` inside the import file, we only want to create a single unique node
+
+2. Confirm that your import Cypher file is in place
+```bash
+
+```
 
 ```sql
 // import Soil_Service nodes
