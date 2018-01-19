@@ -132,7 +132,7 @@ Sample output:
 sudo docker exec -ti $(sudo docker ps --format '{% raw %}{{.Names}}{% endraw %}') bin/neo4j-shell -c "CALL db.relationshipTypes();"
 ```
 Sample output:  
-  : - ```bash {% raw %}
+  : - ```bash
 +------------------+
 | relationshipType |
 +------------------+
@@ -143,15 +143,14 @@ Sample output:
 | "CORRECTS"       |
 | "DISCUSSES"      |
 | "ISSUES"         |
-| "SENT\_TO"        |
+| "SENTTO"        |
 | "ACTIONS"        |
-| "WORKS\_AT"       |
-| "OPERATES\_IN"    |
-| "PART\_OF"        |
+| "WORKSAT"       |
+| "OPERATESIN"    |
+| "PARTOF"        |
 +------------------+
 12 rows
 10 ms
-{% endraw %}
 ```
 
 ---
