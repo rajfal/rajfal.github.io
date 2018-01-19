@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Site's layout and content"
+title: "Goal for this site"
 comments: false
 description: "Plan for running data into Neo4j..."
 categories: neo4j docker paperwork
@@ -15,12 +15,13 @@ keywords: "neo4j, docker, csv"
 2. as a Docker container
 
 * prepare MySQL data exports
+- prepare a CSV file
 - use bash to format and inspect files and add file header row
 + create a Cypher import file, \*.cql
 - use neo4-shell utility to import data
 - mention gotchas, such as Neo4j Browser after removing graph data but leaving node labels and key properties still visible
 
-**\*Original MySQL data:**
+** From this denormalized MySQL data ...**
 
 ```bash
 +-------------+------------+----------+----------+--------------+----------+------------+---------------+---------------+--------------+
@@ -32,4 +33,7 @@ keywords: "neo4j, docker, csv"
 +-------------+------------+----------+----------+--------------+----------+------------+---------------+---------------+--------------+
 3 rows in set (0.00 sec)
 ```
+** ... to this graph schema in Neo4j running in a Docker container**
+Soil Survey meta-graph:  
+  : - ![Soil Survey meta-graph](/assets/images/soil_survey_meta_graph.png)
 ---
