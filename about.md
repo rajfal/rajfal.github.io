@@ -4,6 +4,8 @@ title: About
 permalink: /about/
 ---
 
+    <img class="img-circle" src="kitten.jpg">
+
 I have 15+ years experience in relational database modeling & design, data imports-exports, data migration across industries such as electrical, gas and water utilities, insurance, health, mining and agricultural and energy trading sectors.
 
 I enjoy extracting, transforming and analysing recordsets from a variety of data sources such as relational databases, text files and documents. When converting raw business data into tabular datasets I deliver data that maintains integrity and accuracy.
