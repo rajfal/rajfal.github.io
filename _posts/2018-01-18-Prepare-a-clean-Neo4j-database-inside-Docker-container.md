@@ -102,22 +102,32 @@ N.B.:
 
 We can also wrap all of the above commands related to inside a shell script adapted from StackOverflow[[^1]]
 ```bash
-!/bin/sh
-# script for clearing local graph.db database linked to Docker Neo4j container     
+#!/bin/sh
+# script for clearing local graph.db database linked to Docker Neo4j container
+
+echo Deleting all nodes and relationships from running Neo4j database
+
+# delete all nodes and relationships
+sudo docker exec -ti $(sudo docker ps --format '{{.Names}}') bin/neo4j-shell -c "MATCH (n) DETACH DELETE n;"
 
 echo Stopping Neo4j Docker container
 
+# could also use sudo docker ps --format '{{.ID}}' 
+# but that would assume that there is only a single Neo4j container running
 sudo docker stop $(sudo docker ps -q --filter ancestor=neo4j:3.3)
 
-echo Removing graph.db files
+echo Now removing graph.db labels and property keys
 
+# remove all hanging labels and property kesys
 sudo rm -rf neo4j/data/graph.db
 
-sudo docker run --rm --publish=7474:7474 --publish=7687:7687 --volume=$HOME/neo4j/data:/data --volume=$HOME/neo4j/logs:/logs --volume=$HOME/neo4j/import:/var/lib/neo4j/import --volume=$HOME/neo4j/conf:/var/lib/neo4j/conf neo4j:3.3
+sudo docker run --rm --publish=7474:7474 --publish=7687:7687 --volume=$HOME/neo4j/data:/data --volume=$HOME/neo4j/logs:/logs --volume=$HOME/neo4j/import:/var/lib/neo4j/import --volume=$HOME/neo4j/conf:/var/lib/neo4j/conf \
+neo4j:3.3
+
 ```
 
 ---
-***You have overcome a perplexing Gotch related to DETACH DELETE Cypher command and got a graph.db database ready to receive your CSV data file***{: style="color: green"}
+***You have overcome a perplexing Gotcha related to DETACH DELETE Cypher command and got a graph.db database ready to receive your CSV data file***{: style="color: green"}
 
 ---
 [Back to top of page](#)
