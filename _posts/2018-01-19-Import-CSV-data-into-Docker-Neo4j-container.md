@@ -53,13 +53,13 @@ Also:
 
 2. Confirm that the Cypher file, `soil_survey_import_to_neo4j_in_docker.cql`,  is in place
 ```bash
-sudo head -8 neo4j/import/soil_survey_import_to_neo4j_in_docker.cql 
-
-CREATE INDEX ON :Hort_Client(client);
-CREATE INDEX ON :Hort_Client(name);
+sudo head -3 neo4j/import/soil_survey_sample.csv 
+Hort_Client,Contractor,Region,Locality,Soil_Service,Solution,Soil_Issue,Date_Reported,Date_Actioned,DaysToAction
+159,1091,Northbury,3656,54593,5397,Erosion,2007-05-07,2008-02-18,287
+159,1091,Northbury,1516,22644,5397,Erosion,2007-05-07,2008-03-18,316
 ```
-
-
+Also:
+  : - exporting  
 
 #### Running preliminary data exploration on **soil_survey.csv** with your [Neo4j Browser](http://localhost:7474/)
 
