@@ -54,17 +54,12 @@ Also:
 2. Confirm that the Cypher file, `soil_survey_import_to_neo4j_in_docker.cql`,  is in place
 ```bash
 sudo head -8 neo4j/import/soil_survey_import_to_neo4j_in_docker.cql 
-// '----start---of---import---'
 
-// This file is to be used for Docker installation of Neo4j
-
-
-// import Hort_Client nodes
 CREATE INDEX ON :Hort_Client(client);
 CREATE INDEX ON :Hort_Client(name);
 ```
 
-XX
+XY
 
 #### Running preliminary data exploration on **soil_survey.csv** with your [Neo4j Browser](http://localhost:7474/)
 
