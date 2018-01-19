@@ -29,7 +29,7 @@ There are a number of tools that we can use to import external data into a Neo4j
 
 **Neo4j Browser** - it will run LOAD CSV statements but only one at a time
 
-**neo4j-shell** - is a command line utility that comes pre-installed with Neo4j and will run multi-statement Cypher scripts to run against a graph database. Each statement must be terminated with a semicolon, **(;)**
+**neo4j-shell** - is a command line utility that comes pre-installed with Neo4j and will run multi-statement Cypher scripts to run against a graph database. Each statement must be terminated with a semicolon**(;)**
 
 **neo4j-import** - is a command line utility that comes pre-installed with Neo4j and is designed for bulk loading massive datasets that exceed 10 million records. You can also use this tool to test far smaller datasets. However, note that your CSV files must follow a very specific format[[^1]]
 
