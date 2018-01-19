@@ -4,9 +4,8 @@ title: About
 permalink: /about/
 ---
 
-//![Graph.db already contains nodes and relationships](/assets/images/graph_nodes_present.png)
-    <img class="img-circle" src="/assets/images/rmj_mini_photo_.jpg">
-
+![Graph Data Engineer :)](/assets/images/rmj_mini_photo_.jpg)
+    
 I have 15+ years experience in relational database modeling & design, data imports-exports, data migration across industries such as electrical, gas and water utilities, insurance, health, mining and agricultural and energy trading sectors.
 
 I enjoy extracting, transforming and analysing recordsets from a variety of data sources such as relational databases, text files and documents. When converting raw business data into tabular datasets I deliver data that maintains integrity and accuracy.
