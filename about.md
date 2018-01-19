@@ -19,3 +19,5 @@ However, I left the Relational world to venture out into the universe of Connect
 Enjoy!
 
 Rafał
+
+PS: [BTW, you'll find my LinkedIn profile here](https://www.linkedin.com/in/rafaljacyna/)
