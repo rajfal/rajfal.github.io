@@ -21,6 +21,8 @@ keywords: "neo4j, docker, csv"
 - mention gotchas, such as Neo4j Browser after removing graph data but leaving node labels and key properties still visible
 
 **\*Original MySQL data:**
+
+```bash
 +-------------+------------+----------+----------+--------------+----------+------------+---------------+---------------+--------------+
 | Hort_Client | Contractor | Region   | Locality | Soil_Service | Solution | Soil_Issue | Date_Reported | Date_Actioned | DaysToAction |
 +-------------+------------+----------+----------+--------------+----------+------------+---------------+---------------+--------------+
@@ -29,5 +31,5 @@ keywords: "neo4j, docker, csv"
 |         160 |       1250 | Eastling | 937      |         2106 |    10773 | Erosion    | 2011-10-24    | 2012-02-13    |          112 |
 +-------------+------------+----------+----------+--------------+----------+------------+---------------+---------------+--------------+
 3 rows in set (0.00 sec)
-
+```
 ---
