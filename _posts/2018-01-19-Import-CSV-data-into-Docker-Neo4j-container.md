@@ -48,8 +48,6 @@ Hort_Client,Contractor,Region,Locality,Soil_Service,Solution,Soil_Issue,Date_Rep
 159,1091,Northbury,3656,54593,5397,Erosion,2007-05-07,2008-02-18,287
 159,1091,Northbury,1516,22644,5397,Erosion,2007-05-07,2008-03-18,316
 ```
-Also:
-  : - importing  
 
 2. Confirm that the Cypher file, `soil_survey_import_to_neo4j_in_docker.cql`,  is in place
 ```bash
@@ -57,118 +55,107 @@ sudo head -2 neo4j/import/soil_survey_import_to_neo4j_in_docker.cql
 CREATE INDEX ON :Hort_Client(client);
 CREATE INDEX ON :Hort_Client(name);
 ```
-Also:
-  : - exporting  
 
-#### Running preliminary data exploration on **soil_survey.csv** with your [Neo4j Browser](http://localhost:7474/)
+3. In a terminal different to the one that Neo4j service is running in, enter the following command 
+```bash
+sudo docker exec -ti $(sudo docker ps --format '{{.Names}}') bin/neo4j-shell -file import/soil_survey_import_to_neo4j_in_docker.cql
+```
+Sample output:  
+  : - ```bash
++-------------------+
+| No data returned. |
++-------------------+
+Indexes added: 1
+66 ms
++-------------------+
+| No data returned. |
++-------------------+
+Indexes added: 1
+11 ms
++-------------------+
+| No data returned. |
++-------------------+
+Nodes created: 21
+Properties set: 42
+Labels added: 21
+723 ms
++-------------------+
+| No data returned. |
++-------------------+
+Indexes added: 1
+19 ms
++-------------------+
+| No data returned. |
++-------------------+
+Indexes added: 1
+15 ms
++-------------------+
+| No data returned. |
++-------------------+
+Nodes created: 2670
+Properties set: 5340
+Labels added: 2670
+980 ms
++-------------------+
+| No data returned. |
++-------------------+
+Relationships created: 2796
+5457 ms
+  ..
+  ..
+  ...
+  ```
+    
+4. Get a list of node labels
+```bash
+sudo docker exec -ti $(sudo docker ps --format '{{.Names}}') bin/neo4j-shell -c "CALL db.labels();"
+```
+Sample output:  
+  : - ```bash
++----------------+
+| label          |
++----------------+
+| "Hort_Client"  |
+| "Soil_Service" |
+| "Solution"     |
+| "Soil_Issue"   |
+| "Soil_Report"  |
+| "Contractor"   |
+| "Region"       |
+| "Locality"     |
++----------------+
+8 rows
+15 ms
+```
+5. Get a list of relationships
+```bash
+sudo docker exec -ti $(sudo docker ps --format '{{.Names}}') bin/neo4j-shell -c "CALL db.relationships();"
+```
+Sample output:  
+  : - ```bash
++------------------+
+| relationshipType |
++------------------+
+| "REQUESTS"       |
+| "RECOMMENDS"     |
+| "HAS"            |
+| "INVESTIGATES"   |
+| "CORRECTS"       |
+| "DISCUSSES"      |
+| "ISSUES"         |
+| "SENT_TO"        |
+| "ACTIONS"        |
+| "WORKS_AT"       |
+| "OPERATES_IN"    |
+| "PART_OF"        |
++------------------+
+12 rows
+10 ms
 
-**NB:** *Ensure you've parked your CSV file in `~/neo4j/import` and Neo4j service is running*{: style="color: red"}
-
-3. Count total number of lines. 
-```sql
-LOAD CSV WITH HEADERS FROM "file:///soil_survey_sample.csv" AS line
-WITH line
-RETURN count(line);
 ```
-```bash
-╒════════════╕
-│"line_count"│
-╞════════════╡
-│2837        │
-└────────────┘
-```
-
-2. Get fields and values from a typical line
-```sql
-LOAD CSV WITH HEADERS FROM "file:///soil_survey_sample.csv" AS line 
-WITH line LIMIT 1 RETURN line as fields_and_values;
-```
-```bash
-{
-  "Solution": "5397",
-  "Soil_Service": "54593",
-  "Region": "Northbury",
-  "Contractor": "1091",
-  "Soil_Issue": "Erosion",
-  "Date_Reported": "2007-05-07",
-  "DaysToAction": "287",
-  "Date_Actioned": "2008-02-18",
-  "Locality": "3656",
-  "Hort_Client": "159"
-}
-```
-3. Get fields and values from a typical line, nicely formatted
-```sql
-LOAD CSV WITH HEADERS FROM "file:///soil_survey_sample.csv" AS line
-WITH line LIMIT 1
-RETURN line.Hort_Client as Hort_Client, line.Soil_Service as Soil_Service, line.Soil_Issue as Soil_Issue, line.Solution as Solution, line.Date_Reported as Date_Reported, line.Date_Actioned as Date_Actioned, line.DaysToAction as DaysToAction, line.Contractor as Contractor, line.Locality as Locality, line.Region as Region;
-```
-```bash
-╒═════════════╤══════════════╤════════════╤══════════╤═══════════════╤═══════════════╤══════════════╤════════════╤══════════╤═══════════╕
-│"Hort_Client"│"Soil_Service"│"Soil_Issue"│"Solution"│"Date_Reported"│"Date_Actioned"│"DaysToAction"│"Contractor"│"Locality"│"Region"   │
-╞═════════════╪══════════════╪════════════╪══════════╪═══════════════╪═══════════════╪══════════════╪════════════╪══════════╪═══════════╡
-│"159"        │"54593"       │"Erosion"   │"5397"    │"2007-05-07"   │"2008-02-18"   │"287"         │"1091"      │"3656"    │"Northbury"│
-└─────────────┴──────────────┴────────────┴──────────┴───────────────┴───────────────┴──────────────┴────────────┴──────────┴───────────┘
-```
-  
-4. Get a count of unique values found in fields of interest
-```sql
-LOAD CSV WITH HEADERS FROM "file:///soil_survey_sample.csv" AS line
-WITH line
-WITH  line.Hort_Client as client, line.Soil_Service as service, line.Soil_Issue as issue, line.Solution as solution, line.Locality as locality, line.Region as region
-RETURN count(DISTINCT client) as Hort_Client, count(DISTINCT service) as Soil_Service, count(DISTINCT issue) as Soil_Issue, count(DISTINCT solution) as Solution, count(DISTINCT locality) as Locality, count(DISTINCT region) as Region;
-```
-```bash
-╒═════════════╤══════════════╤════════════╤══════════╤══════════╤════════╕
-│"Hort_Client"│"Soil_Service"│"Soil_Issue"│"Solution"│"Locality"│"Region"│
-╞═════════════╪══════════════╪════════════╪══════════╪══════════╪════════╡
-│21           │2670          │12          │255       │1925      │4       │
-└─────────────┴──────────────┴────────────┴──────────┴──────────┴────────┘
-```
-
-5. Derive statistics from a numerical field of interest, e.g. `DaysToAction`
-```sql
-LOAD CSV WITH HEADERS FROM "file:///soil_survey_sample.csv" AS line
-WITH line
-WITH  toInt(line.DaysToAction) as action_delay
-RETURN min(action_delay) as min_delay, max(action_delay) as max_delay, avg(action_delay) as mean_delay, stDev(action_delay) as std_dev,
-percentileDisc(action_delay, 0.25) as _25percentile, percentileDisc(action_delay, 0.5) as _50percentile, percentileDisc(action_delay, 0.75) as _75percentile, percentileDisc(action_delay, 0.9) as _90percentile;
-```
-```bash
-╒═══════════╤═══════════╤══════════════════╤═════════════════╤═══════════════╤═══════════════╤═══════════════╤═══════════════╕
-│"min_delay"│"max_delay"│"mean_delay"      │"std_dev"        │"_25percentile"│"_50percentile"│"_75percentile"│"_90percentile"│
-╞═══════════╪═══════════╪══════════════════╪═════════════════╪═══════════════╪═══════════════╪═══════════════╪═══════════════╡
-│-140       │365        │103.14698625308418│77.27355038508219│49             │84             │133            │216            │
-└───────────┴───────────┴──────────────────┴─────────────────┴───────────────┴───────────────┴───────────────┴───────────────┘
-```
-Also:  
-  : - Take note that the calculated field `min_delay` indicates an error in data, where `Date_Actioned` occurs before `Date_Reported`. How about inspecting the data and fixing this error before importing it into the graph?
-  
-6. View a random sample of five records from the file about to be imported
-```sql
-LOAD CSV WITH HEADERS FROM "file:///soil_survey_sample.csv" AS line
-WITH line SKIP toInteger(100*rand())+ 1 LIMIT 5
-RETURN line.Hort_Client as Hort_Client, line.Soil_Service as Soil_Service, line.Soil_Issue as Soil_Issue, line.Solution as Solution, line.Date_Reported as Date_Reported, line.Date_Actioned as Date_Actioned, line.DaysToAction as DaysToAction, line.Contractor as Contractor, line.Locality as Locality, line.Region as Region;
-```
-```bash
-╒═════════════╤══════════════╤════════════════╤══════════╤═══════════════╤═══════════════╤══════════════╤════════════╤══════════╤═══════════╕
-│"Hort_Client"│"Soil_Service"│"Soil_Issue"    │"Solution"│"Date_Reported"│"Date_Actioned"│"DaysToAction"│"Contractor"│"Locality"│"Region"   │
-╞═════════════╪══════════════╪════════════════╪══════════╪═══════════════╪═══════════════╪══════════════╪════════════╪══════════╪═══════════╡
-│"170"        │"3796"        │"HighAlkalinity"│"766"     │"2008-02-18"   │"2008-07-08"   │"141"         │"2295"      │"2616"    │"Eastling" │
-├─────────────┼──────────────┼────────────────┼──────────┼───────────────┼───────────────┼──────────────┼────────────┼──────────┼───────────┤
-│"170"        │"2135"        │"Erosion"       │"2104"    │"2008-02-18"   │"2008-11-18"   │"274"         │"2295"      │"1471"    │"Eastling" │
-├─────────────┼──────────────┼────────────────┼──────────┼───────────────┼───────────────┼──────────────┼────────────┼──────────┼───────────┤
-│"159"        │"52067"       │"HighAlkalinity"│"765"     │"2008-02-25"   │"2008-05-20"   │"85"          │"1091"      │"3487"    │"Northbury"│
-├─────────────┼──────────────┼────────────────┼──────────┼───────────────┼───────────────┼──────────────┼────────────┼──────────┼───────────┤
-│"159"        │"6116"        │"HighAlkalinity"│"765"     │"2008-02-25"   │"2008-06-24"   │"120"         │"1091"      │"409"     │"Northbury"│
-├─────────────┼──────────────┼────────────────┼──────────┼───────────────┼───────────────┼──────────────┼────────────┼──────────┼───────────┤
-│"160"        │"6241"        │"Erosion"       │"8775"    │"2008-02-25"   │"2008-04-15"   │"50"          │"1250"      │"2777"    │"Eastling" │
-└─────────────┴──────────────┴────────────────┴──────────┴───────────────┴───────────────┴──────────────┴────────────┴──────────┴───────────┘
-```
-
 
 ---
-***You have a background understanding of Cypher and how its statements related to the graph model, plus you have been able to get a preliminary peak at the structure of the CSV file you are about to import***{: style="color: green"}
+***You have successfully populated Neo4j database using neo4j-shell utility and confirmed existence of new nodes and relationships***{: style="color: green"}
 
 ---
 [Back to top of page](#)
