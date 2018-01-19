@@ -58,7 +58,7 @@ CREATE INDEX ON :Hort_Client(name);
 
 3. In a terminal different to the one that Neo4j service is running in, enter the following command 
 ```bash
-sudo docker exec -ti $(sudo docker ps --format '{{.Names}}') bin/neo4j-shell -file import/soil_survey_import_to_neo4j_in_docker.cql
+sudo docker exec -ti $(sudo docker ps --format '{% raw %}{{.Names}}{% endraw %}') bin/neo4j-shell -file import/soil_survey_import_to_neo4j_in_docker.cql
 ```
 Sample output:  
   : - ```bash
@@ -108,7 +108,7 @@ Relationships created: 2796
     
 4. Get a list of node labels
 ```bash
-sudo docker exec -ti $(sudo docker ps --format '{{.Names}}') bin/neo4j-shell -c "CALL db.labels();"
+sudo docker exec -ti $(sudo docker ps --format '{% raw %}{{.Names}}{% endraw %}') bin/neo4j-shell -c "CALL db.labels();"
 ```
 Sample output:  
   : - ```bash
@@ -129,10 +129,10 @@ Sample output:
 ```
 5. Get a list of relationships
 ```bash
-sudo docker exec -ti $(sudo docker ps --format '{{.Names}}') bin/neo4j-shell -c "CALL db.relationshipTypes();"
+sudo docker exec -ti $(sudo docker ps --format '{% raw %}{{.Names}}{% endraw %}') bin/neo4j-shell -c "CALL db.relationshipTypes();"
 ```
 Sample output:  
-  : - ```bash
+  : - ```bash {% raw %}
 +------------------+
 | relationshipType |
 +------------------+
@@ -151,7 +151,7 @@ Sample output:
 +------------------+
 12 rows
 10 ms
-
+{% endraw %}
 ```
 
 ---
