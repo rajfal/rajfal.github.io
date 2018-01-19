@@ -4,7 +4,8 @@ title: About
 permalink: /about/
 ---
 
-    <img class="img-circle" src="kitten.jpg">
+//![Graph.db already contains nodes and relationships](/assets/images/graph_nodes_present.png)
+    <img class="img-circle" src="/assets/images/rmj_mini_photo_.jpg">
 
 I have 15+ years experience in relational database modeling & design, data imports-exports, data migration across industries such as electrical, gas and water utilities, insurance, health, mining and agricultural and energy trading sectors.
 
