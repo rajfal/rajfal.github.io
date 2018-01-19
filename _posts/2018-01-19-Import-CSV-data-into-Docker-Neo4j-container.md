@@ -58,7 +58,7 @@ CREATE INDEX ON :Hort_Client(client);
 CREATE INDEX ON :Hort_Client(name);
 {% raw %}
 USING PERIODIC COMMIT 1000
-LOAD CSV WITH HEADERS FROM "file:///soil_survey_sample.csv" AS line
+LOAD CSV WITH HEADERS FROM "file:|||soil_survey_sample.csv" AS line
 WITH line LIMIT 10000
 MERGE (hc:Hort_Client {client: line.Hort_Client, name: 'hc_' + line.Hort_Client});
 {% endraw %}
