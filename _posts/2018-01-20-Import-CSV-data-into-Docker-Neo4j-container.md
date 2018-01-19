@@ -149,7 +149,7 @@ Sample output:
 ```sql
 CALL db.schema();
 ```
-Sample output:  
+Soil Survey meta-graph:  
   : - ![Soil Survey meta-graph](/assets/images/soil_survey_meta_graph.png)
   
   
