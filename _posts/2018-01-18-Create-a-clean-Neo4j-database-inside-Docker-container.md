@@ -108,7 +108,7 @@ We can also wrap all of the above commands related to inside a shell script adap
 echo Deleting all nodes and relationships from running Neo4j database
 
 # delete all nodes and relationships
-sudo docker exec -ti $(sudo docker ps --format '\{{\.Names\}}') bin/neo4j-shell -c "MATCH (n) DETACH DELETE n;"
+sudo docker exec -ti $(sudo docker ps --format '\{ \{.Names\} \}') bin/neo4j-shell -c "MATCH (n) DETACH DELETE n;"
 
 echo Stopping Neo4j Docker container
 
