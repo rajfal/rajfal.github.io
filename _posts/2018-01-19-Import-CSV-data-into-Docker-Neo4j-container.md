@@ -41,7 +41,7 @@ There are a number of tools that we can use to import external data into a Neo4j
 
 #### How to import data into Neo4j using neo4j-shell
 
-1. Confirm that your import CSV file, `soil_survey_sample.csv`, is in place
+1. Confirm that the CSV file, `soil_survey_sample.csv`, is in place
 ```bash
 sudo head -3 neo4j/import/soil_survey_sample.csv 
 Hort_Client,Contractor,Region,Locality,Soil_Service,Solution,Soil_Issue,Date_Reported,Date_Actioned,DaysToAction
@@ -51,7 +51,7 @@ Hort_Client,Contractor,Region,Locality,Soil_Service,Solution,Soil_Issue,Date_Rep
 Also:
   : - importing ????  
 
-2. Confirm that your import Cypher file, `soil_survey_import_to_neo4j_in_docker.cql`,  is in place
+2. Confirm that the Cypher file, `soil_survey_import_to_neo4j_in_docker.cql`,  is in place
 ```bash
 sudo head -8 neo4j/import/soil_survey_import_to_neo4j_in_docker.cql 
 // '----start---of---import---'
