@@ -129,7 +129,7 @@ Sample output:
 ```
 5. Get a list of relationships
 ```bash
-sudo docker exec -ti $(sudo docker ps --format '{{.Names}}') bin/neo4j-shell -c "CALL db.relationships();"
+sudo docker exec -ti $(sudo docker ps --format '{{.Names}}') bin/neo4j-shell -c "CALL db.relationshipTypes();"
 ```
 Sample output:  
   : - ```bash
@@ -143,11 +143,11 @@ Sample output:
 | "CORRECTS"       |
 | "DISCUSSES"      |
 | "ISSUES"         |
-| "SENT_TO"        |
+| "SENT\_TO"        |
 | "ACTIONS"        |
-| "WORKS_AT"       |
-| "OPERATES_IN"    |
-| "PART_OF"        |
+| "WORKS\_AT"       |
+| "OPERATES\_IN"    |
+| "PART\_OF"        |
 +------------------+
 12 rows
 10 ms
