@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "Goal for this site"
+title: "Goals for this project"
 comments: false
 description: "Running relational data into a Neo4j graph"
 categories: neo4j docker paperwork
-keywords: "neo4j, docker, csv"
+keywords: "neo4j, docker, csv, data import, data conversion, data model, graph database, rdbms, relational data"
 ---
 
-### Goal: import Relational data into a Connected graph
+### Import Relational data into a Connected graph
 
 ** From this denormalized MySQL data ...**
 
