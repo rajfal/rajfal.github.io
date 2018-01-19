@@ -112,7 +112,7 @@ sudo docker exec -ti $(sudo docker ps --format '\{{.Names}}') bin/neo4j-shell -c
 
 echo Stopping Neo4j Docker container
 
-# could also use sudo docker ps --format '\{{.ID}}' 
+# could also use sudo docker ps --format ''{{'.ID'}}'' 
 # but that would assume that there is only a single Neo4j container running
 sudo docker stop $(sudo docker ps -q --filter ancestor=neo4j:3.3)
 
