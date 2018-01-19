@@ -17,26 +17,19 @@ keywords: "neo4j, Docker, csv, graph database, CSV, data import, Docker containe
 
 ---
 
-#### *What's next?*{: style="color: black"}
-- prepare a Cypher script, docker_soil_survey_import.cql, that will instruct Neo4j to create required nodes and relationships
-- ensure that survey.csv and docker_soil_survey_import.cql files are moved to `~/neo4j/import` directory
-- run the data import using **neo4j-shell**. This is a command line client that communicates directly with your Neo4j database
-- confirm that all records are in and generate a meta-graph that should be exactly like the data model we created[[^1]]
-
-#### What tool should I use for importing data into Neo4j?
+#### What can I use to import data into Neo4j?
 
 There are a number of tools that we can use to import external data into a Neo4j graph:
 
 **Neo4j Browser** - it will run LOAD CSV statements but only one at a time
 
-**neo4j-shell** - is a command line utility that comes pre-installed with Neo4j and will run multi-statement Cypher scripts to run against a graph database. Each statement must be terminated with a semicolon**(;)**
+**neo4j-shell** - is a command line utility that comes pre-installed with Neo4j and will run multi-statement Cypher scripts to run against a graph database. Each statement must be terminated with a semicolon**(;)** and separated with an empty line
 
 **neo4j-import** - is a command line utility that comes pre-installed with Neo4j and is designed for bulk loading massive datasets that exceed 10 million records. You can also use this tool to test far smaller datasets. However, note that your CSV files must follow a very specific format[[^1]]
 
 **LazyWebCypher** - an online web app that will run multi-statement Cypher scripts even against your own local Neo4j instance[[^2]]
 
 **cycli** - Cypher command-line interface[[^3]]
-
 
 
 #### How to import data into Neo4j using neo4j-shell
@@ -143,16 +136,23 @@ Sample output:
 | "CORRECTS"       |
 | "DISCUSSES"      |
 | "ISSUES"         |
-| "SENTTO"        |
+| "SENT&#95;TO"        |
 | "ACTIONS"        |
-| "WORKSAT"       |
-| "OPERATESIN"    |
-| "PARTOF"        |
+| "WORKS&#95;AT"       |
+| "OPERATES&#95;IN"    |
+| "PART&#95;OF"       |
 +------------------+
 12 rows
 10 ms
 ```
-
+6. Generate a meta-graph in Neo4j Browser
+```sql
+CALL db.schema();
+```
+Sample output:  
+  : - ![Soil Survey meta-graph](/assets/images/soil_survey_meta_graph.png)
+  
+  
 ---
 ***You have successfully populated Neo4j database using neo4j-shell utility and confirmed existence of new nodes and relationships***{: style="color: green"}
 
@@ -163,5 +163,5 @@ Sample output:
 [^1]: 1: [Using neo4j-import tool](https://neo4j.com/docs/operations-manual/current/tutorial/import-tool/)
 [^2]: 2: [LazyWebCypher](http://www.lyonwj.com/LazyWebCypher/)
 [^3]: 3: [Nicole White's Cycli](https://github.com/nicolewhite/cycli)
-[^4]: 4: [Neo4j Cypher Commands Refcard](https://neo4j.com/docs/cypher-refcard/current/)
+
 
