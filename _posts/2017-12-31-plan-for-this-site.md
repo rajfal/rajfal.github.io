@@ -2,24 +2,12 @@
 layout: post
 title: "Goal for this site"
 comments: false
-description: "Plan for running data into Neo4j..."
+description: "Running relational data into a Neo4j graph"
 categories: neo4j docker paperwork
 keywords: "neo4j, docker, csv"
 ---
 
-### Objective 1: import a denormalized CSV data into Neo4j
-
-#### Run Neo4j in two separate environments 
-
-1. as a local laptop install
-2. as a Docker container
-
-* prepare MySQL data exports
-- prepare a CSV file
-- use bash to format and inspect files and add file header row
-+ create a Cypher import file, \*.cql
-- use neo4-shell utility to import data
-- mention gotchas, such as Neo4j Browser after removing graph data but leaving node labels and key properties still visible
+### Goal: import Relational data into a Connected graph
 
 ** From this denormalized MySQL data ...**
 
