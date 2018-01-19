@@ -53,7 +53,7 @@ Also:
 
 2. Confirm that the Cypher file, `soil_survey_import_to_neo4j_in_docker.cql`,  is in place
 ```bash
-sudo head -8 neo4j/import/soil_survey_import_to_neo4j_in_docker.cql 
+sudo head -2 neo4j/import/soil_survey_import_to_neo4j_in_docker.cql 
 CREATE INDEX ON :Hort_Client(client);
 CREATE INDEX ON :Hort_Client(name);
 ```
