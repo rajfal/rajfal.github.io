@@ -12,9 +12,9 @@ I enjoy extracting, transforming and analysing recordsets from a variety of data
 
 One of my key strengths is posing questions that uncover what drives business systems and the people using them. 
 
-<b>However, as of early 2017</b>, I left the Relational world to venture out into the universe of Connected semantic databases and graphs.
+However, I left the Relational world to venture out into the universe of Connected semantic databases and graphs.
 
-<b>The technology I am exploring right now is Neo4j, and hence this is what Graphspace is all about.</b>
+<b>The technology I am exploring right now is Neo4j, and hence this is what ***Graph*{: style="color: red"}**space** is all about.</b>
 
 Enjoy!
 
