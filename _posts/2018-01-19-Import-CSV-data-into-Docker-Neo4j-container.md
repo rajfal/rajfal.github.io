@@ -62,8 +62,9 @@ sudo head -8 neo4j/import/soil_survey_import_to_neo4j_in_docker.cql
 // import Hort_Client nodes
 CREATE INDEX ON :Hort_Client(client);
 CREATE INDEX ON :Hort_Client(name);
-
 ```
+
+XX
 
 #### Running preliminary data exploration on **soil_survey.csv** with your [Neo4j Browser](http://localhost:7474/)
 
