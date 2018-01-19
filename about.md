@@ -14,7 +14,7 @@ One of my key strengths is posing questions that uncover what drives business sy
 
 However, I left the Relational world to venture out into the universe of Connected semantic databases and graphs.
 
-<b>The technology I am exploring is the **[Neo4j Graph Platform](https://neo4j.com)**, and hence this is what Graph*{: style="color: red"}****space** is all about.</b>
+<b>The technology I am exploring is the **[Neo4j Graph Platform](https://neo4j.com)**, and hence this is what ***Graph***{: style="color: red"}**space** is all about.</b>
 
 Enjoy!
 
