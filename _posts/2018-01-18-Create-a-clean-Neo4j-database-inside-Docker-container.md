@@ -119,7 +119,7 @@ sudo docker stop $(sudo docker ps -q --filter ancestor=neo4j:3.3)
 echo Now removing graph.db labels and property keys
 
 # remove all hanging labels and property kesys
-sudo rm -rf neo4j/data/graph.db
+sudo rm -rf neo4j/data/databases/graph.db
 
 sudo docker run --rm --publish=7474:7474 --publish=7687:7687 --volume=$HOME/neo4j/data:/data --volume=$HOME/neo4j/logs:/logs --volume=$HOME/neo4j/import:/var/lib/neo4j/import --volume=$HOME/neo4j/conf:/var/lib/neo4j/conf \
 neo4j:3.3
