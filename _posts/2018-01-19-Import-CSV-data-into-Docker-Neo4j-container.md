@@ -49,7 +49,7 @@ Hort_Client,Contractor,Region,Locality,Soil_Service,Solution,Soil_Issue,Date_Rep
 159,1091,Northbury,1516,22644,5397,Erosion,2007-05-07,2008-03-18,316
 ```
 Also:
-  : - importing ????  
+  : - importing  
 
 2. Confirm that the Cypher file, `soil_survey_import_to_neo4j_in_docker.cql`,  is in place
 ```bash
@@ -59,13 +59,13 @@ CREATE INDEX ON :Hort_Client(client);
 CREATE INDEX ON :Hort_Client(name);
 ```
 
-XY
+
 
 #### Running preliminary data exploration on **soil_survey.csv** with your [Neo4j Browser](http://localhost:7474/)
 
 **NB:** *Ensure you've parked your CSV file in `~/neo4j/import` and Neo4j service is running*{: style="color: red"}
 
-1. Count total number of lines. 
+3. Count total number of lines. 
 ```sql
 LOAD CSV WITH HEADERS FROM "file:///soil_survey_sample.csv" AS line
 WITH line
