@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Prepare a fresh Neo4j graph database inside a Docker container"
+title: "Create a clean Neo4j graph database inside a Docker container"
 comments: false
 description: "workaround on initializing a clean database inside a Neo4j container in Docker"
 categories: [neo4j, docker, graph.db]
@@ -108,11 +108,11 @@ We can also wrap all of the above commands related to inside a shell script adap
 echo Deleting all nodes and relationships from running Neo4j database
 
 # delete all nodes and relationships
-sudo docker exec -ti $(sudo docker ps --format \'{{.Names}}') bin/neo4j-shell -c "MATCH (n) DETACH DELETE n;"
+sudo docker exec -ti $(sudo docker ps --format '\{{.Names}}') bin/neo4j-shell -c "MATCH (n) DETACH DELETE n;"
 
 echo Stopping Neo4j Docker container
 
-# could also use sudo docker ps --format \'{{.ID}}' 
+# could also use sudo docker ps --format '\{{.ID}}' 
 # but that would assume that there is only a single Neo4j container running
 sudo docker stop $(sudo docker ps -q --filter ancestor=neo4j:3.3)
 
