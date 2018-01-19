@@ -100,7 +100,7 @@ Starting Neo4j.
 
 N.B.:
 
-We can also wrap all of the above commands related to inside a shell script adapted from StackOverflow[[^1]]
+We can also wrap all of the above commands inside a shell script adapted from StackOverflow[[^1]]
 ```bash
 #!/bin/sh
 # script for clearing local graph.db database linked to Docker Neo4j container
