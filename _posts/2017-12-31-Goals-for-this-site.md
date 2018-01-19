@@ -9,7 +9,7 @@ keywords: "neo4j, docker, csv, data import, data conversion, data model, graph d
 
 ### Import Relational data into a Connected graph
 
-**From denormalized MySQL data ...**
+#### From denormalized MySQL data ... #####
 
 ```bash
 +-------------+------------+----------+----------+--------------+----------+------------+---------------+---------------+--------------+
@@ -21,7 +21,7 @@ keywords: "neo4j, docker, csv, data import, data conversion, data model, graph d
 +-------------+------------+----------+----------+--------------+----------+------------+---------------+---------------+--------------+
 3 rows in set (0.00 sec)
 ```
-**... to this graph schema in Neo4j running in a Docker container**
+#### ... to this graph schema in Neo4j running in a Docker container ####
 Soil Survey meta-graph:  
   : - ![Soil Survey meta-graph](/assets/images/soil_survey_meta_graph.png)
 ---
