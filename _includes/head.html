@@ -7,7 +7,7 @@
   {% assign page_title = '' %}
   {% if page.title == "Home" %}
       {% capture page_title %}
-        <span style='color:red'>{{ site.title }}</span>{{ site.title2 }} | {{ site.description }}
+        {{ site.title }}{{ site.title2 }} | {{ site.description }}
         {%if paginator and paginator.page != 1 %} - {{ paginator.page }}{% endif %}
       {% endcapture %}
   {% else %}
