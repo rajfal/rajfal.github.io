@@ -41,51 +41,29 @@ There are a number of tools that we can use to import external data into a Neo4j
 
 #### How to import data into Neo4j using neo4j-shell
 
-1. Confirm that your import CSV file is in place
+1. Confirm that your import CSV file, `soil_survey_sample.csv`, is in place
 ```bash
-sudo head -3 neo4j/import/soil_survey.csv 
+sudo head -3 neo4j/import/soil_survey_sample.csv 
 Hort_Client,Contractor,Region,Locality,Soil_Service,Solution,Soil_Issue,Date_Reported,Date_Actioned,DaysToAction
 159,1091,Northbury,3656,54593,5397,Erosion,2007-05-07,2008-02-18,287
 159,1091,Northbury,1516,22644,5397,Erosion,2007-05-07,2008-03-18,316
 ```
 Also:
-  : - importing `Hort_Client` nodes  
+  : - importing ????  
 
-2. Confirm that your import Cypher file is in place
+2. Confirm that your import Cypher file, `soil_survey_import_to_neo4j_in_docker.cql`,  is in place
 ```bash
+sudo head -8 neo4j/import/soil_survey_import_to_neo4j_in_docker.cql 
+// '----start---of---import---'
+
+// This file is to be used for Docker installation of Neo4j
+
+
+// import Hort_Client nodes
+CREATE INDEX ON :Hort_Client(client);
+CREATE INDEX ON :Hort_Client(name);
 
 ```
-
-```sql
-// import Soil_Service nodes
-CREATE INDEX ON :Soil_Service(ss_id);
-CREATE INDEX ON :Soil_Service(name);
-
-USING PERIODIC COMMIT 1000
-LOAD CSV WITH HEADERS FROM "file:///soil_survey.csv" AS line
-WITH line LIMIT 10000
-MERGE (ss:Soil_Service {ss_id: line.Soil_Service, name: '_' + line.Soil_Service});
-```
-Also:
-  : - as above but import `Soil_Service` nodes
-
-```sql
-// Hort_Client-->Soil_Service
-
-USING PERIODIC COMMIT 1000
-LOAD CSV WITH HEADERS FROM "file:///soil_survey.csv" AS line
-WITH line LIMIT 10000
-MATCH (hc:Hort_Client {client: line.Hort_Client})
-MATCH (ss:Soil_Service {ss_id: line.Soil_Service})
-MERGE (hc)-[:REQUESTS]->(ss);
-```
-Also:  
-  : - `MATCH` - locate `Hort_Client` and `Soil_Service` nodes whose properties match the values of the current file line being read in  
-  : - `MERGE (hc)-[:REQUESTS]->(ss)` - once the two above nodes are found, create a relationship between them, labelled `REQUESTS`
-  : - import/ stores files, such as Json or CSV, that you can import to graph. I also put my Cypher scripts in here. More on that later
-  : - conf/ stores a customised neo4j.conf file. More later about modifying specific settings
-  
-The resulting Cypher file will be a series of statements that will index node properties, create nodes and build relationships between them.  
 
 #### Running preliminary data exploration on **soil_survey.csv** with your [Neo4j Browser](http://localhost:7474/)
 
