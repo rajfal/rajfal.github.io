@@ -32,7 +32,7 @@ sass:
 author:
   name     : "Rafał"
   job      : "Graph Data Engineer"
-  bio      : "I explore a semantic database called Neo4j ... where Connected is more meaningful than Related ..."
+  bio      : "I am an explorer of semantic graph databases where Connected is more meaningful than Related ..."
   thumb    : /images/author.jpg
   #email    : hnrird@gmail.com
   url      : http://rajfal.github.io
