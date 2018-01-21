@@ -84,7 +84,7 @@ Also:
   : - in this instance you are wanting nifty_yalow as the name of this container. This reference will be used in other Docker container operations
   : - OR a faster solution
   ```bash
-  sudo docker ps --format '{% raw %}{{.Names}}{% endraw %}')
+  sudo docker ps --format '{% raw %}{{.Names}}{% endraw %}'
   nifty_yalow
   ```
   
