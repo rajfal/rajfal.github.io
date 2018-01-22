@@ -31,15 +31,15 @@ Another limit we can place is that a Contractor must not extend its operation ac
 ```sql
 MATCH (n:Hort_Client)<-[:SENT_TO]-(:Soil_Report)<-[:ACTIONS]-(:Contractor)-[:OPERATES_IN]->(m:Region)
 WITH n.name as hort_name, n.client as sorting, count(DISTINCT m.name) as region_no, 
-collect(DISTINCT m.name) AS regions
+collect(DISTINCT m.name) AS region_list
 WHERE region_no > 1
-RETURN hort_name, region_no, regions 
+RETURN hort_name, region_no, region_list 
 ORDER BY sorting;
 ```
 Output:  
   : - ```bash
 ╒═══════════╤═══════════╤════════════════════════════════════╕
-│"hort_name"│"region_no"│"regions"                           │
+│"hort_name"│"region_no"│"region_list"                       │
 ╞═══════════╪═══════════╪════════════════════════════════════╡
 │"hc_157"   │3          │["Northbury","Swifford","Eastling"] │
 ├───────────┼───────────┼────────────────────────────────────┤
@@ -50,15 +50,16 @@ Output:
 2. Find all contractors  who worked  for  more than  two  clients. Licenses specify a max client permit only
 ```sql
 MATCH (n:Hort_Client)<-[:SENT_TO]-(:Soil_Report)<-[:ACTIONS]-(c:Contractor)
-WITH c.name as contractor, c.c_id as cid, count(DISTINCT n.name) as no_clients, collect(DISTINCT n.name) AS clients
+WITH c.name as contractor, c.c_id as sorting, count(DISTINCT n.name) as no_clients, 
+collect(DISTINCT n.name) AS client_list
 WHERE no_clients > 1
 RETURN contractor, no_clients, clients 
-ORDER BY cid;
+ORDER BY sorting;
 ```
 Output:  
   : - ```bash
 ╒═════════════╤════════════╤═══════════════════╕
-│"contractor" │"no_clients"│"clients"          │
+│"contractor" │"no_clients"│"client_list"      │
 ╞═════════════╪════════════╪═══════════════════╡
 │"contra_1250"│2           │["hc_160","hc_167"]│
 └─────────────┴────────────┴───────────────────┘
