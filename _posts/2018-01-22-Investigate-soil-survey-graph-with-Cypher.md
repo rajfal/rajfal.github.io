@@ -30,20 +30,20 @@ Another limit we can place is that a Contractor must not extend its operation ac
 1. Find all hort firms  who've hired contractors from  more than in one region. Licenses specify a single region permit only
 ```sql
 MATCH (n:Hort_Client)<-[:SENT_TO]-(:Soil_Report)<-[:ACTIONS]-(:Contractor)-[:OPERATES_IN]->(m:Region)
-WITH n, count(DISTINCT m.name) as region_no, collect(DISTINCT m.name) AS regions
+WITH n.name as hort_name, n.client as sorting, count(DISTINCT m.name) as region_no, collect(DISTINCT m.name) AS regions
 WHERE region_no > 1
-RETURN n.client, region_no, regions 
-ORDER BY n.client ;
+RETURN hort_name, region_no, regions 
+ORDER BY sorting;
 ```
 Output:  
   : - ```bash
-╒══════════╤═══════════╤════════════════════════════════════╕
-│"n.client"│"region_no"│"regions"                           │
-╞══════════╪═══════════╪════════════════════════════════════╡
-│"157"     │3          │["Northbury","Swifford","Eastling"] │
-├──────────┼───────────┼────────────────────────────────────┤
-│"171"     │3          │["Northbury","Swifford","Westshire"]│
-└──────────┴───────────┴────────────────────────────────────┘
+╒═══════════╤═══════════╤════════════════════════════════════╕
+│"hort_name"│"region_no"│"regions"                           │
+╞═══════════╪═══════════╪════════════════════════════════════╡
+│"hc_157"   │3          │["Northbury","Swifford","Eastling"] │
+├───────────┼───────────┼────────────────────────────────────┤
+│"hc_171"   │3          │["Northbury","Swifford","Westshire"]│
+└───────────┴───────────┴────────────────────────────────────┘
 ```
 
 2. Find all contractors  who worked  for  more than  two  clients. Licenses specify a max client permit only
