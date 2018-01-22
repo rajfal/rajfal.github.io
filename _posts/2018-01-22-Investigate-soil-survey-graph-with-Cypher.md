@@ -9,7 +9,9 @@ keywords: "neo4j, Cypher, data exploration, cypher query, cypher statements, dat
 ---
 
 > #### *Prerequisites:*{: style="color: red"}
-> - [sample soil survey data loaded into a Neo4j graph](/2018/Import-CSV-data-into-Docker-Neo4j-container/)---
+> - [sample soil survey data loaded into a Neo4j graph](/2018/Import-CSV-data-into-Docker-Neo4j-container/)
+
+---
 
 #### Background
 
