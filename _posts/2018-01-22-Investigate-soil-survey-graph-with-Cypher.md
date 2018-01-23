@@ -27,12 +27,12 @@ Another limit we can place is that a Contractor must not extend its operation ac
 
 #### Exploring specifics
 
-1. Find all hort firms  who've hired contractors from  more than in one region. Licenses specify a single region permit only
+1. Find all hort firms  who've hired contractors from  more than in one region. Regulations require that a hort firm only uses a single contractor.
 ```sql
 MATCH (n:Hort_Client)<-[:SENT_TO]-(:Soil_Report)<-[:ACTIONS]-(:Contractor)-[:OPERATES_IN]->(m:Region)
 WITH n.name as hort_name, n.client as sorting, count(DISTINCT m.name) as no_regions, 
 collect(DISTINCT m.name) AS region_list
-WHERE region_no > 1
+WHERE no_regions > 1
 RETURN hort_name, no_regions, region_list 
 ORDER BY sorting;
 ```
@@ -46,8 +46,21 @@ Output:
 │"hc_171"   │3           │["Northbury","Swifford","Westshire"]│
 └───────────┴────────────┴────────────────────────────────────┘
 ```
+Also:
+  : - graph to expose the above patterns
+  ```sql
+  MATCH (n:Hort_Client)<-[:SENT_TO]-(:Soil_Report)<-[:ACTIONS]-(:Contractor)-[:OPERATES_IN]->(m:Region)
+WITH n.name as hort_name, count(DISTINCT m.name) as no_regions
+WHERE no_regions > 1
+WITH hort_name
+MATCH path = shortestPath((n1:Hort_Client)-[*1..3]-(m1:Region))
+WHERE n1.name = hort_name
+RETURN DISTINCT path; 
+  ```
+  : - ![Hort_Client with many regions](/assets/images/soil_survey_hort_firm_sourcing_contracts_from_many_regions.png)
 
-2. Find all contractors  who worked  for  more than  two  clients. Licenses specify a max client permit only
+
+2. Find all contractors  who worked  for  more than  X  clients. Regulations specify a max number of clients only. In this sample of records, we'll set X = 1
 ```sql
 MATCH (n:Hort_Client)<-[:SENT_TO]-(:Soil_Report)<-[:ACTIONS]-(c:Contractor)
 WITH c.name as contractor, c.c_id as sorting, count(DISTINCT n.name) as no_clients, 
@@ -67,9 +80,10 @@ Output:
 Also:
   : - graph that illustrates the above table
   ```sql
-WITH c.name as contractor, c.c_id as cid, count(DISTINCT n.name) as no_clients, collect(DISTINCT n.name) AS clients
+MATCH (n:Hort_Client)<-[:SENT_TO]-(:Soil_Report)<-[:ACTIONS]-(c:Contractor)
+WITH c.name as contractor, count(DISTINCT n.name) as no_clients
 WHERE no_clients > 1
-WITH contractor, clients
+WITH contractor
 MATCH path = shortestPath((n1:Hort_Client)<-[*1..2]-(c1:Contractor))
 WHERE c1.name = contractor
 RETURN DISTINCT path;
