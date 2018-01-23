@@ -64,8 +64,21 @@ Output:
 │"contra_1250"│2           │["hc_160","hc_167"]│
 └─────────────┴────────────┴───────────────────┘
 ```
+Also:
+  : - graph that illustrates the above table
+  ```sql
+WITH c.name as contractor, c.c_id as cid, count(DISTINCT n.name) as no_clients, collect(DISTINCT n.name) AS clients
+WHERE no_clients > 1
+WITH contractor, clients
+MATCH path = shortestPath((n1:Hort_Client)<-[*1..2]-(c1:Contractor))
+WHERE c1.name = contractor
+RETURN DISTINCT path;
+  ```
+  : - ![Contractor with two clients](/assets/images/soil_survey_contra_and_two_clients.png)
   
-  
+ 
+ 
+ 
 ---
 ***we are defining business rules for the enterprises that generate and look where the rules are broken***{: style="color: green"}
 
