@@ -27,13 +27,12 @@ Another limit we can place is that a Contractor must not extend its operation ac
 
 #### Exploring specific scenarios where unexpected business activities take place
 
-** Business rule: any one `Hort_Client` can only hire a `Contractor` from its own and one region **
+** Business rule: a `Hort_Client` can hire any `Contractor` but only from its own and one region **
 
 1. Let's find hort firms that have hired contractors
   ```sql
-  WITH n.name as hort_name, count(DISTINCT m.name) as no_regions
-WHERE no_regions > 0
-WITH hort_name
+MATCH (n:Hort_Client)<-[:SENT_TO]-(:Soil_Report)<-[:ACTIONS]-(:Contractor)-[:OPERATES_IN]->(m:Region)
+WITH n.name as hort_name
 MATCH path = shortestPath((n1:Hort_Client)-[*1..3]-(m1:Region))
 WHERE n1.name = hort_name
 RETURN DISTINCT path;
@@ -42,7 +41,7 @@ RETURN DISTINCT path;
   : - `Hort_Client` nodes with associated `Contractor` nodes. But who are the culprits ignoring the regulations?
   ![Hort_Client with many regions](/assets/images/soil_survey_hort_firm_and_contractors.png)
   
-2. We can take a tabular approach to pin-pointing the related nodes of interest 
+2. We can take a tabular solution to pin-pointing the related nodes of interest 
   ```sql
 MATCH (n:Hort_Client)<-[:SENT_TO]-(:Soil_Report)<-[:ACTIONS]-(:Contractor)-[:OPERATES_IN]->(m:Region)
 WITH n.name as hort_name, n.client as sorting, count(DISTINCT m.name) as no_regions, 
@@ -64,7 +63,7 @@ ORDER BY sorting;
 
 3. Let's use a more incisive graph approach to show us the suspect relationships
   ```sql
-  MATCH (n:Hort_Client)<-[:SENT_TO]-(:Soil_Report)<-[:ACTIONS]-(:Contractor)-[:OPERATES_IN]->(m:Region)
+MATCH (n:Hort_Client)<-[:SENT_TO]-(:Soil_Report)<-[:ACTIONS]-(:Contractor)-[:OPERATES_IN]->(m:Region)
 WITH n.name as hort_name, count(DISTINCT m.name) as no_regions
 WHERE no_regions > 1
 WITH hort_name
@@ -76,7 +75,22 @@ RETURN DISTINCT path;
   : - it is *hc_157*{: style="color: red"} and *hc_171*{: style="color: red"} who've done cross-border deals
   ![Hort_Client with many regions](/assets/images/soil_survey_hort_firm_sourcing_contracts_from_many_regions.png)
   
-2. Find all contractors  who worked  for  more than  X  clients. Regulations specify a max number of clients only. In this sample of records, we'll set X = 1
+** Business rule: a `Contractor` can have no more than X `Hort_Client`s **
+
+1. See contractors and their clients
+  ```sql
+MATCH (n:Hort_Client)<-[:SENT_TO]-(:Soil_Report)<-[:ACTIONS]-(c:Contractor)
+WITH c.name as contractor
+MATCH path = shortestPath((n1:Hort_Client)<-[*1..2]-(c1:Contractor))
+WHERE c1.name = contractor
+RETURN DISTINCT path;
+  ```
+  Output:
+  : - Displaying `Contractor`s and their `Hort_Client` nodes. But are there any contractors who contravene the rules?
+  ![Contractors and their Hort_Clients](/assets/images/soil_survey_contractors_and_hort_firms.png)
+  
+
+2. Find all contractors  who worked for more than X clients. For this sample of records, we'll set X = 1
 ```sql
 MATCH (n:Hort_Client)<-[:SENT_TO]-(:Soil_Report)<-[:ACTIONS]-(c:Contractor)
 WITH c.name as contractor, c.c_id as sorting, count(DISTINCT n.name) as no_clients, 
