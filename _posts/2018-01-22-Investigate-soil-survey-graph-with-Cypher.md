@@ -125,7 +125,7 @@ RETURN DISTINCT path;
  
  
 ---
-***we are defining business rules for the enterprises that generate and look where the rules are broken***{: style="color: green"}
+***We have defined some business rules by which the data must play. However, we used a number of Cypher queries to look where those rules are broken***{: style="color: green"}
 
 ---
 [Back to top of page](#)
