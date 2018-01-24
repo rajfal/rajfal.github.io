@@ -27,7 +27,7 @@ Another limit we can place is that a Contractor must not extend its operation ac
 
 #### Exploring specific scenarios where unexpected business activities take place
 
-> Business rule: a `Hort_Client` can hire any `Contractor` but only from its own and one region
+> *Business rule: a `Hort_Client` can hire any `Contractor` but only from its own and one region*{: style="color: blue"}
 
 1. Let's find hort firms that have hired contractors
   ```sql
@@ -75,7 +75,7 @@ RETURN DISTINCT path;
   : - it is *hc_157*{: style="color: red"} and *hc_171*{: style="color: red"} who've done cross-border deals
   ![Hort_Client with many regions](/assets/images/soil_survey_hort_firm_sourcing_contracts_from_many_regions.png)
   
-> Business rule: a `Contractor` can have no more than X `Hort_Client`s
+> *Business rule: a `Contractor` can have no more than X `Hort_Client`s*{: style="color: blue"}
 
 1. See contractors and their clients
   ```sql
