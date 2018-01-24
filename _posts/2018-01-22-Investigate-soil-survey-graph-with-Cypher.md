@@ -27,7 +27,7 @@ Another limit we can place is that a Contractor must not extend its operation ac
 
 #### Exploring specific scenarios where unexpected business activities take place
 
-** Business rule: a `Hort_Client` can hire any `Contractor` but only from its own and one region **
+#### Business rule: a `Hort_Client` can hire any `Contractor` but only from its own and one region
 
 1. Let's find hort firms that have hired contractors
   ```sql
@@ -75,7 +75,7 @@ RETURN DISTINCT path;
   : - it is *hc_157*{: style="color: red"} and *hc_171*{: style="color: red"} who've done cross-border deals
   ![Hort_Client with many regions](/assets/images/soil_survey_hort_firm_sourcing_contracts_from_many_regions.png)
   
-** Business rule: a `Contractor` can have no more than X `Hort_Client`s **
+#### Business rule: a `Contractor` can have no more than X `Hort_Client`s
 
 1. See contractors and their clients
   ```sql
@@ -90,7 +90,7 @@ RETURN DISTINCT path;
   ![Contractors and their Hort_Clients](/assets/images/soil_survey_contractors_and_hort_firms.png)
   
 
-2. Find all contractors  who worked for more than X clients. For this sample of records, we'll set X = 1
+2. We can see the related nodes of interest in a table that shows us contractors  who worked for more than X clients. For this sample of records, we'll set X = 1
 ```sql
 MATCH (n:Hort_Client)<-[:SENT_TO]-(:Soil_Report)<-[:ACTIONS]-(c:Contractor)
 WITH c.name as contractor, c.c_id as sorting, count(DISTINCT n.name) as no_clients, 
@@ -107,8 +107,8 @@ Output:
 │"contra_1250"│2           │["hc_160","hc_167"]│
 └─────────────┴────────────┴───────────────────┘
 ```
-Also:
-  : - graph that illustrates the above table
+
+3. A more direct graph view will disclose the suspect activities
   ```sql
 MATCH (n:Hort_Client)<-[:SENT_TO]-(:Soil_Report)<-[:ACTIONS]-(c:Contractor)
 WITH c.name as contractor, count(DISTINCT n.name) as no_clients
@@ -116,11 +116,12 @@ WHERE no_clients > 1
 WITH contractor
 MATCH path = shortestPath((n1:Hort_Client)<-[*1..2]-(c1:Contractor))
 WHERE c1.name = contractor
-RETURN DISTINCT path;
+RETURN DISTINCT path; 
   ```
-  : - ![Contractor with two clients](/assets/images/soil_survey_contra_and_two_clients.png)
+  Output:
+  : - it is *contra_1250*{: style="color: red"} who is moonshining for another `Hort_Client`
+  ![Hort_Client with many regions](/assets/images/soil_survey_contra_and_two_clients.png)
   
- 
  
  
 ---
