@@ -27,12 +27,22 @@ Another limit we can place is that a Contractor must not extend its operation ac
 
 #### Exploring specific scenarios where unexpected business activities take place
 
-1. Find all hort firms  who've hired contractors from  more than in one region. Regulations require that a hort firm only uses a contractor from a single region; presumably where `Hort_Client` itself is located.
-  Also:
-  : - `Hort_Client` nodes with associated `Contractor` nodes - who are the culprits ignoring the regulations?
+** Business rule: any one `Hort_Client` can only hire a `Contractor` from its own and one region **
+
+1. Let's find hort firms that have hired contractors
+  ```sql
+  WITH n.name as hort_name, count(DISTINCT m.name) as no_regions
+WHERE no_regions > 0
+WITH hort_name
+MATCH path = shortestPath((n1:Hort_Client)-[*1..3]-(m1:Region))
+WHERE n1.name = hort_name
+RETURN DISTINCT path;
+  ```
+  Output:
+  : - `Hort_Client` nodes with associated `Contractor` nodes. But who are the culprits ignoring the regulations?
   ![Hort_Client with many regions](/assets/images/soil_survey_hort_firm_and_contractors.png)
   
-  : - we can take a tabular approach to pin-pointing the related nodes of interest 
+2. We can take a tabular approach to pin-pointing the related nodes of interest 
   ```sql
 MATCH (n:Hort_Client)<-[:SENT_TO]-(:Soil_Report)<-[:ACTIONS]-(:Contractor)-[:OPERATES_IN]->(m:Region)
 WITH n.name as hort_name, n.client as sorting, count(DISTINCT m.name) as no_regions, 
@@ -40,7 +50,7 @@ collect(DISTINCT m.name) AS region_list
 WHERE no_regions > 1
 RETURN hort_name, no_regions, region_list 
 ORDER BY sorting;
-```
+  ```
   Output:  
   : - ```bash
 ╒═══════════╤════════════╤════════════════════════════════════╕
@@ -51,7 +61,8 @@ ORDER BY sorting;
 │"hc_171"   │3           │["Northbury","Swifford","Westshire"]│
 └───────────┴────────────┴────────────────────────────────────┘
 ```
-  : - or use a more incisive graph approach to identify the suspect relationships
+
+3. Let's use a more incisive graph approach to show us the suspect relationships
   ```sql
   MATCH (n:Hort_Client)<-[:SENT_TO]-(:Soil_Report)<-[:ACTIONS]-(:Contractor)-[:OPERATES_IN]->(m:Region)
 WITH n.name as hort_name, count(DISTINCT m.name) as no_regions
