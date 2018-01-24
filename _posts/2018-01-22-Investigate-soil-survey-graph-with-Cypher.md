@@ -47,7 +47,10 @@ Output:
 └───────────┴────────────┴────────────────────────────────────┘
 ```
 Also:
-  : - graph to expose the above patterns
+  : - `Hort_Client` nodes with associated `Contractor` nodes - who are the culprits?
+  ![Hort_Client with many regions](/assets/images/soil_survey_hort_firm_and_contractors.png)
+  
+  : - graph to expose the suspect relationships
   ```sql
   MATCH (n:Hort_Client)<-[:SENT_TO]-(:Soil_Report)<-[:ACTIONS]-(:Contractor)-[:OPERATES_IN]->(m:Region)
 WITH n.name as hort_name, count(DISTINCT m.name) as no_regions
@@ -58,8 +61,7 @@ WHERE n1.name = hort_name
 RETURN DISTINCT path; 
   ```
   : - ![Hort_Client with many regions](/assets/images/soil_survey_hort_firm_sourcing_contracts_from_many_regions.png)
-
-
+  
 2. Find all contractors  who worked  for  more than  X  clients. Regulations specify a max number of clients only. In this sample of records, we'll set X = 1
 ```sql
 MATCH (n:Hort_Client)<-[:SENT_TO]-(:Soil_Report)<-[:ACTIONS]-(c:Contractor)
