@@ -25,10 +25,15 @@ Let's say that any horticultural enterprise must not be found to hire contractin
 
 Another limit we can place is that a Contractor must not extend its operation across some minimum number of clients. THe idea here is that each Contractor must maintain a minimum of familiarity with a given property and can not sacrifice that aspect of its business in preference to simply maximising its income across as many clients as possible but not retaining any detailed property knowledge...
 
-#### Exploring specifics
+#### Exploring specific scenarios where unexpected business activities take place
 
-1. Find all hort firms  who've hired contractors from  more than in one region. Regulations require that a hort firm only uses a single contractor.
-```sql
+1. Find all hort firms  who've hired contractors from  more than in one region. Regulations require that a hort firm only uses a contractor from a single region; presumably where `Hort_Client` itself is located.
+  Also:
+  : - `Hort_Client` nodes with associated `Contractor` nodes - who are the culprits ignoring the regulations?
+  ![Hort_Client with many regions](/assets/images/soil_survey_hort_firm_and_contractors.png)
+  
+  : - we can take a tabular approach to pin-pointing the related nodes of interest 
+  ```sql
 MATCH (n:Hort_Client)<-[:SENT_TO]-(:Soil_Report)<-[:ACTIONS]-(:Contractor)-[:OPERATES_IN]->(m:Region)
 WITH n.name as hort_name, n.client as sorting, count(DISTINCT m.name) as no_regions, 
 collect(DISTINCT m.name) AS region_list
@@ -36,7 +41,7 @@ WHERE no_regions > 1
 RETURN hort_name, no_regions, region_list 
 ORDER BY sorting;
 ```
-Output:  
+  Output:  
   : - ```bash
 ╒═══════════╤════════════╤════════════════════════════════════╕
 │"hort_name"│"no_regions"│"region_list"                       │
@@ -46,11 +51,7 @@ Output:
 │"hc_171"   │3           │["Northbury","Swifford","Westshire"]│
 └───────────┴────────────┴────────────────────────────────────┘
 ```
-Also:
-  : - `Hort_Client` nodes with associated `Contractor` nodes - who are the culprits?
-  ![Hort_Client with many regions](/assets/images/soil_survey_hort_firm_and_contractors.png)
-  
-  : - graph to expose the suspect relationships
+  : - or use a more incisive graph approach to identify the suspect relationships
   ```sql
   MATCH (n:Hort_Client)<-[:SENT_TO]-(:Soil_Report)<-[:ACTIONS]-(:Contractor)-[:OPERATES_IN]->(m:Region)
 WITH n.name as hort_name, count(DISTINCT m.name) as no_regions
