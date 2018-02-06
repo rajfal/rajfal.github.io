@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Investigate soil survey graph with Cypher"
+title: "Investigate graph data anomalies with Cypher"
 comments: false
 description: "Cypher queries to explore data in Neo4j"
 categories: [neo4j, Cypher, data analysis]
