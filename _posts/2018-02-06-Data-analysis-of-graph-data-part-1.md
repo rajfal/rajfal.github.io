@@ -19,9 +19,9 @@ The other day I came across the post about [Getting Started with Data Analysis u
 
 It inspired me to look at the Soil Survey data and come up with different ways of analyzing the graph. I am going to dive straight into Cypher and explain what different statements aim to do as we go along.
 
-#### 1. Obtain summary information
-
 > *Business rule: a `Hort_Client` can hire any `Contractor` but only from its own and one region*{: style="color: blue"}
+
+#### 1. Obtain summary information
 
 1. Let's find how many properties are in the survey data, how many different soil conditions have been found, what are they and how many soil tests have been performed.
   ```sql
@@ -30,44 +30,64 @@ RETURN count(DISTINCT h.name) as no_properties, count(DISTINCT s) as no_soil_iss
 collect(DISTINCT s.type) as soil_issues_present, count(DISTINCT ss) as no_analyses_completed
   ```
   Output:  
-  : - ```bash
-╒═══════════════╤════════════════╤══════════════════════════════════════════════════════════════════════╤═══════════════════════╕
-│"no_properties"│"no_soil_issues"│"soil_issues_present"                                                 │"no_analyses_completed"│
-╞═══════════════╪════════════════╪══════════════════════════════════════════════════════════════════════╪═══════════════════════╡
-│21             │12              │["Erosion","LowOrganicMatter","Acidification","Compaction","LowOrganic│2670                   │
-│               │                │Biota","HighAlkalinity","Impermeable","HeavyMetalContamination","LowPh│                       │
-│               │                │osphorus","Salinity","LowNitrogen","LowPotassium"]                    │                       │
-└───────────────┴────────────────┴──────────────────────────────────────────────────────────────────────┴───────────────────────┘
+ ```bash
+╒═══════════════╤══════════════════════════╤═════════════════════════════╤═══════════════════════╕
+│"no_properties"│"soil_issues_investigated"│"soil_issues_present"        │"no_analyses_completed"│
+╞═══════════════╪══════════════════════════╪═════════════════════════════╪═══════════════════════╡
+│21             │12                        │["Erosion","LowOrganicMatter"│2670                   │
+│               │                          │,"Acidification","Compaction"│                       │
+│               │                          │,"LowOrganicBiota","HighAlkal│                       │
+│               │                          │inity","Impermeable","HeavyMe│                       │
+│               │                          │talContamination","LowPhospho│                       │
+│               │                          │rus","Salinity","LowNitrogen"│                       │
+│               │                          │,"LowPotassium"]             │                       │
+└───────────────┴──────────────────────────┴─────────────────────────────┴───────────────────────┘
 ```
 
-3. Let's use a more incisive graph approach to show us the suspect relationships
-  ```sql
-MATCH (n:Hort_Client)<-[:SENT_TO]-(:Soil_Report)<-[:ACTIONS]-(:Contractor)-[:OPERATES_IN]->(m:Region)
-WITH n.name as hort_name, count(DISTINCT m.name) as no_regions
-WHERE no_regions > 1
-WITH hort_name
-MATCH path = shortestPath((n1:Hort_Client)-[*1..3]-(m1:Region))
-WHERE n1.name = hort_name
-RETURN DISTINCT path; 
-  ```
-  Output:
-  : - it is *hc_157*{: style="color: red"} and *hc_171*{: style="color: red"} who've done cross-border deals
-  ![Hort_Client with many regions](/assets/images/soil_survey_hort_firm_sourcing_contracts_from_many_regions.png)
-  
-> *Business rule: a `Contractor` can have no more than X `Hort_Client`s*{: style="color: blue"}
+#### 2. What is the frequency of specific soil issues?
 
-1. See contractors and their clients
+1. Now that we know what kind of soil problems exists in our survey data, let's seek how often each one occurs and list properties at which they are common.
   ```sql
-MATCH (n:Hort_Client)<-[:SENT_TO]-(:Soil_Report)<-[:ACTIONS]-(c:Contractor)
-WITH c.name as contractor
-MATCH path = shortestPath((n1:Hort_Client)<-[*1..2]-(c1:Contractor))
-WHERE c1.name = contractor
-RETURN DISTINCT path;
+MATCH (h:Hort_Client)-[:HAS]->(s:Soil_Issue)
+RETURN s.type as soil_condition, count(h.name) as frequency, collect(h.name) as properties
+ORDER BY frequency DESC
   ```
-  Output:
-  : - Displaying `Contractor`s and their `Hort_Client` nodes. But are there any contractors who contravene the rules?
-  ![Contractors and their Hort_Clients](/assets/images/soil_survey_contractors_and_hort_firms.png)
-  
+  Output:  
+ ```bash
+╒═════════════════════════╤═══════════╤══════════════════════════════════════════════════════════════════════╕
+│"soil_condition"         │"frequency"│"properties"                                                          │
+╞═════════════════════════╪═══════════╪══════════════════════════════════════════════════════════════════════╡
+│"Erosion"                │20         │["hc_162","hc_167","hc_171","hc_175","hc_159","hc_174","hc_161","hc_16│
+│                         │           │6","hc_164","hc_173","hc_157","hc_158","hc_168","hc_170","hc_163","hc_│
+│                         │           │155","hc_165","hc_172","hc_160","hc_169"]                             │
+├─────────────────────────┼───────────┼──────────────────────────────────────────────────────────────────────┤
+│"Compaction"             │14         │["hc_175","hc_163","hc_167","hc_171","hc_165","hc_168","hc_160","hc_17│
+│                         │           │0","hc_161","hc_158","hc_155","hc_172","hc_169","hc_174"]             │
+├─────────────────────────┼───────────┼──────────────────────────────────────────────────────────────────────┤
+│"HighAlkalinity"         │13         │["hc_175","hc_169","hc_163","hc_159","hc_166","hc_168","hc_156","hc_17│
+│                         │           │2","hc_170","hc_155","hc_162","hc_165","hc_171"]                      │
+├─────────────────────────┼───────────┼──────────────────────────────────────────────────────────────────────┤
+│"LowOrganicBiota"        │8          │["hc_175","hc_168","hc_169","hc_170","hc_159","hc_172","hc_174","hc_15│
+│                         │           │8"]                                                                   │
+├─────────────────────────┼───────────┼──────────────────────────────────────────────────────────────────────┤
+│"LowOrganicMatter"       │8          │["hc_167","hc_170","hc_163","hc_168","hc_161","hc_162","hc_169","hc_16│
+│                         │           │5"]                                                                   │
+├─────────────────────────┼───────────┼──────────────────────────────────────────────────────────────────────┤
+│"LowPhosphorus"          │7          │["hc_164","hc_174","hc_166","hc_162","hc_165","hc_157","hc_175"]      │
+├─────────────────────────┼───────────┼──────────────────────────────────────────────────────────────────────┤
+│"Acidification"          │5          │["hc_171","hc_166","hc_156","hc_164","hc_167"]                        │
+├─────────────────────────┼───────────┼──────────────────────────────────────────────────────────────────────┤
+│"Salinity"               │3          │["hc_155","hc_158","hc_172"]                                          │
+├─────────────────────────┼───────────┼──────────────────────────────────────────────────────────────────────┤
+│"LowPotassium"           │1          │["hc_165"]                                                            │
+├─────────────────────────┼───────────┼──────────────────────────────────────────────────────────────────────┤
+│"LowNitrogen"            │1          │["hc_175"]                                                            │
+├─────────────────────────┼───────────┼──────────────────────────────────────────────────────────────────────┤
+│"HeavyMetalContamination"│1          │["hc_157"]                                                            │
+├─────────────────────────┼───────────┼──────────────────────────────────────────────────────────────────────┤
+│"Impermeable"            │1          │["hc_158"]                                                            │
+└─────────────────────────┴───────────┴──────────────────────────────────────────────────────────────────────┘
+```
 
 2. We can see the related nodes of interest in a table that shows us contractors  who worked for more than X clients. For this sample of records, we'll set X = 1
 ```sql
