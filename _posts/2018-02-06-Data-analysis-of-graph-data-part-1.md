@@ -27,7 +27,7 @@ MATCH (h:Hort_Client)-[:HAS]->(s:Soil_Issue)<-[:INVESTIGATES]-(ss:Soil_Service)
 RETURN count(DISTINCT h.name) as no_properties, count(DISTINCT s) as no_soil_issues,
 collect(DISTINCT s.type) as soil_issues_present, count(DISTINCT ss) as no_analyses_completed
   ```
-__Output:__
+__Output__
     
  ```bash
 ╒═══════════════╤══════════════════════════╤═════════════════════════════╤═══════════════════════╕
