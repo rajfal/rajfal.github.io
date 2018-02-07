@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "How to tweak Cypher queries to improve data retrieval speeds by more than 500%"
+title: "How to tweak Cypher to boost your queries by more than 500%"
 comments: false
 description: "Comparing Cypher pattern paths to improve data result performance"
 categories: [neo4j, Cypher, query performance]
