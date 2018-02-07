@@ -19,8 +19,6 @@ The other day I came across the post about [Getting Started with Data Analysis u
 
 It inspired me to look at the Soil Survey data and come up with different ways of analyzing the graph. I am going to dive straight into Cypher and explain what different statements aim to do as we go along.
 
-> *Business rule: a `Hort_Client` can hire any `Contractor` but only from its own and one region*{: style="color: blue"}
-
 #### 1. Obtain summary information
 
 1. Let's find how many properties are in the survey data, how many different soil conditions have been found, what are they and how many soil tests have been performed.
@@ -88,9 +86,9 @@ ORDER BY frequency DESC
 │"Impermeable"            │1          │["hc_158"]                                                            │
 └─────────────────────────┴───────────┴──────────────────────────────────────────────────────────────────────┘
 ```
-#### 3. What is the frequency of specific soil conditions at a given `Hort_Client` site?
+#### 3. What is the frequency of specific soil conditions at a horticultural site?
 
-1. Given a specific horticultural site, in this case `hc_175`, we want to get soil condition frequencies relevant to this property.
+1. Say that at `Hort_Client` property named `hc_175`, we want to get soil condition frequencies relevant to this property.
   ```sql
 MATCH (h:Hort_Client)-[:HAS]->(s:Soil_Issue)<-[:INVESTIGATES]-(ss:Soil_Service)<-[:REQUESTS]-(h:Hort_Client)
 WHERE h.name='hc_175'
@@ -115,7 +113,7 @@ ORDER BY h.name, no_found DESC
 │"hc_175"│"LowPhosphorus"  │3         │
 └────────┴─────────────────┴──────────┘
 ```
-#### 4. A tip that will improve your Cypher query performance by 200%?
+#### 4. A tip that will improve your Cypher query performance by over 1000%?
 
 1. Running different queries to obtain the above result, I noticed an intriguing relationship between node-relationship path definition and the speed at which the results were retrieved. Here, I am referring to the first line of the code above,
 ```sql
@@ -123,9 +121,9 @@ MATCH (h:Hort_Client)-[:HAS]->(s:Soil_Issue)<-[:INVESTIGATES]-(ss:Soil_Service)<
 ```
 While I used two other path configurations to get the same result they differed in performance. To illustrate performance of each path, I used the entire graph dataset.
 
-__Case I__
+__Case I - starting point__
 
-Here I am using a variable length path of between 1 and 2 relationships from `Soil_Issue` to `Hort_Client`.
+Using a variable length path of between 1 and 2 relationships from `Soil_Issue` to `Hort_Client`.
 
 ```sql
 MATCH (h:Hort_Client)-[:HAS]->(s:Soil_Issue)<-[*1..2]-(h:Hort_Client)
@@ -134,10 +132,12 @@ ORDER BY h.name, no_found DESC
 ```
 ```bash
 Started streaming 82 records after 231 ms and completed after 232 ms.
+Cypher version: CYPHER 3.3, planner: COST, runtime: INTERPRETED. 368963 total db hits in 211 ms.
 ```
-__Case II__
+__Case II - 580% improvement__
 
-Here I am using a variable length path of between 1 and 2 relationships from `Soil_Issue` to `Hort_Client`.
+Using a fixed length path of exactly 2 relationships from `Soil_Issue` to `Hort_Client`.
+We can also rewrite *[*2..2]* as *[*2]* 
 
 ```sql
 MATCH (h:Hort_Client)-[:HAS]->(s:Soil_Issue)<-[*2..2]-(h:Hort_Client)
@@ -146,17 +146,25 @@ ORDER BY h.name, no_found DESC
 ```
 ```bash
 Started streaming 82 records after 40 ms and completed after 40 ms.
+Cypher version: CYPHER 3.3, planner: COST, runtime: INTERPRETED. 54921 total db hits in 59 ms.
 ```
-__Case III__
+__Case III - 1100% improvement__
+
+Using relationships in any direction between `Soil_Service` and `Hort_Client`.
+
 ```sql
-MATCH (h:Hort_Client)-[:HAS]->(s:Soil_Issue)<-[:INVESTIGATES]-(ss:Soil_Service)--(h:Hort_Client)
+MATCH (h:Hort_Client)-[:HAS]->(s:Soil_Issue)<-[:INVESTIGATES]-(ss:Soil_Service){% raw %}--{% endraw %}(h:Hort_Client)
 RETURN h.name, s.type as soil_condition, count(s) as no_found
 ORDER BY h.name, no_found DESC
 ```
 ```bash
 Started streaming 82 records after 21 ms and completed after 21 ms. 
+Cypher version: CYPHER 3.3, planner: COST, runtime: INTERPRETED. 39639 total db hits in 22 ms.
 ```
-__Case IV__
+__Case IV - 1700% improvement__
+
+Using a fully declared path spanning all nodes and relationships of interest.
+
 ```sql
 MATCH (h:Hort_Client)-[:HAS]->(s:Soil_Issue)<-[:INVESTIGATES]-(ss:Soil_Service)<-[:REQUESTS]-(h:Hort_Client)
 RETURN h.name, s.type as soil_condition, count(s) as no_found
@@ -164,7 +172,9 @@ ORDER BY h.name, no_found DESC
 ```
 ```bash
 Started streaming 82 records after 13 ms and completed after 13 ms.
+Cypher version: CYPHER 3.3, planner: COST, runtime: INTERPRETED. 21299 total db hits in 14 ms.
 ```  
+> *Conclusion: to minimise time of data retrieval specify the nodes and relationships that make up your path pattern*{: style="color: blue"}
  
  
 ---
