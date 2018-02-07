@@ -1,11 +1,11 @@
 ---
 layout: post
-title: "Graph database data analysis, part 1"
+title: "Graph data analysis using collect(),count() and WHERE filter"
 comments: false
-description: "Cypher queries to analyze data in Neo4j"
+description: "Aggregate functions in Cypher queries to analyze Neo4j data in Neo4j"
 categories: [neo4j, Cypher, data analysis]
 tags: [neo4j, cypher, data import]
-keywords: "neo4j, Cypher, data exploration, cypher query, cypher statements, data analysis"
+keywords: "neo4j, Cypher, data exploration, cypher query, cypher statements, data analysis, collect(), count()"
 ---
 
 > #### *Prerequisites:*{: style="color: red"}
