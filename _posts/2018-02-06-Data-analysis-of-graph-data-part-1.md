@@ -28,7 +28,6 @@ RETURN count(DISTINCT h.name) as no_properties, count(DISTINCT s) as no_soil_iss
 collect(DISTINCT s.type) as soil_issues_present, count(DISTINCT ss) as no_analyses_completed
   ```
   Output:
-    :
     
  ```bash
 ╒═══════════════╤══════════════════════════╤═════════════════════════════╤═══════════════════════╕
