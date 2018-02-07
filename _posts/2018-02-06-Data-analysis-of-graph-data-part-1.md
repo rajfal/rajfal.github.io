@@ -113,7 +113,70 @@ ORDER BY h.name, no_found DESC
 │"hc_175"│"LowPhosphorus"  │3         │
 └────────┴─────────────────┴──────────┘
 ```
-#### 4. A tip that will improve your Cypher query performance by over 1000%?
+
+#### 4. Find the soil issues present for each `Hort_Client` and number of analyses done at each site, list the results in descending order of no_soil_analyses
+
+1. Say that at `Hort_Client` property named `hc_175`, we want to get soil condition frequencies relevant to this property.
+  ```sql
+MATCH (h:Hort_Client)-[:HAS]->(s:Soil_Issue)<-[:INVESTIGATES]-(ss:Soil_Service)<-[:REQUESTS]-(h:Hort_Client)
+RETURN h.name, collect(DISTINCT s.type) as soil_condition, count(ss) as no_soil_analyses
+ORDER BY no_soil_analyses DESC
+  ```
+  Output:  
+ ```bash
+╒════════╤══════════════════════════════════════════════════════════════════════╤══════════════════╕
+│"h.name"│"soil_condition"                                                      │"no_soil_analyses"│
+╞════════╪══════════════════════════════════════════════════════════════════════╪══════════════════╡
+│"hc_175"│["Erosion","Compaction","LowOrganicBiota","HighAlkalinity","LowPhospho│302               │
+│        │rus","LowNitrogen"]                                                   │                  │
+├────────┼──────────────────────────────────────────────────────────────────────┼──────────────────┤
+│"hc_168"│["Erosion","LowOrganicMatter","Compaction","LowOrganicBiota","HighAlka│261               │
+│        │linity"]                                                              │                  │
+├────────┼──────────────────────────────────────────────────────────────────────┼──────────────────┤
+│"hc_172"│["Erosion","Compaction","LowOrganicBiota","HighAlkalinity","Salinity"]│222               │
+├────────┼──────────────────────────────────────────────────────────────────────┼──────────────────┤
+│"hc_158"│["Erosion","Compaction","LowOrganicBiota","Impermeable","Salinity"]   │217               │
+├────────┼──────────────────────────────────────────────────────────────────────┼──────────────────┤
+│"hc_166"│["Erosion","Acidification","HighAlkalinity","LowPhosphorus"]          │188               │
+├────────┼──────────────────────────────────────────────────────────────────────┼──────────────────┤
+│"hc_169"│["Erosion","LowOrganicMatter","Compaction","LowOrganicBiota","HighAlka│182               │
+│        │linity"]                                                              │                  │
+├────────┼──────────────────────────────────────────────────────────────────────┼──────────────────┤
+│"hc_160"│["Erosion","Compaction"]                                              │175               │
+├────────┼──────────────────────────────────────────────────────────────────────┼──────────────────┤
+│"hc_155"│["Erosion","Compaction","HighAlkalinity","Salinity"]                  │150               │
+├────────┼──────────────────────────────────────────────────────────────────────┼──────────────────┤
+│"hc_170"│["Erosion","LowOrganicMatter","Compaction","LowOrganicBiota","HighAlka│148               │
+│        │linity"]                                                              │                  │
+├────────┼──────────────────────────────────────────────────────────────────────┼──────────────────┤
+│"hc_163"│["Erosion","LowOrganicMatter","Compaction","HighAlkalinity"]          │139               │
+├────────┼──────────────────────────────────────────────────────────────────────┼──────────────────┤
+│"hc_165"│["Erosion","LowOrganicMatter","Compaction","HighAlkalinity","LowPhosph│128               │
+│        │orus","LowPotassium"]                                                 │                  │
+├────────┼──────────────────────────────────────────────────────────────────────┼──────────────────┤
+│"hc_167"│["Erosion","LowOrganicMatter","Acidification","Compaction"]           │123               │
+├────────┼──────────────────────────────────────────────────────────────────────┼──────────────────┤
+│"hc_157"│["Erosion","HeavyMetalContamination","LowPhosphorus"]                 │118               │
+├────────┼──────────────────────────────────────────────────────────────────────┼──────────────────┤
+│"hc_161"│["Erosion","LowOrganicMatter","Compaction"]                           │113               │
+├────────┼──────────────────────────────────────────────────────────────────────┼──────────────────┤
+│"hc_162"│["Erosion","LowOrganicMatter","HighAlkalinity","LowPhosphorus"]       │100               │
+├────────┼──────────────────────────────────────────────────────────────────────┼──────────────────┤
+│"hc_156"│["Acidification","HighAlkalinity"]                                    │79                │
+├────────┼──────────────────────────────────────────────────────────────────────┼──────────────────┤
+│"hc_174"│["Erosion","Compaction","LowOrganicBiota","LowPhosphorus"]            │78                │
+├────────┼──────────────────────────────────────────────────────────────────────┼──────────────────┤
+│"hc_159"│["Erosion","LowOrganicBiota","HighAlkalinity"]                        │69                │
+├────────┼──────────────────────────────────────────────────────────────────────┼──────────────────┤
+│"hc_171"│["Erosion","Acidification","Compaction","HighAlkalinity"]             │56                │
+├────────┼──────────────────────────────────────────────────────────────────────┼──────────────────┤
+│"hc_164"│["Erosion","Acidification","LowPhosphorus"]                           │39                │
+├────────┼──────────────────────────────────────────────────────────────────────┼──────────────────┤
+│"hc_173"│["Erosion"]                                                           │36                │
+└────────┴──────────────────────────────────────────────────────────────────────┴──────────────────┘
+```
+
+#### Bonus: how to improve your Cypher query performance by over 1000%?
 
 1. Running different queries to obtain the above result, I noticed an intriguing relationship between node-relationship path definition and the speed at which the results were retrieved. Here, I am referring to the first line of the code above,
 ```sql
