@@ -126,8 +126,9 @@ MATCH (h:Hort_Client)-[:HAS]->(s:Soil_Issue)<-[:INVESTIGATES]-(ss:Soil_Service)<
 RETURN h.name, collect(DISTINCT s.type) as soil_condition, count(ss) as no_soil_analyses
 ORDER BY no_soil_analyses DESC
   ```
-Output: 
-
+  Output:
+    : - 
+    
  ```bash
 ╒════════╤══════════════════════════════════════════════════════════════════════╤══════════════════╕
 │"h.name"│"soil_condition"                                                      │"no_soil_analyses"│
@@ -216,7 +217,7 @@ Output:
 └────────┴─────────────────────────┴──────────┘
 ```
 
-The above query looks at each `Hort_Client` and figures out the frequency of each `Soil_Issue` at that site. I ran different Cypher queries to obtain the above result and noticed an intriguing relationship between node-relationship path definition and the speed at which the results were brought back. 
+The above query looks at every `Hort_Client` in the graph and calculates the frequency of a `Soil_Issue` occuring at that site. I ran different Cypher queries to obtain the above result and noticed an intriguing relationship between node-relationship path definition and the speed at which the results were brought back. 
 
 __Case I - baseline__
 
