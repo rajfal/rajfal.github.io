@@ -184,7 +184,7 @@ __Output:__
 ```
  
 ---
-***We have investigated several ways of analysing data, using aggregation functions***{: style="color: green"}
+***We analysed soil survey data, using aggregation functions such as collect() and count(), and filtering with WHERE***{: style="color: green"}
 
 ---
 [Back to top of page](#)
