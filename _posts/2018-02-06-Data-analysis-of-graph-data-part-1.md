@@ -88,6 +88,7 @@ ORDER BY frequency DESC
 │"Impermeable"            │1          │["hc_158"]                                                            │
 └─────────────────────────┴───────────┴──────────────────────────────────────────────────────────────────────┘
 ```
+
 #### 3. What is the frequency of specific soil conditions at a horticultural site?
 
 1. Say that at `Hort_Client` property named `hc_175`, we want to get soil condition frequencies relevant to this property.
