@@ -27,7 +27,8 @@ MATCH (h:Hort_Client)-[:HAS]->(s:Soil_Issue)<-[:INVESTIGATES]-(ss:Soil_Service)
 RETURN count(DISTINCT h.name) as no_properties, count(DISTINCT s) as no_soil_issues,
 collect(DISTINCT s.type) as soil_issues_present, count(DISTINCT ss) as no_analyses_completed
   ```
-  Output:  
+  Output:
+    : - 
  ```bash
 ╒═══════════════╤══════════════════════════╤═════════════════════════════╤═══════════════════════╕
 │"no_properties"│"soil_issues_investigated"│"soil_issues_present"        │"no_analyses_completed"│
@@ -51,6 +52,7 @@ RETURN s.type as soil_condition, count(h.name) as frequency, collect(h.name) as 
 ORDER BY frequency DESC
   ```
   Output:  
+    : - 
  ```bash
 ╒═════════════════════════╤═══════════╤══════════════════════════════════════════════════════════════════════╕
 │"soil_condition"         │"frequency"│"properties"                                                          │
@@ -95,7 +97,8 @@ WHERE h.name='hc_175'
 RETURN h.name, s.type as soil_condition, count(s) as no_found
 ORDER BY h.name, no_found DESC
   ```
-  Output:  
+  Output:
+    : - 
  ```bash
 ╒════════╤═════════════════╤══════════╕
 │"h.name"│"soil_condition" │"no_found"│
@@ -114,7 +117,7 @@ ORDER BY h.name, no_found DESC
 └────────┴─────────────────┴──────────┘
 ```
 
-#### 4. Find the soil issues present for each `Hort_Client` and number of analyses done at each site, list the results in descending order of no_soil_analyses
+#### 4. Find the soil issues present at each property, the number of analyses done at each site
 
 1. Say that at `Hort_Client` property named `hc_175`, we want to get soil condition frequencies relevant to this property.
   ```sql
@@ -122,7 +125,8 @@ MATCH (h:Hort_Client)-[:HAS]->(s:Soil_Issue)<-[:INVESTIGATES]-(ss:Soil_Service)<
 RETURN h.name, collect(DISTINCT s.type) as soil_condition, count(ss) as no_soil_analyses
 ORDER BY no_soil_analyses DESC
   ```
-  Output:  
+  Output: 
+    : - 
  ```sql
 ╒════════╤══════════════════════════════════════════════════════════════════════╤══════════════════╕
 │"h.name"│"soil_condition"                                                      │"no_soil_analyses"│
@@ -178,7 +182,7 @@ ORDER BY no_soil_analyses DESC
 
 #### Bonus: how to improve your Cypher query performance by over 1000%?
 
-1. Running different queries to obtain the above result, I noticed an intriguing relationship between node-relationship path definition and the speed at which the results were retrieved. Here, I am referring to the first line of the code above,
+Running different queries to obtain the above result, I noticed an intriguing relationship between node-relationship path definition and the speed at which the results were retrieved. Here, I am referring to the first line of the code above,
 ```sql
 MATCH (h:Hort_Client)-[:HAS]->(s:Soil_Issue)<-[:INVESTIGATES]-(ss:Soil_Service)<-[:REQUESTS]-(h:Hort_Client)
 ```
