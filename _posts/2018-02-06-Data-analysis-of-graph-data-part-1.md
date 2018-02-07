@@ -88,43 +88,88 @@ ORDER BY frequency DESC
 │"Impermeable"            │1          │["hc_158"]                                                            │
 └─────────────────────────┴───────────┴──────────────────────────────────────────────────────────────────────┘
 ```
+#### 3. What is the frequency of specific soil conditions at a given `Hort_Client` site?
 
-2. We can see the related nodes of interest in a table that shows us contractors  who worked for more than X clients. For this sample of records, we'll set X = 1
-```sql
-MATCH (n:Hort_Client)<-[:SENT_TO]-(:Soil_Report)<-[:ACTIONS]-(c:Contractor)
-WITH c.name as contractor, c.c_id as sorting, count(DISTINCT n.name) as no_clients, 
-collect(DISTINCT n.name) AS client_list
-WHERE no_clients > 1
-RETURN contractor, no_clients, clients 
-ORDER BY sorting;
-```
-Output:  
-  : - ```bash
-╒═════════════╤════════════╤═══════════════════╕
-│"contractor" │"no_clients"│"client_list"      │
-╞═════════════╪════════════╪═══════════════════╡
-│"contra_1250"│2           │["hc_160","hc_167"]│
-└─────────────┴────────────┴───────────────────┘
-```
-
-3. A more direct graph view will disclose the suspect activities
+1. Given a specific horticultural site, in this case `hc_175`, we want to get soil condition frequencies relevant to this property.
   ```sql
-MATCH (n:Hort_Client)<-[:SENT_TO]-(:Soil_Report)<-[:ACTIONS]-(c:Contractor)
-WITH c.name as contractor, count(DISTINCT n.name) as no_clients
-WHERE no_clients > 1
-WITH contractor
-MATCH path = shortestPath((n1:Hort_Client)<-[*1..2]-(c1:Contractor))
-WHERE c1.name = contractor
-RETURN DISTINCT path; 
+MATCH (h:Hort_Client)-[:HAS]->(s:Soil_Issue)<-[:INVESTIGATES]-(ss:Soil_Service)<-[:REQUESTS]-(h:Hort_Client)
+WHERE h.name='hc_175'
+RETURN h.name, s.type as soil_condition, count(s) as no_found
+ORDER BY h.name, no_found DESC
   ```
-  Output:
-  : - it is *contra_1250*{: style="color: red"} who is moonshining for another `Hort_Client`
-  ![Hort_Client with many regions](/assets/images/soil_survey_contra_and_two_clients.png)
-  
+  Output:  
+ ```bash
+╒════════╤═════════════════╤══════════╕
+│"h.name"│"soil_condition" │"no_found"│
+╞════════╪═════════════════╪══════════╡
+│"hc_175"│"Erosion"        │124       │
+├────────┼─────────────────┼──────────┤
+│"hc_175"│"LowOrganicBiota"│72        │
+├────────┼─────────────────┼──────────┤
+│"hc_175"│"HighAlkalinity" │45        │
+├────────┼─────────────────┼──────────┤
+│"hc_175"│"Compaction"     │42        │
+├────────┼─────────────────┼──────────┤
+│"hc_175"│"LowNitrogen"    │16        │
+├────────┼─────────────────┼──────────┤
+│"hc_175"│"LowPhosphorus"  │3         │
+└────────┴─────────────────┴──────────┘
+```
+#### 4. A tip that will improve your Cypher query performance by 200%?
+
+1. Running different queries to obtain the above result, I noticed an intriguing relationship between node-relationship path definition and the speed at which the results were retrieved. Here, I am referring to the first line of the code above,
+```sql
+MATCH (h:Hort_Client)-[:HAS]->(s:Soil_Issue)<-[:INVESTIGATES]-(ss:Soil_Service)<-[:REQUESTS]-(h:Hort_Client)
+```
+While I used two other path configurations to get the same result they differed in performance. To illustrate performance of each path, I used the entire graph dataset.
+
+__Case I__
+
+Here I am using a variable length path of between 1 and 2 relationships from `Soil_Issue` to `Hort_Client`.
+
+```sql
+MATCH (h:Hort_Client)-[:HAS]->(s:Soil_Issue)<-[*1..2]-(h:Hort_Client)
+RETURN h.name, s.type as soil_condition, count(s) as no_found
+ORDER BY h.name, no_found DESC
+```
+```bash
+Started streaming 82 records after 231 ms and completed after 232 ms.
+```
+__Case II__
+
+Here I am using a variable length path of between 1 and 2 relationships from `Soil_Issue` to `Hort_Client`.
+
+```sql
+MATCH (h:Hort_Client)-[:HAS]->(s:Soil_Issue)<-[*2..2]-(h:Hort_Client)
+RETURN h.name, s.type as soil_condition, count(s) as no_found
+ORDER BY h.name, no_found DESC
+```
+```bash
+Started streaming 82 records after 40 ms and completed after 40 ms.
+```
+__Case III__
+```sql
+MATCH (h:Hort_Client)-[:HAS]->(s:Soil_Issue)<-[:INVESTIGATES]-(ss:Soil_Service)--(h:Hort_Client)
+RETURN h.name, s.type as soil_condition, count(s) as no_found
+ORDER BY h.name, no_found DESC
+```
+```bash
+Started streaming 82 records after 21 ms and completed after 21 ms. 
+```
+__Case IV__
+```sql
+MATCH (h:Hort_Client)-[:HAS]->(s:Soil_Issue)<-[:INVESTIGATES]-(ss:Soil_Service)<-[:REQUESTS]-(h:Hort_Client)
+RETURN h.name, s.type as soil_condition, count(s) as no_found
+ORDER BY h.name, no_found DESC
+```
+```bash
+Started streaming 82 records after 13 ms and completed after 13 ms.
+```  
  
  
 ---
-***We have defined some business rules by which the data must play. We used Cypher queries to figure out where those rules are broken***{: style="color: green"}
+***We have defined some business rules by which the data must play. We used Cypher queries to figure out where those rules are brok
+en***{: style="color: green"}
 
 ---
 [Back to top of page](#)
