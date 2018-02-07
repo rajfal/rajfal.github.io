@@ -21,7 +21,8 @@ It inspired me to look at the Soil Survey data and come up with different ways o
 
 #### 1. Obtain summary information
 
-1. Let's find how many properties are in the survey data, how many different soil conditions have been found, what are they and how many soil tests have been performed.
+1. Let's find how many properties are in the survey data, how many different soil conditions have been found, what are they and how many soil tests have been performed. I am using Cypher's in-built [`collect()`](https://neo4j.com/docs/developer-manual/current/cypher/functions/aggregating/#functions-collect) function to amalgamate multiple values into a single list that will be displayed under its own column.
+
   ```sql
 MATCH (h:Hort_Client)-[:HAS]->(s:Soil_Issue)<-[:INVESTIGATES]-(ss:Soil_Service)
 RETURN count(DISTINCT h.name) as no_properties, count(DISTINCT s) as no_soil_issues,
@@ -45,7 +46,8 @@ __Output:__
 
 #### 2. What is the frequency of specific soil issues?
 
-1. Now that we know what kind of soil problems exists in our survey data, let's seek how often each one occurs and list properties at which they are common.
+1. Now that we know what kind of soil problems exists in our survey data, let's seek how often each one occurs and list properties at which they are common. The `collect()` function allows us to view all properties that share a specific soil condition.
+
   ```sql
 MATCH (h:Hort_Client)-[:HAS]->(s:Soil_Issue)
 RETURN s.type as soil_condition, count(h.name) as frequency, collect(h.name) as properties
@@ -91,7 +93,7 @@ __Output:__
 
 #### 3. What is the frequency of specific soil conditions at a horticultural site?
 
-1. Say that at `Hort_Client` property named `hc_175`, we want to get soil condition frequencies relevant to this property.
+1. Say that at `Hort_Client` property named `hc_175`, we want to get soil condition frequencies relevant to this property. We achieved the desired filtering, using the [`WHERE`](https://neo4j.com/docs/developer-manual/current/cypher/clauses/where/) condition as part of the `MATCH` clause.
   ```sql
 MATCH (h:Hort_Client)-[:HAS]->(s:Soil_Issue)<-[:INVESTIGATES]-(ss:Soil_Service)<-[:REQUESTS]-(h:Hort_Client)
 WHERE h.name='hc_175'
