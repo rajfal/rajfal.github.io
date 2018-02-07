@@ -27,7 +27,7 @@ MATCH (h:Hort_Client)-[:HAS]->(s:Soil_Issue)<-[:INVESTIGATES]-(ss:Soil_Service)
 RETURN count(DISTINCT h.name) as no_properties, count(DISTINCT s) as no_soil_issues,
 collect(DISTINCT s.type) as soil_issues_present, count(DISTINCT ss) as no_analyses_completed
   ```
-  Output:
+__Output:__
     
  ```bash
 ╒═══════════════╤══════════════════════════╤═════════════════════════════╤═══════════════════════╕
@@ -51,8 +51,7 @@ MATCH (h:Hort_Client)-[:HAS]->(s:Soil_Issue)
 RETURN s.type as soil_condition, count(h.name) as frequency, collect(h.name) as properties
 ORDER BY frequency DESC
   ```
-  Output:  
-    : - 
+__Output:__
     
  ```bash
 ╒═════════════════════════╤═══════════╤══════════════════════════════════════════════════════════════════════╕
@@ -99,8 +98,7 @@ WHERE h.name='hc_175'
 RETURN h.name, s.type as soil_condition, count(s) as no_found
 ORDER BY h.name, no_found DESC
   ```
-  Output:
-    : - 
+__Output:__
     
  ```bash
 ╒════════╤═════════════════╤══════════╕
@@ -128,8 +126,7 @@ MATCH (h:Hort_Client)-[:HAS]->(s:Soil_Issue)<-[:INVESTIGATES]-(ss:Soil_Service)<
 RETURN h.name, collect(DISTINCT s.type) as soil_condition, count(ss) as no_soil_analyses
 ORDER BY no_soil_analyses DESC
   ```
-  Output:
-    : - 
+__Output:__ 
     
  ```bash
 ╒════════╤══════════════════════════════════════════════════════════════════════╤══════════════════╕
