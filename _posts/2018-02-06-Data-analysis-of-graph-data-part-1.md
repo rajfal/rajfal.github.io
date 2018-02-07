@@ -15,7 +15,7 @@ keywords: "neo4j, Cypher, data exploration, cypher query, cypher statements, dat
 
 #### Background
 
-The other day I came across the post about Getting [Started with Data Analysis using Neo4j](https://neo4j.com/blog/getting-started-data-analysis-neo4j/)
+The other day I came across the post about [Getting Started with Data Analysis using Neo4j](https://neo4j.com/blog/getting-started-data-analysis-neo4j/)
 
 It inspired me to look at the Soil Survey data and come up with different ways of analyzing the graph. I am going to dive straight into Cypher and explain what different statements aim to do as we go along.
 
@@ -30,7 +30,7 @@ RETURN count(DISTINCT h.name) as no_properties, count(DISTINCT s) as no_soil_iss
 collect(DISTINCT s.type) as soil_issues_present, count(DISTINCT ss) as no_analyses_completed
   ```
   Output:  
-  : - ```bash
+  : - ```python
 ╒═══════════════╤══════════════════════════╤═════════════════════════════╤═══════════════════════╕
 │"no_properties"│"soil_issues_investigated"│"soil_issues_present"        │"no_analyses_completed"│
 ╞═══════════════╪══════════════════════════╪═════════════════════════════╪═══════════════════════╡
