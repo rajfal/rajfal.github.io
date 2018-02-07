@@ -121,7 +121,7 @@ MATCH (h:Hort_Client)-[:HAS]->(s:Soil_Issue)<-[:INVESTIGATES]-(ss:Soil_Service)<
 ```
 While I used two other path configurations to get the same result they differed in performance. To illustrate performance of each path, I used the entire graph dataset.
 
-__Case I - starting point__
+__Case I - baseline__
 
 Using a variable length path of between 1 and 2 relationships from `Soil_Issue` to `Hort_Client`.
 
@@ -137,7 +137,7 @@ Cypher version: CYPHER 3.3, planner: COST, runtime: INTERPRETED. 368963 total db
 __Case II - 580% improvement__
 
 Using a fixed length path of exactly 2 relationships from `Soil_Issue` to `Hort_Client`.
-We can also rewrite *[*2..2]* as *[*2]* 
+We can also rewrite `[*2..2]` as `[*2]` 
 
 ```sql
 MATCH (h:Hort_Client)-[:HAS]->(s:Soil_Issue)<-[*2..2]-(h:Hort_Client)
@@ -153,7 +153,7 @@ __Case III - 1100% improvement__
 Using relationships in any direction between `Soil_Service` and `Hort_Client`.
 
 ```sql
-MATCH (h:Hort_Client)-[:HAS]->(s:Soil_Issue)<-[:INVESTIGATES]-(ss:Soil_Service){% raw %}--{% endraw %}(h:Hort_Client)
+MATCH (h:Hort_Client)-[:HAS]->(s:Soil_Issue)<-[:INVESTIGATES]-(ss:Soil_Service){% raw %}--(h:Hort_Client){% endraw %}
 RETURN h.name, s.type as soil_condition, count(s) as no_found
 ORDER BY h.name, no_found DESC
 ```
