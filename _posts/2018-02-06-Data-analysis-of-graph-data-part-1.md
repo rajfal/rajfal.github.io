@@ -126,8 +126,8 @@ MATCH (h:Hort_Client)-[:HAS]->(s:Soil_Issue)<-[:INVESTIGATES]-(ss:Soil_Service)<
 RETURN h.name, collect(DISTINCT s.type) as soil_condition, count(ss) as no_soil_analyses
 ORDER BY no_soil_analyses DESC
   ```
-  Output: 
-    : - 
+Output: 
+
  ```bash
 ╒════════╤══════════════════════════════════════════════════════════════════════╤══════════════════╕
 │"h.name"│"soil_condition"                                                      │"no_soil_analyses"│
