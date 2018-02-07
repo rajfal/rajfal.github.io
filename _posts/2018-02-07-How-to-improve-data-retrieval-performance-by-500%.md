@@ -113,7 +113,7 @@ Cypher version: CYPHER 3.3, planner: COST, runtime: INTERPRETED. 21299 total db 
 
  
 ---
-***The biggest takeaway - to minimise time of data retrieval, be specific about the nodes and relationships that make up your path pattern***{: style="color: green"}
+***The biggest takeaway - to minimise the speed of data retrieval, be specific about the nodes and relationships that make up your path pattern***{: style="color: green"}
 
 ---
 [Back to top of page](#)
