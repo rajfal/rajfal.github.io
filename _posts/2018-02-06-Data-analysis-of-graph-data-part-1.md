@@ -29,6 +29,7 @@ collect(DISTINCT s.type) as soil_issues_present, count(DISTINCT ss) as no_analys
   ```
   Output:
     : - 
+    
  ```bash
 ╒═══════════════╤══════════════════════════╤═════════════════════════════╤═══════════════════════╕
 │"no_properties"│"soil_issues_investigated"│"soil_issues_present"        │"no_analyses_completed"│
@@ -53,6 +54,7 @@ ORDER BY frequency DESC
   ```
   Output:  
     : - 
+    
  ```bash
 ╒═════════════════════════╤═══════════╤══════════════════════════════════════════════════════════════════════╕
 │"soil_condition"         │"frequency"│"properties"                                                          │
@@ -100,6 +102,7 @@ ORDER BY h.name, no_found DESC
   ```
   Output:
     : - 
+    
  ```bash
 ╒════════╤═════════════════╤══════════╕
 │"h.name"│"soil_condition" │"no_found"│
