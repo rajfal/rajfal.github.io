@@ -30,18 +30,14 @@ RETURN count(DISTINCT h.name) as no_properties, count(DISTINCT s) as no_soil_iss
 collect(DISTINCT s.type) as soil_issues_present, count(DISTINCT ss) as no_analyses_completed
   ```
   Output:  
-  : - ```python
-╒═══════════════╤══════════════════════════╤═════════════════════════════╤═══════════════════════╕
-│"no_properties"│"soil_issues_investigated"│"soil_issues_present"        │"no_analyses_completed"│
-╞═══════════════╪══════════════════════════╪═════════════════════════════╪═══════════════════════╡
-│21             │12                        │["Erosion","LowOrganicMatter"│2670                   │
-│               │                          │,"Acidification","Compaction"│                       │
-│               │                          │,"LowOrganicBiota","HighAlkal│                       │
-│               │                          │inity","Impermeable","HeavyMe│                       │
-│               │                          │talContamination","LowPhospho│                       │
-│               │                          │rus","Salinity","LowNitrogen"│                       │
-│               │                          │,"LowPotassium"]             │                       │
-└───────────────┴──────────────────────────┴─────────────────────────────┴───────────────────────┘
+  : - ```bash
+╒═══════════════╤════════════════╤══════════════════════════════════════════════════════════════════════╤═══════════════════════╕
+│"no_properties"│"no_soil_issues"│"soil_issues_present"                                                 │"no_analyses_completed"│
+╞═══════════════╪════════════════╪══════════════════════════════════════════════════════════════════════╪═══════════════════════╡
+│21             │12              │["Erosion","LowOrganicMatter","Acidification","Compaction","LowOrganic│2670                   │
+│               │                │Biota","HighAlkalinity","Impermeable","HeavyMetalContamination","LowPh│                       │
+│               │                │osphorus","Salinity","LowNitrogen","LowPotassium"]                    │                       │
+└───────────────┴────────────────┴──────────────────────────────────────────────────────────────────────┴───────────────────────┘
 ```
 
 3. Let's use a more incisive graph approach to show us the suspect relationships
