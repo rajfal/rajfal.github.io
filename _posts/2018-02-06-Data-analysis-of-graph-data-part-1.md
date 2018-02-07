@@ -183,11 +183,40 @@ ORDER BY no_soil_analyses DESC
 
 #### Bonus: how to improve your Cypher query performance by over 1000%?
 
-Running different queries to obtain the above result, I noticed an intriguing relationship between node-relationship path definition and the speed at which the results were retrieved. Here, I am referring to the first line of the code above,
-```sql
-MATCH (h:Hort_Client)-[:HAS]->(s:Soil_Issue)<-[:INVESTIGATES]-(ss:Soil_Service)<-[:REQUESTS]-(h:Hort_Client)
+```bash
+╒════════╤═════════════════════════╤══════════╕
+│"h.name"│"soil_condition"         │"no_found"│
+╞════════╪═════════════════════════╪══════════╡
+│"hc_155"│"Erosion"                │52        │
+├────────┼─────────────────────────┼──────────┤
+│"hc_155"│"HighAlkalinity"         │45        │
+├────────┼─────────────────────────┼──────────┤
+│"hc_155"│"Compaction"             │43        │
+├────────┼─────────────────────────┼──────────┤
+│"hc_155"│"Salinity"               │10        │
+├────────┼─────────────────────────┼──────────┤
+│"hc_156"│"Acidification"          │41        │
+├────────┼─────────────────────────┼──────────┤
+...
+
+├────────┼─────────────────────────┼──────────┤
+│"hc_174"│"LowOrganicBiota"        │4         │
+├────────┼─────────────────────────┼──────────┤
+│"hc_175"│"Erosion"                │124       │
+├────────┼─────────────────────────┼──────────┤
+│"hc_175"│"LowOrganicBiota"        │72        │
+├────────┼─────────────────────────┼──────────┤
+│"hc_175"│"HighAlkalinity"         │45        │
+├────────┼─────────────────────────┼──────────┤
+│"hc_175"│"Compaction"             │42        │
+├────────┼─────────────────────────┼──────────┤
+│"hc_175"│"LowNitrogen"            │16        │
+├────────┼─────────────────────────┼──────────┤
+│"hc_175"│"LowPhosphorus"          │3         │
+└────────┴─────────────────────────┴──────────┘
 ```
-While I used two other path configurations to get the same result they differed in performance. To illustrate performance of each path, I used the entire graph dataset.
+
+The above query looks at each `Hort_Client` and figures out the frequency of each `Soil_Issue` at that site. I ran different Cypher queries to obtain the above result and noticed an intriguing relationship between node-relationship path definition and the speed at which the results were brought back. 
 
 __Case I - baseline__
 
