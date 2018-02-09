@@ -97,7 +97,7 @@ The `WITH` clause allows us to capture one specific node, h, and aggregates all 
 
 We can see our output because instead of using `WITH` clause we use the `RETURN` one. The second block of `MATCH` code will now receive two parameters, `property` and `toto`  with their respective values of "hc_165" and 128.
 
-```python
+```sql
 MATCH (h:Hort_Client {name :'hc_165'})-[:HAS]->(s:Soil_Issue)<-[:INVESTIGATES]-(ss:Soil_Service)<-[:REQUESTS]-(h)
 WITH h.name as property, count(s) as toto
 
@@ -147,7 +147,7 @@ The string '%' gets tacked to the end to let us know that we dealing with percen
 | 37+'%'         | 37%           | 
 
 And the final result:
-
+```bash
 ╒══════════╤══════════════════╤══════════╤═══════════╕
 │"property"│"soil_condition"  │"no_found"│"frequency"│
 ╞══════════╪══════════════════╪══════════╪═══════════╡
@@ -163,7 +163,7 @@ And the final result:
 ├──────────┼──────────────────┼──────────┼───────────┤
 │"hc_165"  │"LowPotassium"    │5         │"3%"       │
 └──────────┴──────────────────┴──────────┴───────────┘
-
+```
  
 
 
