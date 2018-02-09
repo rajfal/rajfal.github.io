@@ -44,7 +44,8 @@ First, let's look at the summary of the property `hc_165`. We want to find what 
 MATCH (h:Hort_Client)-[:HAS]->(s:Soil_Issue)<-[:INVESTIGATES]-(ss:Soil_Service)<-[:REQUESTS]-(h:Hort_Client)
 WHERE h.name='hc_165'
 RETURN h.name, s.type as soil_condition, count(s) as no_found
-ORDER BY h.name, no_found DESC  ```
+ORDER BY h.name, no_found DESC  
+```
 __Output:__
     
  ```bash
