@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "How to implement a graph similarity score to find matching nodes"
+title: "Build a graph similarity score to find matching nodes"
 comments: true
 description: "Use similarity scoring with Cypher queries to find nodes with similar attributes"
 categories: [neo4j, Cypher, data analysis, similarity score]
