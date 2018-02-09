@@ -13,7 +13,7 @@ google_analytics: UA-XXXXX-XX
 repo: http://github.com/heiswayi/thinkspace
 #disqus_shortname: "hnbloggithub"
 twitter_username: "RafalJacyna"
-comments: true
+comments: false
 
 # Build settings
 permalink   : /:year/:title/
