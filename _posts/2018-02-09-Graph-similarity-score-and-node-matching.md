@@ -24,7 +24,7 @@ you've had a disappointing experience with.
 
 Or, say that you are a contractor that has a novel method for remediating specific soil conditions. You had quantifiable success at sites that share common characteristics and to make your operations efficient you are targetting properties where such soil conditions exist and you are the only business in the market to provide a lasting solution.
 
-#### Plan
+#### Design plan
 
 In both cases my exercises is going to help you to locate similar properties.
 
@@ -34,7 +34,7 @@ I will break my exercise into three sections:
 - drill down to the found properties' commonolities but also expose differences from the benchmark properties
 
 
-#### 1. Build a soil profile for a property
+#### 1. Build a property soil profile
 
 1. We know that each `Hort_Client` has period soil testing to determine and address ongoing or once-off `Soil_Issues`. Each property has about 5 years of soil testing data which gives us enough information to develop a soil profile for each property.
 
@@ -67,7 +67,40 @@ __Output:__
 ```
 If we were to sum all of the soil conditions, we'd find that this property has been tested 128 times. It's clear that some properties would have been analysed more or less frequently than this particular one. So, we need a relative measure with which we can compare different `Hort_Client` sites. The easiest one to implement would be to use a percentage ratio, %.
 
-Let's build one.
+Let's build one and examine what each part of Cypher code does, before I generate the result.
+
+```sql
+MATCH (h:Hort_Client {name :'hc_165'})-[:HAS]->(s:Soil_Issue)<-[:INVESTIGATES]-(ss:Soil_Service)<-[:REQUESTS]-(h)
+WITH h.name as property, count(s) as toto
+
+MATCH (h:Hort_Client {name :property})-[:HAS]->(s:Soil_Issue)<-[:INVESTIGATES]-(ss:Soil_Service)<-[:REQUESTS]-(h)
+WITH property, toto, s, count(s) as total
+RETURN property, s.type as soil_condition, total AS no_found, toInteger((total/toFloat((toto)))*100)+'%' AS frequency
+ORDER BY total DESC
+```
+
+First thing to note is that we are using two `MATCH` clauses that target our pattern of interest. The first `MATCH` clause will give us a total count of soil tests carried out at this property. I will run a partial query statement so you can understand what the first block of code does.
+
+```sql
+MATCH (h:Hort_Client {name :'hc_165'})-[:HAS]->(s:Soil_Issue)<-[:INVESTIGATES]-(ss:Soil_Service)<-[:REQUESTS]-(h)
+RETURN h.name as property, count(s) as toto
+```
+```bash
+╒══════════╤══════╕
+│"property"│"toto"│
+╞══════════╪══════╡
+│"hc_165"  │128   │
+└──────────┴──────┘
+```
+
+The `WITH` clause allows us to capture one specific node, h, and aggregates all soil issues using the function, count().
+
+We can see our output because instead of using `WITH` clause we use the `RETURN` one. The second block of `MATCH` code will now receive two parameters, `property` and `toto`  with their respective values of "hc_165" and 128.
+
+
+
+
+
 
 
 
