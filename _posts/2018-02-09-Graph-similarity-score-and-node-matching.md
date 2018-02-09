@@ -97,9 +97,58 @@ The `WITH` clause allows us to capture one specific node, h, and aggregates all 
 
 We can see our output because instead of using `WITH` clause we use the `RETURN` one. The second block of `MATCH` code will now receive two parameters, `property` and `toto`  with their respective values of "hc_165" and 128.
 
+```sql
+MATCH (h:Hort_Client {name :'hc_165'})-[:HAS]->(s:Soil_Issue)<-[:INVESTIGATES]-(ss:Soil_Service)<-[:REQUESTS]-(h)
+WITH h.name as property, count(s) as toto
+
+MATCH (h:Hort_Client {name :property})-[:HAS]->(s:Soil_Issue)<-[:INVESTIGATES]-(ss:Soil_Service)<-[:REQUESTS]-(h)
+RETURN property, toto, s, count(s) as total
+```
+Whereas the first `MATCH` block calculated the total number of soil tests for this property, the second `MATCH` block will sum the number of test for each soil issue that was found for this `Hort_Client`. Also note that we just passed the variables, `property` and `toto` to the second `MATCH' clause
+
+```bash
+╒══════════╤══════╤═══════════════════════════╤═══════╕
+│"property"│"toto"│"s"                        │"total"│
+╞══════════╪══════╪═══════════════════════════╪═══════╡
+│"hc_165"  │128   │{"type":"Compaction"}      │27     │
+├──────────┼──────┼───────────────────────────┼───────┤
+│"hc_165"  │128   │{"type":"Erosion"}         │48     │
+├──────────┼──────┼───────────────────────────┼───────┤
+│"hc_165"  │128   │{"type":"LowPhosphorus"}   │16     │
+├──────────┼──────┼───────────────────────────┼───────┤
+│"hc_165"  │128   │{"type":"HighAlkalinity"}  │23     │
+├──────────┼──────┼───────────────────────────┼───────┤
+│"hc_165"  │128   │{"type":"LowOrganicMatter"}│9      │
+├──────────┼──────┼───────────────────────────┼───────┤
+│"hc_165"  │128   │{"type":"LowPotassium"}    │5      │
+└──────────┴──────┴───────────────────────────┴───────┘
+```
+
+Let's examine how % value for each `Soil_Issue` is calculated.
+```python
+toInteger((total/toFloat(toto))*100)+'%'
+```
+
+At this point, we need to do a couple of type conversions. Both `toto` and `total` variables are passed as integers. Dividing two integers will yield another integer. However, because we will end up with a rational number that starts with a decimal point, the end result will be a zero, 0. So we have to force a division by a Float type number. Hence, why we
+apply ` toFloat(toto) ` conversion.
+
+The result of `total` divided by the converted `toto` is then immediately multiplied by 100 to move the decimal point to the right and the `toInteger()` conversion extracts everything to the left of the decimal point as the result we want. 
+
+The string '%' gets tacked to the end to let us know that we dealing with percentage values.
+
+##### Table 1: Evaluation steps
+
+| Calculation    | Result        | 
+| -------------- |:-------------:|
+| toFloat(128)   | 128.00        | 
+| 48/128.00      | 0.375         |  
+| 0.375x100      | 37.5          | 
+| toInteger(37.5)| 37            | 
+| 37+'%'         | 37%           | 
+| -------------- |:-------------:|
 
 
-
+ 
 
 
 
