@@ -20,10 +20,11 @@ finding recommendations. I decided to implemented something similar with my own 
 
 Imagine that you are a horticultural property investor and you know from experience that certain sets of soil problems are 
 difficult and expensive to address. Whenever you consider a property, you wish to know whether it is anything like the one
-you've had a disappointing experience with. Or, say that you are a contractor that has a novel method for remediating
-specific soil conditions. You had quantifiable success at sites that share common characteristics and to make your operations
-efficient you are targetting properties where such soil conditions exist and you are the only business in the market to
-provide a lasting solution.
+you've had a disappointing experience with. 
+
+Or, say that you are a contractor that has a novel method for remediating specific soil conditions. You had quantifiable success at sites that share common characteristics and to make your operations efficient you are targetting properties where such soil conditions exist and you are the only business in the market to provide a lasting solution.
+
+#### Plan
 
 In both cases my exercises is going to help you to locate similar properties.
 
@@ -33,7 +34,43 @@ I will break my exercise into three sections:
 - drill down to the found properties' commonolities but also expose differences from the benchmark properties
 
 
-#### 1. Build a soil profile for a `Hort_Client` property
+#### 1. Build a soil profile for a property
+
+1. We know that each `Hort_Client` has period soil testing to determine and address ongoing or once-off `Soil_Issues`. Each property has about 5 years of soil testing data which gives us enough information to develop a soil profile for each property.
+
+First, let's look at the summary of the property `hc_165`. We want to find what kind of soil conditions have been present and how many of each.
+
+```sql
+MATCH (h:Hort_Client)-[:HAS]->(s:Soil_Issue)<-[:INVESTIGATES]-(ss:Soil_Service)<-[:REQUESTS]-(h:Hort_Client)
+WHERE h.name='hc_165'
+RETURN h.name, s.type as soil_condition, count(s) as no_found
+ORDER BY h.name, no_found DESC  ```
+__Output:__
+    
+ ```bash
+╒════════╤══════════════════╤══════════╕
+│"h.name"│"soil_condition"  │"no_found"│
+╞════════╪══════════════════╪══════════╡
+│"hc_165"│"Erosion"         │48        │
+├────────┼──────────────────┼──────────┤
+│"hc_165"│"Compaction"      │27        │
+├────────┼──────────────────┼──────────┤
+│"hc_165"│"HighAlkalinity"  │23        │
+├────────┼──────────────────┼──────────┤
+│"hc_165"│"LowPhosphorus"   │16        │
+├────────┼──────────────────┼──────────┤
+│"hc_165"│"LowOrganicMatter"│9         │
+├────────┼──────────────────┼──────────┤
+│"hc_165"│"LowPotassium"    │5         │
+└────────┴──────────────────┴──────────┘
+```
+If we were to sum all of the soil conditions, we'd find that this property has been tested 128 times. It's clear that some properties would have been analysed more or less frequently than this particular one. So, we need a relative measure with which we can compare different `Hort_Client` sites. The easiest one to implement would be to use a percentage ratio, %.
+
+Let's build one.
+
+
+
+
 
 1. Let's find how many properties are in the survey data, how many different soil conditions have been found, what are they and how many soil tests have been performed. I am using Cypher's in-built [`collect()`](https://neo4j.com/docs/developer-manual/current/cypher/functions/aggregating/#functions-collect) function to amalgamate multiple values into a single list that will be displayed under its own column.
 
