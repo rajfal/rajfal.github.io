@@ -85,6 +85,8 @@ First thing to note is that we are using two `MATCH` clauses that target our pat
 MATCH (h:Hort_Client {name :'hc_165'})-[:HAS]->(s:Soil_Issue)<-[:INVESTIGATES]-(ss:Soil_Service)<-[:REQUESTS]-(h)
 RETURN h.name as property, count(s) as toto
 ```
+__Output:__
+  
 ```bash
 ╒══════════╤══════╕
 │"property"│"toto"│
@@ -104,7 +106,7 @@ WITH h.name as property, count(s) as toto
 MATCH (h:Hort_Client {name :property})-[:HAS]->(s:Soil_Issue)<-[:INVESTIGATES]-(ss:Soil_Service)<-[:REQUESTS]-(h)
 RETURN property, toto, s, count(s) as total
 ```
-Whereas the first `MATCH` block calculated the total number of soil tests for this property, the second `MATCH` block will sum the number of test for each soil issue that was found for this `Hort_Client`. Also note that we just passed the variables, `property` and `toto` to the second `MATCH' clause
+Whereas, the first `MATCH` block calculates total number of soil tests for the property, the second `MATCH` block sums the number of tests for each soil issue that was found for this `Hort_Client`. Also note that we just passed the variables, `property` and `toto` to the second `MATCH` clause
 
 ```bash
 ╒══════════╤══════╤═══════════════════════════╤═══════╕
@@ -136,7 +138,8 @@ The result of `total` divided by the converted `toto` is then immediately multip
 
 The string '%' gets tacked to the end to let us know that we dealing with percentage values.
 
-##### Table 1: Evaluation steps
+
+##### Evaluation steps for toInteger((total/toFloat(toto))*100)+'%'
 
 | Calculation    | Result        | 
 | -------------- |:-------------:|
@@ -146,7 +149,9 @@ The string '%' gets tacked to the end to let us know that we dealing with percen
 | toInteger(37.5)| 37            | 
 | 37+'%'         | 37%           | 
 
+
 And the final result:
+
 ```bash
 ╒══════════╤══════════════════╤══════════╤═══════════╕
 │"property"│"soil_condition"  │"no_found"│"frequency"│
@@ -165,7 +170,7 @@ And the final result:
 └──────────┴──────────────────┴──────────┴───────────┘
 ```
  
-
+---
 
 
 
