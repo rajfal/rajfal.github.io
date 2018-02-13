@@ -303,12 +303,10 @@ __Output:__
 └─────────────┴────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-
-1. Let's find how many properties are in the survey data, how many different soil conditions have been found, what are they and how many soil tests have been performed. I am using Cypher's in-built [`collect()`](https://neo4j.com/docs/developer-manual/current/cypher/functions/aggregating/#functions-collect) function to amalgamate multiple values into a single list that will be displayed under its own column.
-
+BTW, I was inspired by the discussion around the topic of [How to aggregate an aggregated list in cypher](https://stackoverflow.com/questions/40713658/how-to-aggregate-an-aggregated-list-in-cypher) to modify and develop this last block of Cypher code.
  
 ---
-***We analysed soil survey data, using aggregation functions such as collect() and count(), and filtering with WHERE***{: style="color: green"}
+***We built a similarity scoring algorithm for nodes and their aggregated data, using a soil profile, feature weights and then we confirmed that indeed the similar properties shared common characteristics***{: style="color: green"}
 
 ---
 [Back to top of page](#)
