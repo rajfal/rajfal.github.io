@@ -15,7 +15,7 @@ keywords: "neo4j, Cypher, data exploration, cypher query, similarity score, data
 
 #### Background
 
-Following on from the post entitled, Getting Started with Data Analysis using Neo4j[[^1]], the author makes a reference to
+Following on from the post entitled, [Getting started with Data Analysis in Neo4j](https://neo4j.com/blog/getting-started-data-analysis-neo4j/), the author makes a reference to
 finding recommendations. I decided to implemented something similar with my own data. 
 
 Imagine that you are a horticultural property investor and you know from experience that certain sets of soil problems are 
@@ -29,12 +29,13 @@ Or, say that you are a contractor that has a novel method for remediating specif
 In both cases my exercises is going to help you to locate similar properties.
 
 I will break my exercise into three sections:
-- build a soil profile of a given `Hort_Client` site based on soil conditions discovered during multiple soil tests
-- create an algorithm that will find similar properties based on the profile that we developed
-- drill down to the found properties' commonolities but also expose differences from the benchmark properties
+- [[^1]]build a soil profile of a given `Hort_Client` site based on soil conditions discovered during multiple soil tests
+- [[^2]]create an algorithm that will find similar properties based on the profile that we developed
+- [[^3]]drill down to the found properties' commonolities but also expose differences from the benchmark properties
 
 
 #### 1. Build a property soil profile
+#### [^1]: 1: [Build a property profile]()
 
 1. We know that each `Hort_Client` has period soil testing to determine and address ongoing or once-off `Soil_Issues`. Each property has about 5 years of soil testing data which gives us enough information to develop a soil profile for each property.
 
@@ -313,5 +314,5 @@ BTW, I was inspired by the discussion around the topic of [How to aggregate an a
 
 ---
 
-[^1]: 1: [Getting started with Data Analysis in Neo4j](https://neo4j.com/blog/getting-started-data-analysis-neo4j/)
+[^11]: 1: [Getting started with Data Analysis in Neo4j](https://neo4j.com/blog/getting-started-data-analysis-neo4j/)
 
