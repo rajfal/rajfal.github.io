@@ -233,6 +233,14 @@ END
 ) as similarity_score
 ```
 
+#### 3. Confirm the found properties' common characteristic and expose differences from the benchmark property
+
+1. The similarity score indicated that `hc-168`, `hc-169` and `hc-170` are the most similar to `hc_165` than any other properties in our register. 
+
+Now, we want to figure out whether the exact details by generating and inspecting each property's soil profile. So, we don't just want to take the algorithm's decision for granted, we want to view the details ourselves.
+
+At least, until we can trust the algorithm
+
 
 1. Let's find how many properties are in the survey data, how many different soil conditions have been found, what are they and how many soil tests have been performed. I am using Cypher's in-built [`collect()`](https://neo4j.com/docs/developer-manual/current/cypher/functions/aggregating/#functions-collect) function to amalgamate multiple values into a single list that will be displayed under its own column.
 
