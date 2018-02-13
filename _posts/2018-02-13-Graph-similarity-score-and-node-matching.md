@@ -235,37 +235,76 @@ END
 
 #### 3. Confirm the found properties' common characteristic and expose differences from the benchmark property
 
-1. The similarity score indicated that `hc-168`, `hc-169` and `hc-170` are the most similar to `hc_165` than any other properties in our register. 
+1. The similarity score indicated that `hc_168`, `hc_169` and `hc_170` are the most similar to `hc_165` than any other properties in our register. 
 
 Now, we want to figure out whether the exact details by generating and inspecting each property's soil profile. So, we don't just want to take the algorithm's decision for granted, we want to view the details ourselves.
 
-At least, until we can trust the algorithm
+At least, until we can trust the algorithm.
 
-
-1. Let's find how many properties are in the survey data, how many different soil conditions have been found, what are they and how many soil tests have been performed. I am using Cypher's in-built [`collect()`](https://neo4j.com/docs/developer-manual/current/cypher/functions/aggregating/#functions-collect) function to amalgamate multiple values into a single list that will be displayed under its own column.
+So, what kind of soil issues do these four properties share?
 
   ```sql
-MATCH (h:Hort_Client)-[:HAS]->(s:Soil_Issue)<-[:INVESTIGATES]-(ss:Soil_Service)
-RETURN count(DISTINCT h.name) as no_properties, count(DISTINCT s) as no_soil_issues,
-collect(DISTINCT s.type) as soil_issues_present, count(DISTINCT ss) as no_analyses_completed
+MATCH (h:Hort_Client)-[:HAS]->(s:Soil_Issue)<-[:INVESTIGATES]-(ss:Soil_Service)<-[:REQUESTS]-(h)
+WHERE h.name IN ["hc_168", "hc_169", "hc_170", "hc_165"] //
+WITH h.name as property, collect(DISTINCT s.type) as soil, count(ss) as no_soil_tests
+UNWIND soil as issues
+WITH property, issues order by issues, no_soil_tests
+RETURN property, collect(issues) as sorted, no_soil_tests
+ORDER BY property
   ```
 __Output:__
     
  ```bash
-╒═══════════════╤══════════════════════════╤═════════════════════════════╤═══════════════════════╕
-│"no_properties"│"soil_issues_investigated"│"soil_issues_present"        │"no_analyses_completed"│
-╞═══════════════╪══════════════════════════╪═════════════════════════════╪═══════════════════════╡
-│21             │12                        │["Erosion","LowOrganicMatter"│2670                   │
-│               │                          │,"Acidification","Compaction"│                       │
-│               │                          │,"LowOrganicBiota","HighAlkal│                       │
-│               │                          │inity","Impermeable","HeavyMe│                       │
-│               │                          │talContamination","LowPhospho│                       │
-│               │                          │rus","Salinity","LowNitrogen"│                       │
-│               │                          │,"LowPotassium"]             │                       │
-└───────────────┴──────────────────────────┴─────────────────────────────┴───────────────────────┘
+╒══════════╤═══════════════════════════════════════════════════════════════════════════════════════════╤═══════════════╕
+│"property"│"sorted"                                                                                   │"no_soil_tests"│
+╞══════════╪═══════════════════════════════════════════════════════════════════════════════════════════╪═══════════════╡
+│"hc_165"  │["Compaction","Erosion","HighAlkalinity","LowOrganicMatter","LowPhosphorus","LowPotassium"]│128            │
+├──────────┼───────────────────────────────────────────────────────────────────────────────────────────┼───────────────┤
+│"hc_168"  │["Compaction","Erosion","HighAlkalinity","LowOrganicBiota","LowOrganicMatter"]             │261            │
+├──────────┼───────────────────────────────────────────────────────────────────────────────────────────┼───────────────┤
+│"hc_169"  │["Compaction","Erosion","HighAlkalinity","LowOrganicBiota","LowOrganicMatter"]             │182            │
+├──────────┼───────────────────────────────────────────────────────────────────────────────────────────┼───────────────┤
+│"hc_170"  │["Compaction","Erosion","HighAlkalinity","LowOrganicBiota","LowOrganicMatter"]             │148            │
+└──────────┴───────────────────────────────────────────────────────────────────────────────────────────┴───────────────┘
+```
+
+Next, we'll drill down deeper to uncover the actual soil profile figures for each `Hort_Client`
+
+  ```sql
+MATCH (h:Hort_Client)-[:HAS]->(s:Soil_Issue)<-[:INVESTIGATES]-(ss:Soil_Service)<-[:REQUESTS]-(h:Hort_Client)
+WHERE h.name IN ["hc_168", "hc_169", "hc_170", "hc_165"]
+WITH h.name AS hcs, collect( s.type) AS soil_conditions, count(s) AS total
+UNWIND soil_conditions AS list
+WITH hcs, list, COUNT(list) AS count, total
+with hcs, list ORDER BY list, count, total
+WITH hcs, COLLECT(list) AS values, COLLECT(count) AS counts, total
+UNWIND hcs AS hort_client
+RETURN
+  hort_client, EXTRACT(i IN RANGE(0, SIZE(values) - 1) | [values[i], toInteger((counts[i]/toFloat(total))*100)+'%']) AS soil_profile
+ORDER BY hort_client
+  ```
+__Output:__
+    
+ ```bash
+╒═════════════╤════════════════════════════════════════════════════════════════════════════════════════╕
+│"hort_client"│"soil_profile"                                                                          │
+╞═════════════╪════════════════════════════════════════════════════════════════════════════════════════╡
+│"hc_165"     │[["Compaction","21%"],["Erosion","37%"],["HighAlkalinity","17%"],["LowOrganicMatter","7%│
+│             │"],["LowPhosphorus","12%"],["LowPotassium","3%"]]                                       │
+├─────────────┼────────────────────────────────────────────────────────────────────────────────────────┤
+│"hc_168"     │[["Compaction","14%"],["Erosion","44%"],["HighAlkalinity","13%"],["LowOrganicBiota","18%│
+│             │"],["LowOrganicMatter","8%"]]                                                           │
+├─────────────┼────────────────────────────────────────────────────────────────────────────────────────┤
+│"hc_169"     │[["Compaction","23%"],["Erosion","8%"],["HighAlkalinity","23%"],["LowOrganicBiota","22%"│
+│             │],["LowOrganicMatter","21%"]]                                                           │
+├─────────────┼────────────────────────────────────────────────────────────────────────────────────────┤
+│"hc_170"     │[["Compaction","25%"],["Erosion","43%"],["HighAlkalinity","24%"],["LowOrganicBiota","1%"│
+│             │],["LowOrganicMatter","6%"]]                                                            │
+└─────────────┴────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 
+1. Let's find how many properties are in the survey data, how many different soil conditions have been found, what are they and how many soil tests have been performed. I am using Cypher's in-built [`collect()`](https://neo4j.com/docs/developer-manual/current/cypher/functions/aggregating/#functions-collect) function to amalgamate multiple values into a single list that will be displayed under its own column.
 
  
 ---
