@@ -157,7 +157,7 @@ RETURN y,m,day, relationships(p)
 ```
 __Output:__
   
- ![Viewing :PREVIOUS relationships](/assets/images/time_tree_NEXT.png)
+ ![Viewing :PREVIOUS relationships](/assets/images/time_tree_PREVIOUS.png)
  
 
 #### 3. Confirm the found properties' common characteristic and expose differences from the benchmark property
