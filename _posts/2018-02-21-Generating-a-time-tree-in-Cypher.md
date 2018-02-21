@@ -115,7 +115,8 @@ __Output:__
  ```bash
 Added 3026 labels, created 3026 nodes, set 3026 properties, created 5939 relationships, completed after 582 ms.
 ```
-Let's take a date of the 1st of February 2014 and find the next three days
+
+Now, let's take a date of the 1st of February 2014 and find the next three days.
 
 ```sql
 MATCH p = (y:Year {year: 2014})-[:HAS_MONTH]->(m:Month {month: 2})-[:HAS_DAY]->(:Day {day: 1})-[:NEXT*0..3]->(day)
@@ -126,68 +127,38 @@ __Output:__
  ![Viewing :NEXT relationships](/assets/images/time_tree_NEXT.png)
   
 
-#### 2. Create an algorithm that will find similar properties based on the profile that we developed
+#### 2. Create relationships between days that go back in time
 
-1. Once we've established the profile of the property, then we can use it as a benchmark to find properties that are like it. For example, we are interested in properties that have significant erosion and compaction problems but also have substantial problems with alkalinity, lack of organic matter and major element shortages, such as P and K.
+1. I also wanted to generate relationships tell us what is the date `[:PREVIOUS]` to the one we are currently viewing. Such as, what are the last three days before the one in question.
 
-Here is the Cypher code that would help us unearth such similarities.
+This particular piece of Cypher I had to create and it works in the reverse order of the one that determines the `[:NEXT]` relationships.
 
 ```sql
-MATCH (h:Hort_Client)-[:HAS]->(s:Soil_Issue)<-[r:INVESTIGATES]-(ss:Soil_Service)-[r1:INVESTIGATES]->(s1:Soil_Issue)<-[:HAS]-(h1:Hort_Client)
-WHERE h<>h1 AND h.name='hc_165'
-RETURN h1.name AS related_hort_client, 
-sum(
-CASE s1.type 
-  WHEN "Erosion" THEN 0.37 
-  WHEN "Compaction" THEN 0.21
-  WHEN "LowOrganicMatter" THEN 0.07
-  WHEN "HighAlkalinity" THEN 0.17
-  WHEN "LowPhosphorus" THEN 0.12
-  WHEN "LowPotassium" Then 0.03  
-  ELSE 0 
-END
-) as similarity_score
-ORDER BY Score DESC
-LIMIT 3 
+MATCH (year:Year)-[:HAS_MONTH]->(month)-[:HAS_DAY]->(day)
+WITH year,month,day
+ORDER BY year.year, month.month, day.day
+WITH collect(day) as days
+FOREACH(i in RANGE(size(days)-1, 0, -1) | 
+    FOREACH(day2 in [days[i]] | 
+        FOREACH(day1 in [days[i-1]] | 
+            CREATE (day2)-[:PREVIOUS]->(day1))))
 ```
 __Output:__
     
  ```bash
-╒═════════════════════╤══════════════════╕
-│"related_hort_client"│"similarity_score"│
-╞═════════════════════╪══════════════════╡
-│"hc_170"             │127               │
-├─────────────────────┼──────────────────┤
-│"hc_169"             │127               │
-├─────────────────────┼──────────────────┤
-│"hc_168"             │127               │
-└─────────────────────┴──────────────────┘
+Created 2922 relationships, completed after 73 ms.
 ```
 
-This query looks for similar properties calculating a score based a property's soil testing history. In this case, there are 3 similar properties, whose soil profile resembles `hc_165`. 
+Now, let's take a date of the 1st of February 2014 and find the previous three days.
 
-In this restricts findings to properties other than `hc_165`.
-```python
-WHERE h<>h1 AND h.name='hc_165'
+```sql
+MATCH p = (y:Year {year: 2014})-[:HAS_MONTH]->(m:Month {month: 2})-[:HAS_DAY]->(:Day {day: 1})-[:PREVIOUS*0..3]->(day)
+RETURN y,m,day, relationships(p)
 ```
-
-In the following block of code, we are returning a single column. Everytime a specific `Soil_Issue` is found the algorithm gives it a value and adds to the previously summed figure. For example, if a property's soil test indicated that `High_Alkalinity` was found then 0.17 will be added. However, should such a test yield `LowOrganicBiota` then 0 will be added because the algorithm is not looking for this soil problem.
-
-So you can see that each soil condition is assigned certain weights, and these weights are derived from the soil profile figures of the property, `hc_165`.
-
-```python
-sum(
-CASE s1.type 
-  WHEN "Erosion" THEN 0.37 
-  WHEN "Compaction" THEN 0.21
-  WHEN "LowOrganicMatter" THEN 0.07
-  WHEN "HighAlkalinity" THEN 0.17
-  WHEN "LowPhosphorus" THEN 0.12
-  WHEN "LowPotassium" Then 0.03  
-  ELSE 0 
-END
-) as similarity_score
-```
+__Output:__
+  
+ ![Viewing :PREVIOUS relationships](/assets/images/time_tree_NEXT.png)
+ 
 
 #### 3. Confirm the found properties' common characteristic and expose differences from the benchmark property
 
