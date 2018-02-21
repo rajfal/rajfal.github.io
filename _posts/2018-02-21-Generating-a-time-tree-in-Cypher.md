@@ -72,36 +72,48 @@ I will break my exercise into three sections:
 - drill down to the found properties' commonolities but also expose differences from the benchmark properties
 
 
-#### 1. Build a property soil profile
+#### 1. Generate a time tree
 
-1. We know that each `Hort_Client` has period soil testing to determine and address ongoing or once-off `Soil_Issues`. Each property has about 5 years of soil testing data which gives us enough information to develop a soil profile for each property.
-
-First, let's look at the summary of the property `hc_165`. We want to find what kind of soil conditions have been present and how many of each.
+1. Given our range of years, 2007-2014, let's create the tree
+Immediately following, Cypher will create `[:NEXT]` links between each subsequent days, extending out into the future
 
 ```sql
-MATCH (h:Hort_Client)-[:HAS]->(s:Soil_Issue)<-[:INVESTIGATES]-(ss:Soil_Service)<-[:REQUESTS]-(h:Hort_Client)
-WHERE h.name='hc_165'
-RETURN h.name, s.type as soil_condition, count(s) as no_found
-ORDER BY h.name, no_found DESC  
+WITH range(2007, 2014) AS years, range(1,12) as months
+FOREACH(year IN years | 
+  MERGE (y:Year {year: year})
+  FOREACH(month IN months | 
+    CREATE (m:Month {month: month})
+    MERGE (y)-[:HAS_MONTH]->(m)
+    FOREACH(day IN (CASE 
+                      WHEN month IN [1,3,5,7,8,10,12] THEN range(1,31) 
+                      WHEN month = 2 THEN 
+                        CASE
+                          WHEN year % 4 <> 0 THEN range(1,28)
+                          WHEN year % 100 <> 0 THEN range(1,29)
+                          WHEN year % 400 = 0 THEN range(1,29)
+                          ELSE range(1,28)
+                        END
+                      ELSE range(1,30)
+                    END) |      
+      CREATE (d:Day {day: day})
+      MERGE (m)-[:HAS_DAY]->(d))))
+ 
+WITH *
+
+//create [:NEXT] relationships 
+MATCH (year:Year)-[:HAS_MONTH]->(month)-[:HAS_DAY]->(day)
+WITH year,month,day
+ORDER BY year.year, month.month, day.day
+WITH collect(day) as days
+FOREACH(i in RANGE(0, size(days)-2) | 
+    FOREACH(day1 in [days[i]] | 
+        FOREACH(day2 in [days[i+1]] | 
+            CREATE (day1)-[:NEXT]->(day2))))
 ```
 __Output:__
     
  ```bash
-╒════════╤══════════════════╤══════════╕
-│"h.name"│"soil_condition"  │"no_found"│
-╞════════╪══════════════════╪══════════╡
-│"hc_165"│"Erosion"         │48        │
-├────────┼──────────────────┼──────────┤
-│"hc_165"│"Compaction"      │27        │
-├────────┼──────────────────┼──────────┤
-│"hc_165"│"HighAlkalinity"  │23        │
-├────────┼──────────────────┼──────────┤
-│"hc_165"│"LowPhosphorus"   │16        │
-├────────┼──────────────────┼──────────┤
-│"hc_165"│"LowOrganicMatter"│9         │
-├────────┼──────────────────┼──────────┤
-│"hc_165"│"LowPotassium"    │5         │
-└────────┴──────────────────┴──────────┘
+Added 3026 labels, created 3026 nodes, set 3026 properties, created 5939 relationships, completed after 582 ms.
 ```
 If we were to sum all of the soil conditions, we'd find that this property has been tested 128 times. It's clear that some properties would have been analysed more or less frequently than this particular one. So, we need a relative measure with which we can compare different `Hort_Client` sites. The easiest one to implement would be to use a percentage ratio, %.
 
