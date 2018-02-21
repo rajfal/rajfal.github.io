@@ -1,8 +1,8 @@
 ---
 layout: post
-title: "Build a time tree in Cypher to model dates"
+title: "Generate a time tree in Cypher to model dates"
 comments: true
-published: false
+published: true
 description: "Use Cypher to generate a year-month-day time tree"
 categories: [neo4j, Cypher, date modelling, time analysis, time tree]
 tags: [neo4j, cypher, date model, time tree]
@@ -17,9 +17,21 @@ keywords: "neo4j, Cypher, data exploration, cypher query, date modelling, time a
 #### Background
 
 What I want to explore next are the soil analysis trends across time. Initially, I did not add the time dimension to
-my model as a first class citizen and merely appended the original MySQL date information as a property of the `Soil_Report' node.
+my model as a first class citizen and merely appended the original MySQL date information as a property of the `Soil_Report` node:
 
->>>
+```python
+{
+  "recommendation": "4082",
+  "action_date": "2013-08-12",
+  "client": "157",
+  "days_delayed": "56",
+  "soil_analyst": "7320",
+  "report_date": "2013-06-17"
+}
+```
+Note above that the two dates, `action_date` and `report_date` are saved as strings. This data type will become tricky to parse. It would be far more efficient to create events to which these dates apply.
+
+Now that we have data in the graph, the word 'refactoring' comes to mind. That is effectively, what we will do here. However, one step a time. Hence, why we will start with generating a time tree where dates themselves in form of year, month and day nodes will be a graph itself.
 
 Following on from the post entitled, Getting started with Data Analysis in Neo4j[[^1]], the author makes a reference to
 finding recommendations. I decided to implemented something similar with my own data. 
