@@ -160,80 +160,13 @@ __Output:__
  ![Viewing :PREVIOUS relationships](/assets/images/time_tree_PREVIOUS.png)
  
 
-#### 3. Confirm the found properties' common characteristic and expose differences from the benchmark property
+#### 3. Looking at both :NEXT and :PREVIOUS relationships
+ 
 
-1. The similarity score indicated that `hc_168`, `hc_169` and `hc_170` are the most similar to `hc_165` than any other properties in our register. 
-
-Now, we want to figure out whether the exact details by generating and inspecting each property's soil profile. So, we don't just want to take the algorithm's decision for granted, we want to view the details ourselves.
-
-At least, until we can trust the algorithm.
-
-So, what kind of soil issues do these four properties share?
-
-  ```sql
-MATCH (h:Hort_Client)-[:HAS]->(s:Soil_Issue)<-[:INVESTIGATES]-(ss:Soil_Service)<-[:REQUESTS]-(h)
-WHERE h.name IN ["hc_168", "hc_169", "hc_170", "hc_165"] //
-WITH h.name as property, collect(DISTINCT s.type) as soil, count(ss) as no_soil_tests
-UNWIND soil as issues
-WITH property, issues order by issues, no_soil_tests
-RETURN property, collect(issues) as sorted, no_soil_tests
-ORDER BY property
-  ```
-__Output:__
-    
- ```bash
-╒══════════╤═══════════════════════════════════════════════════════════════════════════════════════════╤═══════════════╕
-│"property"│"sorted"                                                                                   │"no_soil_tests"│
-╞══════════╪═══════════════════════════════════════════════════════════════════════════════════════════╪═══════════════╡
-│"hc_165"  │["Compaction","Erosion","HighAlkalinity","LowOrganicMatter","LowPhosphorus","LowPotassium"]│128            │
-├──────────┼───────────────────────────────────────────────────────────────────────────────────────────┼───────────────┤
-│"hc_168"  │["Compaction","Erosion","HighAlkalinity","LowOrganicBiota","LowOrganicMatter"]             │261            │
-├──────────┼───────────────────────────────────────────────────────────────────────────────────────────┼───────────────┤
-│"hc_169"  │["Compaction","Erosion","HighAlkalinity","LowOrganicBiota","LowOrganicMatter"]             │182            │
-├──────────┼───────────────────────────────────────────────────────────────────────────────────────────┼───────────────┤
-│"hc_170"  │["Compaction","Erosion","HighAlkalinity","LowOrganicBiota","LowOrganicMatter"]             │148            │
-└──────────┴───────────────────────────────────────────────────────────────────────────────────────────┴───────────────┘
-```
-
-Next, we'll drill down deeper to uncover the actual soil profile figures for each `Hort_Client`
-
-  ```sql
-MATCH (h:Hort_Client)-[:HAS]->(s:Soil_Issue)<-[:INVESTIGATES]-(ss:Soil_Service)<-[:REQUESTS]-(h:Hort_Client)
-WHERE h.name IN ["hc_168", "hc_169", "hc_170", "hc_165"]
-WITH h.name AS hcs, collect( s.type) AS soil_conditions, count(s) AS total
-UNWIND soil_conditions AS list
-WITH hcs, list, COUNT(list) AS count, total
-with hcs, list ORDER BY list, count, total
-WITH hcs, COLLECT(list) AS values, COLLECT(count) AS counts, total
-UNWIND hcs AS hort_client
-RETURN
-  hort_client, EXTRACT(i IN RANGE(0, SIZE(values) - 1) | [values[i], toInteger((counts[i]/toFloat(total))*100)+'%']) AS soil_profile
-ORDER BY hort_client
-  ```
-__Output:__
-    
- ```bash
-╒═════════════╤════════════════════════════════════════════════════════════════════════════════════════╕
-│"hort_client"│"soil_profile"                                                                          │
-╞═════════════╪════════════════════════════════════════════════════════════════════════════════════════╡
-│"hc_165"     │[["Compaction","21%"],["Erosion","37%"],["HighAlkalinity","17%"],["LowOrganicMatter","7%│
-│             │"],["LowPhosphorus","12%"],["LowPotassium","3%"]]                                       │
-├─────────────┼────────────────────────────────────────────────────────────────────────────────────────┤
-│"hc_168"     │[["Compaction","14%"],["Erosion","44%"],["HighAlkalinity","13%"],["LowOrganicBiota","18%│
-│             │"],["LowOrganicMatter","8%"]]                                                           │
-├─────────────┼────────────────────────────────────────────────────────────────────────────────────────┤
-│"hc_169"     │[["Compaction","23%"],["Erosion","8%"],["HighAlkalinity","23%"],["LowOrganicBiota","22%"│
-│             │],["LowOrganicMatter","21%"]]                                                           │
-├─────────────┼────────────────────────────────────────────────────────────────────────────────────────┤
-│"hc_170"     │[["Compaction","25%"],["Erosion","43%"],["HighAlkalinity","24%"],["LowOrganicBiota","1%"│
-│             │],["LowOrganicMatter","6%"]]                                                            │
-└─────────────┴────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-BTW, I was inspired by the discussion around the topic of [How to aggregate an aggregated list in cypher](https://stackoverflow.com/questions/40713658/how-to-aggregate-an-aggregated-list-in-cypher) to modify and develop this last block of Cypher code.
+![Viewing :PREVIOUS+:NEXT relationships](/assets/images/time_tree_both_ways.png)
  
 ---
-***We built a similarity scoring algorithm for nodes and their aggregated data, using a soil profile, feature weights and then we confirmed that indeed the similar properties shared common characteristics***{: style="color: green"}
+***We generated a time tree linking years, months and days with additional relationships that tell us any date's Next and Previous date***{: style="color: green"}
 
 ---
 [Back to top of page](#)
