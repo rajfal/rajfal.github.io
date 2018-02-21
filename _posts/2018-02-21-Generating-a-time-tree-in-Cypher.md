@@ -33,14 +33,34 @@ Note above that the two dates, `action_date` and `report_date` are saved as stri
 
 Now that we have data in the graph, the word 'refactoring' comes to mind. That is effectively, what we will do here. However, one step a time. Hence, why we will start with generating a time tree where dates themselves in form of year, month and day nodes will be a graph itself.
 
-Following on from the post entitled, Getting started with Data Analysis in Neo4j[[^1]], the author makes a reference to
-finding recommendations. I decided to implemented something similar with my own data. 
+I found an article entitled, Modelling Dates Using Neo4j[[^1]], where the author describes how to create a time tree. There you can find references to several other posts which illustrate how to set up a time tree.
+1. GraphAware Neo4j Time Tree[[^2]]
+2. Neo4j: Cypher – Creating a time tree down to the day[[^3]]
+3. A multilevel indexing structure (path tree)[[^4]]
 
-Imagine that you are a horticultural property investor and you know from experience that certain sets of soil problems are 
-difficult and expensive to address. Whenever you consider a property, you wish to know whether it is anything like the one
-you've had a disappointing experience with. 
+What we need to do first, is to figure out the time range that will be applicable to Soil Survey data.
 
-Or, say that you are a contractor that has a novel method for remediating specific soil conditions. You had quantifiable success at sites that share common characteristics and to make your operations efficient you are targetting properties where such soil conditions exist and you are the only business in the market to provide a lasting solution.
+We'll use some Cypher to filter the earliest and the most recent date, thus giving us the range over which the time tree will be set up.
+
+```sql
+// find the earliest and the latest dates from either of the two date properties in the Soil_Report nodes
+MATCH (s:Soil_Report)
+WITH [max(s.action_date), max(s.report_date)] as max_list, [min(s.action_date), min(s.report_date)] as min_list
+UNWIND max_list as flat_max
+UNWIND min_list as flat_min
+RETURN min(flat_min) as start_date_range, max(flat_max) as end_date_range
+```
+__Output:__
+    
+ ```bash
+╒══════════════════╤════════════════╕
+│"start_date_range"│"end_date_range"│
+╞══════════════════╪════════════════╡
+│"2007-05-07"      │"2014-04-14"    │
+└──────────────────┴────────────────┘
+```
+
+This gives us a seven year period that the time tree will cover down to a day, from 1st January 2007 to 31st December 2014.
 
 #### Design plan
 
@@ -331,5 +351,9 @@ BTW, I was inspired by the discussion around the topic of [How to aggregate an a
 
 ---
 
-[^1]: 1: [Getting started with Data Analysis in Neo4j](https://neo4j.com/blog/getting-started-data-analysis-neo4j/)
+[^1]: 1: [Modelling Dates Using Neo4j](https://www.menome.com/wp/neo4j-modelling-dates/)
+[^2]: 2: [GraphAware Neo4j Time Tree](https://graphaware.com/neo4j/2014/08/20/graphaware-neo4j-timetree.html)
+[^3]: 3: [Neo4j: Cypher – Creating a time tree down to the day](http://www.markhneedham.com/blog/2014/04/19/neo4j-cypher-creating-a-time-tree-down-to-the-day/)
+[^4]: 4: [A multilevel indexing structure (path tree)](http://neo4j.com/docs/1.9.4/cypher-cookbook-path-tree.html)
+
 
