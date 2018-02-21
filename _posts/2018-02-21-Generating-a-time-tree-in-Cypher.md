@@ -115,110 +115,16 @@ __Output:__
  ```bash
 Added 3026 labels, created 3026 nodes, set 3026 properties, created 5939 relationships, completed after 582 ms.
 ```
-If we were to sum all of the soil conditions, we'd find that this property has been tested 128 times. It's clear that some properties would have been analysed more or less frequently than this particular one. So, we need a relative measure with which we can compare different `Hort_Client` sites. The easiest one to implement would be to use a percentage ratio, %.
-
-Let's build one and examine what each part of Cypher code does, before I generate the result.
+Let's take a date of the 1st of February 2014 and find the next three days
 
 ```sql
-MATCH (h:Hort_Client {name :'hc_165'})-[:HAS]->(s:Soil_Issue)<-[:INVESTIGATES]-(ss:Soil_Service)<-[:REQUESTS]-(h)
-WITH h.name as property, count(s) as toto
-
-MATCH (h:Hort_Client {name :property})-[:HAS]->(s:Soil_Issue)<-[:INVESTIGATES]-(ss:Soil_Service)<-[:REQUESTS]-(h)
-WITH property, toto, s, count(s) as total
-RETURN property, s.type as soil_condition, total AS no_found, toInteger((total/toFloat((toto)))*100)+'%' AS frequency
-ORDER BY total DESC
-```
-
-First thing to note is that we are using two `MATCH` clauses that target our pattern of interest. The first `MATCH` clause will give us a total count of soil tests carried out at this property. I will run a partial query statement so you can understand what the first block of code does.
-
-```sql
-MATCH (h:Hort_Client {name :'hc_165'})-[:HAS]->(s:Soil_Issue)<-[:INVESTIGATES]-(ss:Soil_Service)<-[:REQUESTS]-(h)
-RETURN h.name as property, count(s) as toto
+MATCH p = (y:Year {year: 2014})-[:HAS_MONTH]->(m:Month {month: 2})-[:HAS_DAY]->(:Day {day: 1})-[:NEXT*0..3]->(day)
+RETURN y,m,day, relationships(p)
 ```
 __Output:__
   
-```bash
-╒══════════╤══════╕
-│"property"│"toto"│
-╞══════════╪══════╡
-│"hc_165"  │128   │
-└──────────┴──────┘
-```
-
-The `WITH` clause allows us to capture one specific node, h, and aggregates all soil issues using the function, count().
-
-We can see our output because instead of using `WITH` clause we use the `RETURN` one. The second block of `MATCH` code will now receive two parameters, `property` and `toto`  with their respective values of "hc_165" and 128.
-
-```sql
-MATCH (h:Hort_Client {name :'hc_165'})-[:HAS]->(s:Soil_Issue)<-[:INVESTIGATES]-(ss:Soil_Service)<-[:REQUESTS]-(h)
-WITH h.name as property, count(s) as toto
-
-MATCH (h:Hort_Client {name :property})-[:HAS]->(s:Soil_Issue)<-[:INVESTIGATES]-(ss:Soil_Service)<-[:REQUESTS]-(h)
-RETURN property, toto, s, count(s) as total
-```
-Whereas, the first `MATCH` block calculates total number of soil tests for the property, the second `MATCH` block sums the number of tests for each soil issue that was found for this `Hort_Client`. Also note that we just passed the variables, `property` and `toto` to the second `MATCH` clause
-
-```bash
-╒══════════╤══════╤═══════════════════════════╤═══════╕
-│"property"│"toto"│"s"                        │"total"│
-╞══════════╪══════╪═══════════════════════════╪═══════╡
-│"hc_165"  │128   │{"type":"Compaction"}      │27     │
-├──────────┼──────┼───────────────────────────┼───────┤
-│"hc_165"  │128   │{"type":"Erosion"}         │48     │
-├──────────┼──────┼───────────────────────────┼───────┤
-│"hc_165"  │128   │{"type":"LowPhosphorus"}   │16     │
-├──────────┼──────┼───────────────────────────┼───────┤
-│"hc_165"  │128   │{"type":"HighAlkalinity"}  │23     │
-├──────────┼──────┼───────────────────────────┼───────┤
-│"hc_165"  │128   │{"type":"LowOrganicMatter"}│9      │
-├──────────┼──────┼───────────────────────────┼───────┤
-│"hc_165"  │128   │{"type":"LowPotassium"}    │5      │
-└──────────┴──────┴───────────────────────────┴───────┘
-```
-
-Let's examine how % value for each `Soil_Issue` is calculated.
-```python
-toInteger((total/toFloat(toto))*100)+'%'
-```
-
-At this point, we need to do a couple of type conversions. Both `toto` and `total` variables are passed as integers. Dividing two integers will yield another integer. However, because we will end up with a rational number that starts with a decimal point, the end result will be a zero, 0. So we have to force a division by a Float type number. Hence, why we
-apply ` toFloat(toto) ` conversion.
-
-The result of `total` divided by the converted `toto` is then immediately multiplied by 100 to move the decimal point to the right and the `toInteger()` conversion extracts everything to the left of the decimal point as the result we want. 
-
-The string '%' gets tacked to the end to let us know that we dealing with percentage values.
-
-
-##### Evaluation steps for toInteger((total/toFloat(toto))*100)+'%'
-
-| Calculation    | Result        | 
-| -------------- |:-------------:|
-| toFloat(128)   | 128.00        | 
-| 48/128.00      | 0.375         |  
-| 0.375x100      | 37.5          | 
-| toInteger(37.5)| 37            | 
-| 37+'%'         | 37%           | 
-
-
-And the final result:
-
-```bash
-╒══════════╤══════════════════╤══════════╤═══════════╕
-│"property"│"soil_condition"  │"no_found"│"frequency"│
-╞══════════╪══════════════════╪══════════╪═══════════╡
-│"hc_165"  │"Erosion"         │48        │"37%"      │
-├──────────┼──────────────────┼──────────┼───────────┤
-│"hc_165"  │"Compaction"      │27        │"21%"      │
-├──────────┼──────────────────┼──────────┼───────────┤
-│"hc_165"  │"HighAlkalinity"  │23        │"17%"      │
-├──────────┼──────────────────┼──────────┼───────────┤
-│"hc_165"  │"LowPhosphorus"   │16        │"12%"      │
-├──────────┼──────────────────┼──────────┼───────────┤
-│"hc_165"  │"LowOrganicMatter"│9         │"7%"       │
-├──────────┼──────────────────┼──────────┼───────────┤
-│"hc_165"  │"LowPotassium"    │5         │"3%"       │
-└──────────┴──────────────────┴──────────┴───────────┘
-```
+ ![Viewing :NEXT relationships](/assets/images/time_tree_NEXT.png)
+  
 
 #### 2. Create an algorithm that will find similar properties based on the profile that we developed
 
