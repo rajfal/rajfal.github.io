@@ -90,10 +90,24 @@ __Output:__
 └────────┴─────────┴───────┴────────┴─────────┴───────┘
 ```
 
-#### 4. Looking at both :NEXT and :PREVIOUS relationships
+#### 4. Matching variables to specific time tree day nodes
  
+```sql
+MATCH (s:Soil_Report{client:'171', recommendation:'6689', soil_analyst:'576'})
+WITH s, split(s.report_date, '-') as r_on, split(s.action_date, '-')  as a_on
+WITH s, r_on, a_on, toInteger(r_on[0]) as r_year, toInteger(r_on[1]) as r_month, toInteger(r_on[2]) as r_day,
+toInteger(a_on[0]) as a_year, toInteger(a_on[1]) as a_month, toInteger(a_on[2]) as a_day
 
-![Viewing :PREVIOUS+:NEXT relationships](/assets/images/time_tree_both_ways.png)
+MATCH (y:Year {year:r_year})-[:HAS_MONTH]->(m:Month {month:r_month})-[:HAS_DAY]->(r_d:Day {day:r_day})
+MATCH (y1:Year {year:a_year})-[:HAS_MONTH]->(m1:Month {month:a_month})-[:HAS_DAY]->(a_d:Day {day:a_day})
+
+RETURN y,m,r_d, y1, m1, a_d
+```
+__Output:__ 
+
+![Matching variables to time tree](/assets/images/time_tree_match_to_vars.png)
+
+
  
 ---
 ***We generated a time tree linking years, months and days with additional relationships that tell us any date's Next and Previous date***{: style="color: green"}
