@@ -108,18 +108,33 @@ __Output:__
 ![Matching variables to time tree](/assets/images/time_tree_match_to_vars.png)
 
 
+#### 5. Binding time tree day nodes to Soil_Report node
+ 
+```sql
+MATCH (s:Soil_Report{client:'171', recommendation:'6689', soil_analyst:'576'})
+WITH s, split(s.report_date, '-') as r_on, split(s.action_date, '-')  as a_on
+WITH s, r_on, a_on, toInteger(r_on[0]) as r_year, toInteger(r_on[1]) as r_month, toInteger(r_on[2]) as r_day,
+toInteger(a_on[0]) as a_year, toInteger(a_on[1]) as a_month, toInteger(a_on[2]) as a_day
+
+MATCH (y:Year {year:r_year})-[:HAS_MONTH]->(m:Month {month:r_month})-[:HAS_DAY]->(r_d:Day {day:r_day})
+MATCH (y1:Year {year:a_year})-[:HAS_MONTH]->(m1:Month {month:a_month})-[:HAS_DAY]->(a_d:Day {day:a_day})
+
+MERGE (s)-[:REPORTED_ON]->(r_d)
+MERGE (s)-[:ACTIONED_ON]->(a_d)
+
+RETURN ()-[:REPORTED_ON]-(s)-[:ACTIONED_ON]-()
+```
+__Output:__ 
+
+![Matching variables to time tree](/assets/images/time_tree_match_bound_nodes.png)
+
  
 ---
-***We generated a time tree linking years, months and days with additional relationships that tell us any date's Next and Previous date***{: style="color: green"}
+***We stepped through the process of binding an existing `Soil_Report` node to day nodes that are part of the previously implemented time tree - we are ready to refactor the remaining Soil Report nodes***{: style="color: green"}
 
 ---
 [Back to top of page](#)
 
 ---
-
-[^1]: 1: [Modelling Dates Using Neo4j](https://www.menome.com/wp/neo4j-modelling-dates/)
-[^2]: 2: [GraphAware Neo4j Time Tree](https://graphaware.com/neo4j/2014/08/20/graphaware-neo4j-timetree.html)
-[^3]: 3: [Neo4j: Cypher – Creating a time tree down to the day](http://www.markhneedham.com/blog/2014/04/19/neo4j-cypher-creating-a-time-tree-down-to-the-day/)
-[^4]: 4: [A multilevel indexing structure (path tree)](http://neo4j.com/docs/1.9.4/cypher-cookbook-path-tree.html)
 
 
