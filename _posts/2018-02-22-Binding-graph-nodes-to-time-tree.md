@@ -128,6 +128,13 @@ __Output:__
 
 ![Nodes bound to time tree](/assets/images/time_tree_bound_nodes.png)
 
+
+__PS:__ 
+
+1. BTW, updated graph schema :)
+
+![New graph database schema](/assets/images/soil_survey_meta_graph_II.png)
+ 
  
 ---
 ***We stepped through the process of binding an existing `Soil_Report` node to day nodes that are part of the previously implemented time tree - we are ready to refactor the remaining Soil Report nodes***{: style="color: green"}
