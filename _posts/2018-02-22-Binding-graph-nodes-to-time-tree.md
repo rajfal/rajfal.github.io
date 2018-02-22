@@ -126,7 +126,7 @@ RETURN ()-[:REPORTED_ON]-(s)-[:ACTIONED_ON]-()
 ```
 __Output:__ 
 
-![Matching variables to time tree](/assets/images/time_tree_match_bound_nodes.png)
+![Nodes bound to time tree](/assets/images/time_tree_match_bound_nodes.png)
 
  
 ---
