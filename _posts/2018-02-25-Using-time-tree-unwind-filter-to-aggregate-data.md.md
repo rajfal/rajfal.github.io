@@ -45,26 +45,32 @@ __Output:__
 
 1. We will use the month and year of May 2007
 
-Code Study:
-`...
+Explanation of Cypher code used below:
+
+```python
 collect( n.type) as i
 UNWIND i as Issues
 WITH  Y, M, all_issues , Issues ORDER BY Issues
 RETURN Y, M, collect(Issues) as issues, 
 size(filter(x IN Issues WHERE x= 'Erosion')) as Erosion
-...`
+...
+```
 
 Let's study the above code, so we understand what exactly is being done.
-`n.type` represent all rows of `Soil_Issue`s that occur throughout May 2007. 
+
+`n.type` represent all rows of `Soil_Issue`s that occur throughout May 2007
+
 We then apply collect() function to turn them into a list, `i`, of the format, ['c','b', 'a']
 Next, we apply UNWIND clause to turn that list into a rows-based variable called `Issues` - this will allow sorting
+
 WITH clause then applies alphabetic sort to `Issues`, see `Issues ORDER BY Issues`
+
 RETURN clause applies another collect() function call to gather these ordered `Issues` into a variable called `issues`
+
 So what's with `size(filter(x IN Issues WHERE x= 'Erosion')) as Erosion`?
 We use filter() function to pull out only those soil issues of the type 'Erosion'. Every item `x` is tested to see if it contains 'Erosion'. If it does then it's added to the new internal list. 
-Once all the `Issues` have been filtered, we apply size() function on the new list to arrive at the total number of Erosion issues.
 
-If you look at the code below
+Once all the `Issues` have been filtered, we apply size() function on the new list to arrive at the total number of Erosion issues.
 
 ```sql
 MATCH (y:Year {year: 2007})-[:HAS_MONTH]->(m:Month {month: 5})-[:HAS_DAY]->(d:Day)<-[r:REPORTED_ON]-()-[*1..2]-(n:Soil_Issue) 
@@ -139,44 +145,139 @@ __Output:__
 └──────────┴─────────┴────────────────┴─────────────────┘
 ```
 
-#### 4. Matching variables to specific time tree day nodes
+#### 4. Summarize soil issue frequency across years
  
 ```sql
-MATCH (s:Soil_Report{client:'171', recommendation:'6689', soil_analyst:'576'})
-WITH s, split(s.report_date, '-') as r_on, split(s.action_date, '-')  as a_on
-WITH s, r_on, a_on, toInteger(r_on[0]) as r_year, toInteger(r_on[1]) as r_month, toInteger(r_on[2]) as r_day,
-toInteger(a_on[0]) as a_year, toInteger(a_on[1]) as a_month, toInteger(a_on[2]) as a_day
-
-MATCH (y:Year {year:r_year})-[:HAS_MONTH]->(m:Month {month:r_month})-[:HAS_DAY]->(r_d:Day {day:r_day})
-MATCH (y1:Year {year:a_year})-[:HAS_MONTH]->(m1:Month {month:a_month})-[:HAS_DAY]->(a_d:Day {day:a_day})
-
-RETURN y,m,r_d, y1, m1, a_d
+UNWIND [2007,2008, 2009, 2010, 2011, 2012, 2013, 2014]  as years
+MATCH (y:Year {year: years})-[:HAS_MONTH]->(m:Month )-[:HAS_DAY]->(d:Day)<-[r:REPORTED_ON]-()-[*1..2]-(n:Soil_Issue) 
+WITH y.year as Y,  collect( n.type) as Issues
+RETURN Y, 
+size(filter(x IN Issues WHERE x= 'Acidification')) as Acidification,
+size(filter(x IN Issues WHERE x= 'Compaction')) as Compaction,
+size(filter(x IN Issues WHERE x= 'Erosion')) as Erosion,
+size(filter(x IN Issues WHERE x= 'HeavyMetalContamination')) as HeavyMetalContamination,
+size(filter(x IN Issues WHERE x= 'HighAlkalinity')) as HighAlkalinity,
+size(filter(x IN Issues WHERE x= 'Impermeable')) as Impermeable,
+size(filter(x IN Issues WHERE x= 'LowNitrogen')) as LowNitrogen,
+size(filter(x IN Issues WHERE x= 'LowOrganicBiota')) as LowOrganicBiota,
+size(filter(x IN Issues WHERE x= 'LowOrganicMatter')) as LowOrganicMatter,
+size(filter(x IN Issues WHERE x= 'LowPhosphorus')) as LowPhosphorus,
+size(filter(x IN Issues WHERE x= 'LowPotassium')) as LowPotassium,
+size(filter(x IN Issues WHERE x= 'Salinity')) as Salinity
+ORDER By Y
 ```
 __Output:__ 
 
-![Matching variables to time tree](/assets/images/time_tree_match_to_vars.png)
+ ```bash
+╒════╤═══════════════╤════════════╤═════════╤═════════════════════════╤════════════════╤═════════════╤═════════════╤═════════════════╤══════════════════╤═══════════════╤══════════════╤══════════╕
+│"Y" │"Acidification"│"Compaction"│"Erosion"│"HeavyMetalContamination"│"HighAlkalinity"│"Impermeable"│"LowNitrogen"│"LowOrganicBiota"│"LowOrganicMatter"│"LowPhosphorus"│"LowPotassium"│"Salinity"│
+╞════╪═══════════════╪════════════╪═════════╪═════════════════════════╪════════════════╪═════════════╪═════════════╪═════════════════╪══════════════════╪═══════════════╪══════════════╪══════════╡
+│2007│31             │59          │124      │1                        │58              │4            │1            │44               │29                │16             │0             │18        │
+├────┼───────────────┼────────────┼─────────┼─────────────────────────┼────────────────┼─────────────┼─────────────┼─────────────────┼──────────────────┼───────────────┼──────────────┼──────────┤
+│2008│133            │472         │773      │15                       │462             │18           │23           │276              │225               │89             │1             │72        │
+├────┼───────────────┼────────────┼─────────┼─────────────────────────┼────────────────┼─────────────┼─────────────┼─────────────────┼──────────────────┼───────────────┼──────────────┼──────────┤
+│2009│110            │498         │755      │16                       │439             │30           │54           │327              │237               │112            │0             │74        │
+├────┼───────────────┼────────────┼─────────┼─────────────────────────┼────────────────┼─────────────┼─────────────┼─────────────────┼──────────────────┼───────────────┼──────────────┼──────────┤
+│2010│112            │578         │982      │43                       │475             │60           │61           │344              │237               │149            │5             │99        │
+├────┼───────────────┼────────────┼─────────┼─────────────────────────┼────────────────┼─────────────┼─────────────┼─────────────────┼──────────────────┼───────────────┼──────────────┼──────────┤
+│2011│121            │477         │769      │34                       │401             │20           │67           │252              │226               │196            │27            │75        │
+├────┼───────────────┼────────────┼─────────┼─────────────────────────┼────────────────┼─────────────┼─────────────┼─────────────────┼──────────────────┼───────────────┼──────────────┼──────────┤
+│2012│125            │659         │1139     │33                       │512             │56           │92           │426              │293               │273            │52            │121       │
+├────┼───────────────┼────────────┼─────────┼─────────────────────────┼────────────────┼─────────────┼─────────────┼─────────────────┼──────────────────┼───────────────┼──────────────┼──────────┤
+│2013│113            │462         │831      │33                       │386             │50           │13           │247              │192               │175            │43            │171       │
+├────┼───────────────┼────────────┼─────────┼─────────────────────────┼────────────────┼─────────────┼─────────────┼─────────────────┼──────────────────┼───────────────┼──────────────┼──────────┤
+│2014│29             │24          │73       │2                        │51              │1            │11           │14               │12                │45             │4             │1         │
+└────┴───────────────┴────────────┴─────────┴─────────────────────────┴────────────────┴─────────────┴─────────────┴─────────────────┴──────────────────┴───────────────┴──────────────┴──────────┘
+```
 
 
-#### 5. Binding time tree day nodes to Soil_Report node
+#### 5. Summarize soil issue frequency across months of a specific year, e.g. 2007
  
 ```sql
-MATCH (s:Soil_Report{client:'171', recommendation:'6689', soil_analyst:'576'})
-WITH s, split(s.report_date, '-') as r_on, split(s.action_date, '-')  as a_on
-WITH s, r_on, a_on, toInteger(r_on[0]) as r_year, toInteger(r_on[1]) as r_month, toInteger(r_on[2]) as r_day,
-toInteger(a_on[0]) as a_year, toInteger(a_on[1]) as a_month, toInteger(a_on[2]) as a_day
-
-MATCH (y:Year {year:r_year})-[:HAS_MONTH]->(m:Month {month:r_month})-[:HAS_DAY]->(r_d:Day {day:r_day})
-MATCH (y1:Year {year:a_year})-[:HAS_MONTH]->(m1:Month {month:a_month})-[:HAS_DAY]->(a_d:Day {day:a_day})
-
-MERGE (s)-[:REPORTED_ON]->(r_d)
-MERGE (s)-[:ACTIONED_ON]->(a_d)
-
-RETURN ()-[:REPORTED_ON]-(s)-[:ACTIONED_ON]-()
+UNWIND [2007]  as years
+MATCH (y:Year {year: years})-[:HAS_MONTH]->(m:Month )-[:HAS_DAY]->(d:Day)<-[r:REPORTED_ON]-()-[*1..2]-(n:Soil_Issue) 
+WITH y.year as Y,  m.month as M, collect( n.type) as Issues
+RETURN Y, M,
+size(filter(x IN Issues WHERE x= 'Acidification')) as Acidification,
+size(filter(x IN Issues WHERE x= 'Compaction')) as Compaction,
+size(filter(x IN Issues WHERE x= 'Erosion')) as Erosion,
+size(filter(x IN Issues WHERE x= 'HeavyMetalContamination')) as HeavyMetalContamination,
+size(filter(x IN Issues WHERE x= 'HighAlkalinity')) as HighAlkalinity,
+size(filter(x IN Issues WHERE x= 'Impermeable')) as Impermeable,
+size(filter(x IN Issues WHERE x= 'LowNitrogen')) as LowNitrogen,
+size(filter(x IN Issues WHERE x= 'LowOrganicBiota')) as LowOrganicBiota,
+size(filter(x IN Issues WHERE x= 'LowOrganicMatter')) as LowOrganicMatter,
+size(filter(x IN Issues WHERE x= 'LowPhosphorus')) as LowPhosphorus,
+size(filter(x IN Issues WHERE x= 'LowPotassium')) as LowPotassium,
+size(filter(x IN Issues WHERE x= 'Salinity')) as Salinity
+ORDER By Y, M
 ```
 __Output:__ 
 
-![Nodes bound to time tree](/assets/images/time_tree_bound_nodes.png)
+ ```bash
+╒════╤═══════════════╤════════════╤═════════╤═════════════════════════╤════════════════╤═════════════╤═════════════╤═════════════════╤══════════════════╤═══════════════╤══════════════╤══════════╕
+│"Y" │"Acidification"│"Compaction"│"Erosion"│"HeavyMetalContamination"│"HighAlkalinity"│"Impermeable"│"LowNitrogen"│"LowOrganicBiota"│"LowOrganicMatter"│"LowPhosphorus"│"LowPotassium"│"Salinity"│
+╞════╪═══════════════╪════════════╪═════════╪═════════════════════════╪════════════════╪═════════════╪═════════════╪═════════════════╪══════════════════╪═══════════════╪══════════════╪══════════╡
+│2007│31             │59          │124      │1                        │58              │4            │1            │44               │29                │16             │0             │18        │
+├────┼───────────────┼────────────┼─────────┼─────────────────────────┼────────────────┼─────────────┼─────────────┼─────────────────┼──────────────────┼───────────────┼──────────────┼──────────┤
+│2008│133            │472         │773      │15                       │462             │18           │23           │276              │225               │89             │1             │72        │
+├────┼───────────────┼────────────┼─────────┼─────────────────────────┼────────────────┼─────────────┼─────────────┼─────────────────┼──────────────────┼───────────────┼──────────────┼──────────┤
+│2009│110            │498         │755      │16                       │439             │30           │54           │327              │237               │112            │0             │74        │
+├────┼───────────────┼────────────┼─────────┼─────────────────────────┼────────────────┼─────────────┼─────────────┼─────────────────┼──────────────────┼───────────────┼──────────────┼──────────┤
+│2010│112            │578         │982      │43                       │475             │60           │61           │344              │237               │149            │5             │99        │
+├────┼───────────────┼────────────┼─────────┼─────────────────────────┼────────────────┼─────────────┼─────────────┼─────────────────┼──────────────────┼───────────────┼──────────────┼──────────┤
+│2011│121            │477         │769      │34                       │401             │20           │67           │252              │226               │196            │27            │75        │
+├────┼───────────────┼────────────┼─────────┼─────────────────────────┼────────────────┼─────────────┼─────────────┼─────────────────┼──────────────────┼───────────────┼──────────────┼──────────┤
+│2012│125            │659         │1139     │33                       │512             │56           │92           │426              │293               │273            │52            │121       │
+├────┼───────────────┼────────────┼─────────┼─────────────────────────┼────────────────┼─────────────┼─────────────┼─────────────────┼──────────────────┼───────────────┼──────────────┼──────────┤
+│2013│113            │462         │831      │33                       │386             │50           │13           │247              │192               │175            │43            │171       │
+├────┼───────────────┼────────────┼─────────┼─────────────────────────┼────────────────┼─────────────┼─────────────┼─────────────────┼──────────────────┼───────────────┼──────────────┼──────────┤
+│2014│29             │24          │73       │2                        │51              │1            │11           │14               │12                │45             │4             │1         │
+└────┴───────────────┴────────────┴─────────┴─────────────────────────┴────────────────┴─────────────┴─────────────┴─────────────────┴──────────────────┴───────────────┴──────────────┴──────────┘
+```
 
+#### 6. Summarize soil issue frequency across months of the year
+ 
+```sql
+UNWIND [2007]  as years
+MATCH (y:Year {year: years})-[:HAS_MONTH]->(m:Month )-[:HAS_DAY]->(d:Day)<-[r:REPORTED_ON]-()-[*1..2]-(n:Soil_Issue) 
+WITH y.year as Y,  m.month as M, collect( n.type) as Issues
+RETURN Y, M,
+size(filter(x IN Issues WHERE x= 'Acidification')) as Acidification,
+size(filter(x IN Issues WHERE x= 'Compaction')) as Compaction,
+size(filter(x IN Issues WHERE x= 'Erosion')) as Erosion,
+size(filter(x IN Issues WHERE x= 'HeavyMetalContamination')) as HeavyMetalContamination,
+size(filter(x IN Issues WHERE x= 'HighAlkalinity')) as HighAlkalinity,
+size(filter(x IN Issues WHERE x= 'Impermeable')) as Impermeable,
+size(filter(x IN Issues WHERE x= 'LowNitrogen')) as LowNitrogen,
+size(filter(x IN Issues WHERE x= 'LowOrganicBiota')) as LowOrganicBiota,
+size(filter(x IN Issues WHERE x= 'LowOrganicMatter')) as LowOrganicMatter,
+size(filter(x IN Issues WHERE x= 'LowPhosphorus')) as LowPhosphorus,
+size(filter(x IN Issues WHERE x= 'LowPotassium')) as LowPotassium,
+size(filter(x IN Issues WHERE x= 'Salinity')) as Salinity
+ORDER By Y, M
+```
+__Output:__ 
+
+ ```bash
+ UNWIND [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]  as months
+MATCH (y:Year )-[:HAS_MONTH]->(m:Month {month: months})-[:HAS_DAY]->(d:Day)<-[r:REPORTED_ON]-()-[*1..2]-(n:Soil_Issue) 
+WITH m.month as M,  collect( n.type) as Issues //, collect(DISTINCT n.type) as I_set
+RETURN M, 
+size(filter(x IN Issues WHERE x= 'Acidification')) as Acidification,
+size(filter(x IN Issues WHERE x= 'Compaction')) as Compaction,
+size(filter(x IN Issues WHERE x= 'Erosion')) as Erosion,
+size(filter(x IN Issues WHERE x= 'HeavyMetalContamination')) as HeavyMetalContamination,
+size(filter(x IN Issues WHERE x= 'HighAlkalinity')) as HighAlkalinity,
+size(filter(x IN Issues WHERE x= 'Impermeable')) as Impermeable,
+size(filter(x IN Issues WHERE x= 'LowNitrogen')) as LowNitrogen,
+size(filter(x IN Issues WHERE x= 'LowOrganicBiota')) as LowOrganicBiota,
+size(filter(x IN Issues WHERE x= 'LowOrganicMatter')) as LowOrganicMatter,
+size(filter(x IN Issues WHERE x= 'LowPhosphorus')) as LowPhosphorus,
+size(filter(x IN Issues WHERE x= 'LowPotassium')) as LowPotassium,
+size(filter(x IN Issues WHERE x= 'Salinity')) as Salinity
+ORDER By M
+```
 
 __PS:__ 
 
