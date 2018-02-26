@@ -45,6 +45,27 @@ __Output:__
 
 1. We will use the month and year of May 2007
 
+Code Study:
+`...
+collect( n.type) as i
+UNWIND i as Issues
+WITH  Y, M, all_issues , Issues ORDER BY Issues
+RETURN Y, M, collect(Issues) as issues, 
+size(filter(x IN Issues WHERE x= 'Erosion')) as Erosion
+...`
+
+Let's study the above code, so we understand what exactly is being done.
+`n.type` represent all rows of `Soil_Issue`s that occur throughout May 2007. 
+We then apply collect() function to turn them into a list, `i`, of the format, ['c','b', 'a']
+Next, we apply UNWIND clause to turn that list into a rows-based variable called `Issues` - this will allow sorting
+WITH clause then applies alphabetic sort to `Issues`, see `Issues ORDER BY Issues`
+RETURN clause applies another collect() function call to gather these ordered `Issues` into a variable called `issues`
+So what's with `size(filter(x IN Issues WHERE x= 'Erosion')) as Erosion`?
+We use filter() function to pull out only those soil issues of the type 'Erosion'. Every item `x` is tested to see if it contains 'Erosion'. If it does then it's added to the new internal list. 
+Once all the `Issues` have been filtered, we apply size() function on the new list to arrive at the total number of Erosion issues.
+
+If you look at the code below
+
 ```sql
 MATCH (y:Year {year: 2007})-[:HAS_MONTH]->(m:Month {month: 5})-[:HAS_DAY]->(d:Day)<-[r:REPORTED_ON]-()-[*1..2]-(n:Soil_Issue) 
 WITH y.year as Y, m.month as M, count(n) as all_issues , collect( n.type) as i
@@ -91,25 +112,31 @@ __Output:__
 └────┴───┴──────────────────────────────────────────────────────────────────────┘
 ```
 
-#### 3. Assign each string value to a separate variable
+#### 3. Count frequencies of each soil issue in selected months of 2007
 
-1. Note that both dates have been written to the graph as strings, e.g. "2011-05-14"
+1. In this example, we are using the months of May and July of 2007
 
 ```sql
-MATCH (s:Soil_Report{client:'171', recommendation:'6689', soil_analyst:'576'})
-WITH s, split(s.report_date, '-') as r_on, split(s.action_date, '-')  as a_on
-WITH s, r_on, a_on, toInteger(r_on[0]) as r_year, toInteger(r_on[1]) as r_month, toInteger(r_on[2]) as r_day,
-toInteger(a_on[0]) as a_year, toInteger(a_on[1]) as a_month, toInteger(a_on[2]) as a_day
-RETURN r_year, r_month, r_day, a_year, a_month, a_day
+UNWIND [2007] as years
+UNWIND [5, 7] as months
+MATCH (y:Year {year: years})-[:HAS_MONTH]->(m:Month {month: months})-[:HAS_DAY]->(d:Day)<-[r:REPORTED_ON]-()-[*1..2]-(n:Soil_Issue) 
+with y.year as Y, m.month as M, count(n) as all_issues , collect( n.type) as Issues
+RETURN Y + ' - ' + M as Period,
+size(filter(x IN Issues WHERE x= 'Erosion')) as Erosion,
+size(filter(x IN Issues WHERE x= 'HighAlkalinity')) as HighAlkalinity,
+size(filter(x IN Issues WHERE x= 'LowOrganicBiota')) as LowOrganicBiota
+ORDER By Y, M
 ```
 __Output:__
     
  ```bash
-╒════════╤═════════╤═══════╤════════╤═════════╤═══════╕
-│"r_year"│"r_month"│"r_day"│"a_year"│"a_month"│"a_day"│
-╞════════╪═════════╪═══════╪════════╪═════════╪═══════╡
-│2011    │7        │4      │2011    │11       │7      │
-└────────┴─────────┴───────┴────────┴─────────┴───────┘
+╒══════════╤═════════╤════════════════╤═════════════════╕
+│"Period"  │"Erosion"│"HighAlkalinity"│"LowOrganicBiota"│
+╞══════════╪═════════╪════════════════╪═════════════════╡
+│"2007 - 5"│9        │3               │3                │
+├──────────┼─────────┼────────────────┼─────────────────┤
+│"2007 - 7"│6        │2               │2                │
+└──────────┴─────────┴────────────────┴─────────────────┘
 ```
 
 #### 4. Matching variables to specific time tree day nodes
