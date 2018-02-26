@@ -68,9 +68,9 @@ WITH clause then applies alphabetic sort to `Issues`, see `Issues ORDER BY Issue
 RETURN clause applies another collect() function call to gather these ordered `Issues` into a list called `issues`, of the format, ['a','b', 'c']
 
 So what's with `size(filter(x IN Issues WHERE x= 'Erosion')) as Erosion`?
-We use filter() function to pull out only those soil issues of the type 'Erosion'. Every item `x` is tested to see if it contains 'Erosion'. If it does then it's added to the new internal list. 
+We use filter() function to pull out only those soil issues of the type 'Erosion'. Every item `x` in the list `Issues` is tested to see if it contains 'Erosion', or not. If it does, then it's added to the new internal list. 
 
-Once all the `Issues` have been filtered, we apply size() function on the new list to arrive at the total number of Erosion issues.
+Once all the `Issues` have been filtered, we apply size() function on the new list to arrive at the total number of Erosion issues captured. Size() function gives us the number of items in the list and this way we don't need to use any other aggregation function, such as count().
 
 ```sql
 MATCH (y:Year {year: 2007})-[:HAS_MONTH]->(m:Month {month: 5})-[:HAS_DAY]->(d:Day)<-[r:REPORTED_ON]-()-[*1..2]-(n:Soil_Issue) 
