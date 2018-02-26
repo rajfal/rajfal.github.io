@@ -17,56 +17,78 @@ keywords: "neo4j, Cypher, unwind, filter, cypher query, date modelling, time ana
 
 #### Background
 
-Now that we have the time tree in place, let's bind `Soil_Report` node using data from its two properties, `action_date` and `report_date` to specific year-month-day nodes on the time tree. As a reminder let's review the current property list for a `Soil_Report` node:
+With time dimension defined as nodes for each year, month and day, let's see what we can find out about frequency of `Soil_Issue`s across different time periods.
 
-```python
-{
-  "recommendation": "4082",
-  "action_date": "2013-08-12",
-  "client": "157",
-  "days_delayed": "56",
-  "soil_analyst": "7320",
-  "report_date": "2013-06-17"
-}
-```
-We will go step by step to understand exactly how this node binding works.
+I will also build on each successive Cypher query to create more complex and comprehensive insights.
 
 
-#### 1. Retrieve date-related properties fron the node
+#### 1. Find specific soil issues that occurred in a given period
 
-1. As a test run we'll use a very specific `Soil_Report` node
+1. We will use the month and year of May 2007
 
 ```sql
-MATCH (s:Soil_Report{client:'171', recommendation:'6689', soil_analyst:'576'})
-RETURN s.action_date, s.report_date, s.days_delayed
+MATCH (y:Year {year: 2007})-[:HAS_MONTH]->(m:Month {month: 5})-[:HAS_DAY]->(d:Day)<-[r:REPORTED_ON]-()-[*1..2]-(n:Soil_Issue) 
+RETURN  y.year as Y, m.month as M, count(n) as No_found, collect(DISTINCT n.type) as Range_of_issues
+ORDER By y.year, m.month
 ```
 __Output:__
     
  ```bash
-╒═══════════════╤═══════════════╤════════════════╕
-│"s.action_date"│"s.report_date"│"s.days_delayed"│
-╞═══════════════╪═══════════════╪════════════════╡
-│"2011-11-07"   │"2011-07-04"   │"126"           │
-└───────────────┴───────────────┴────────────────┘
+╒════╤═══╤══════════╤══════════════════════════════════════════════╕
+│"Y" │"M"│"No_found"│"Range_of_issues"                             │
+╞════╪═══╪══════════╪══════════════════════════════════════════════╡
+│2007│5  │15        │["Erosion","HighAlkalinity","LowOrganicBiota"]│
+└────┴───┴──────────┴──────────────────────────────────────────────┘
 ```
 
-#### 2. Split each date property string into a list of strings
+#### 2. Split each issue category to inspect specific frequencies
 
-1. Note that both dates have been written to the graph as strings, e.g. "2011-05-14"
+1. We will use the month and year of May 2007
 
 ```sql
-MATCH (s:Soil_Report{client:'171', recommendation:'6689', soil_analyst:'576'})
-WITH s, split(s.report_date, '-') as reported_on, split(s.action_date, '-')  as actioned_on
-RETURN reported_on, actioned_on
+MATCH (y:Year {year: 2007})-[:HAS_MONTH]->(m:Month {month: 5})-[:HAS_DAY]->(d:Day)<-[r:REPORTED_ON]-()-[*1..2]-(n:Soil_Issue) 
+WITH y.year as Y, m.month as M, count(n) as all_issues , collect( n.type) as i
+UNWIND i as Issues
+WITH  Y, M, all_issues , Issues ORDER BY Issues
+RETURN Y, M, collect(Issues) as issues, 
+size(filter(x IN Issues WHERE x= 'Erosion')) as Erosion,
+size(filter(x IN Issues WHERE x= 'HighAlkalinity')) as HighAlkalinity,
+size(filter(x IN Issues WHERE x= 'LowOrganicBiota')) as LowOrganicBiota
 ```
 __Output:__
     
  ```bash
-╒══════════════════╤══════════════════╕
-│"reported_on"     │"actioned_on"     │
-╞══════════════════╪══════════════════╡
-│["2011","07","04"]│["2011","11","07"]│
-└──────────────────┴──────────────────┘
+╒════╤═══╤══════════════════════════════════════════════════════════════════════╤═════════╤════════════════╤═════════════════╕
+│"Y" │"M"│"issues"                                                              │"Erosion"│"HighAlkalinity"│"LowOrganicBiota"│
+╞════╪═══╪══════════════════════════════════════════════════════════════════════╪═════════╪════════════════╪═════════════════╡
+│2007│5  │["LowOrganicBiota","LowOrganicBiota","LowOrganicBiota"]               │0        │0               │1                │
+├────┼───┼──────────────────────────────────────────────────────────────────────┼─────────┼────────────────┼─────────────────┤
+│2007│5  │["Erosion","Erosion","Erosion","Erosion","Erosion","Erosion","Erosion"│1        │0               │0                │
+│    │   │,"Erosion","Erosion"]                                                 │         │                │                 │
+├────┼───┼──────────────────────────────────────────────────────────────────────┼─────────┼────────────────┼─────────────────┤
+│2007│5  │["HighAlkalinity","HighAlkalinity","HighAlkalinity"]                  │0        │1               │0                │
+└────┴───┴──────────────────────────────────────────────────────────────────────┴─────────┴────────────────┴─────────────────┘
+```
+
+Or, we can present the same data in a more compact single line format.
+
+```sql
+MATCH (y:Year {year: 2007})-[:HAS_MONTH]->(m:Month {month: 5})-[:HAS_DAY]->(d:Day)<-[r:REPORTED_ON]-()-[*1..2]-(n:Soil_Issue) 
+WITH y.year as Y, m.month as M, count(n) as all_issues , collect( n.type) as i
+UNWIND i as Issues
+WITH  Y, M, all_issues , Issues ORDER BY Issues
+RETURN Y, M, collect(Issues) as issues
+```
+__Output:__
+    
+ ```bash
+╒════╤═══╤══════════════════════════════════════════════════════════════════════╕
+│"Y" │"M"│"issues"                                                              │
+╞════╪═══╪══════════════════════════════════════════════════════════════════════╡
+│2007│5  │["Erosion","Erosion","Erosion","Erosion","Erosion","Erosion","Erosion"│
+│    │   │,"Erosion","Erosion","HighAlkalinity","HighAlkalinity","HighAlkalinity│
+│    │   │","LowOrganicBiota","LowOrganicBiota","LowOrganicBiota"]              │
+└────┴───┴──────────────────────────────────────────────────────────────────────┘
 ```
 
 #### 3. Assign each string value to a separate variable
