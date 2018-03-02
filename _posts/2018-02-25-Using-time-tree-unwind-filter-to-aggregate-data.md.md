@@ -237,9 +237,6 @@ __Output:__
 ```
 
 #### 6. Summarize soil issue frequency across months of the year
-
-
- {% gist 949951cf13da69853d5c3b1f0ba166ab soil-frequency-across-years.cql %}
  
 ```sql
 UNWIND [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]  as months
