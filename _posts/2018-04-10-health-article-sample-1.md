@@ -1,25 +1,29 @@
 ---
 layout: post
-title: "Using time tree, unwind, filter() and size() functions to aggregate data in Neo4j"
+title: "The Vetiver Guide"
 comments: true
 published: true
-description: "Produce summarised data using a time tree, unwind, filter() and size()"
-categories: [neo4j, Cypher, unwind, time analysis, time tree]
-tags: [neo4j, cypher, unwind, filter, time tree, size]
-keywords: "neo4j, Cypher, unwind, filter, cypher query, date modelling, time analysis, time tree"
+description: "Guid to using vetiver essential oil to support ADD/ADHD, hormonal balance and skin care issues"
+categories: [essential oil, vetiver, nervous system, skin, hormones]
+tags: [essential oils, vetiver, ADD, skin, hormones]
+keywords: "essential oils, vetiver, ADD, skin, hormones, aromatherapy"
 ---
 
 > #### *Prerequisites:*{: style="color: red"}
-> - [sample soil survey data loaded into a Neo4j graph](/2018/Import-CSV-data-into-Docker-Neo4j-container/)
-> - [time tree added as year-month-day related nodes](/2018/Generating-a-time-tree-in-Cypher/)
-
+> - This is a writing sample for health-related publications
 ---
 
-#### Background
+#### Historical, botanical and production background
 
-With time dimension defined as nodes for each year, month and day, let's see what we can find out about frequency of `Soil_Issue`s across different time periods.
+Vetiver is a member of the Graminae grasses, historically harvested in India and Sri Lanka. Its specific scientific name is Vetiveria zizanioides. It is commonly known as ‘khus khus’, not to be confused with ‘couscous’.
 
-I will also build on each successive Cypher query to create more complex and comprehensive insights.
+Vetiver is a perennial grass that can reach up to five feet in height. The plant readily populates riverbanks and requires hot and humid environment to thrive. It can grow across the entire soil pH spectrum, displaying no preference for any, as long as it has full access to sun. Young plants can become stunted in the shade. This grass is characterised by the presence of extensive and deep root systems.
+
+It is the undergrount plant parts, roots and rootless, that are the source of highly sought after oil since antiquity.  The vetiver oil is a complex essential oils, composed of several hundred of sesquiterpene derivatives that provide the benefits captured in perfume making, health restoration as well as an insect repellant.
+
+Oil extraction begins with harvesting of 15-18 month old roots, usually around December and January. The roots are washed, sometimes dried, and subjected to steam distillation where they will yield a half to two percent of oil per weight of plant material.
+
+[Vetiver Growing Information](http://greenharvest.com.au/Plants/Information/Vetiver.html)
 
 
 #### 1. Find specific soil issues that occurred in a given period
