@@ -10,7 +10,7 @@ keywords: "essential oils, vetiver, ADD, skin, hormones, aromatherapy"
 ---
 
 > #### *This is a writing sample for health-related publications:*{: style="color: red"}
-> - 
+> - vetiver essential oil
 ---
 
 #### Historical, botanical and production background
@@ -88,7 +88,7 @@ It can also be used to repel biting insects and termites.
 5. Ylang ylang
 
 ---
-***We looked at the origin of the vetiver plant, derivation of its essential oi and explored body systems that benefit from the oils application and the kinds of conditions it can address***{: style="color: green"}
+***We looked at the origin of the vetiver plant, derivation of its essential oil and explored body systems that benefit from the oil's application and the kinds of conditions it can alleviate.***{: style="color: green"}
 
 ---
 [Back to top of page](#)
