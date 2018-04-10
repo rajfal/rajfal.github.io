@@ -9,8 +9,8 @@ tags: [essential oils, vetiver, ADD, skin, hormones]
 keywords: "essential oils, vetiver, ADD, skin, hormones, aromatherapy"
 ---
 
-> #### *Prerequisites:*{: style="color: red"}
-> - This is a writing sample for health-related publications
+> #### *This is a writing sample for health-related publications:*{: style="color: red"}
+> - 
 ---
 
 #### Historical, botanical and production background
@@ -26,65 +26,40 @@ Oil extraction begins with harvesting of 15-18 month old roots, usually around D
 [Vetiver Growing Information](http://greenharvest.com.au/Plants/Information/Vetiver.html)
 
 
-#### 1. Find specific soil issues that occurred in a given period
+#### Common application methods and uses:
 
-1. We will use the month and year of May 2007
+1. Topical use
 
-```sql
-MATCH (y:Year {year: 2007})-[:HAS_MONTH]->(m:Month {month: 5})-[:HAS_DAY]->(d:Day)<-[r:REPORTED_ON]-()-[*1..2]-(n:Soil_Issue) 
-RETURN  y.year as Y, m.month as M, count(n) as No_found, collect(DISTINCT n.type) as Range_of_issues
-ORDER By y.year, m.month
-```
 __Output:__
     
- ```bash
-╒════╤═══╤══════════╤══════════════════════════════════════════════╕
-│"Y" │"M"│"No_found"│"Range_of_issues"                             │
-╞════╪═══╪══════════╪══════════════════════════════════════════════╡
-│2007│5  │15        │["Erosion","HighAlkalinity","LowOrganicBiota"]│
-└────┴───┴──────────┴──────────────────────────────────────────────┘
-```
+The essential oil can be applied directly to the area of concern. Unlike some essential oils such as cinnamon or oregano, vetiver oil can be used neat. It requires no further dilution in a carrier oil. 
 
-#### 2. Split each issue category to inspect specific frequencies
+[The in vitro antimicrobial evaluation of commercially essential oils and their combinations against acne.](https://www.ncbi.nlm.nih.gov/pubmed/29574906)
 
-1. We will use the month and year of May 2007
+Vetiver has a rejuvenating effect on skin, repairing the effect of dehydration, cuts, wounds, skin irritations and inflammations. It has been reported as a solution for persistent lower back pain (lumbago) and rheumatism.
 
-Explanation of Cypher code used below:
+2. Aromatic use
 
-```python
-collect( n.type) as i
-UNWIND i as Issues
-WITH  Y, M, all_issues , Issues ORDER BY Issues
-RETURN Y, M, collect(Issues) as issues, 
-size(filter(x IN Issues WHERE x= 'Erosion')) as Erosion
-...
-```
+As an aromatic medium, the oil can be diffused through a diffuser or its aroma inhaled directly. Diffuser is helpful if you wish to have the oil droplets dispersed during your sleep at night. Whereas should you be needing the grounding effect of vetiver during daytime, then perhaps carry a small 2-5ml bottle of the oil with you to inhale it directly. Vetiver assists in overcoming depression, insomnia, inability to enter deep sleep, anxiety, stress or tension.
 
-Let's study the above code, so we understand what exactly is being done.
+[Modification of sleep-waking and electroencephalogram induced by vetiver essential oil inhalation.](https://www.ncbi.nlm.nih.gov/pubmed/2706972)
+ 
+[Odors enhance slow-wave activity in non-rapid eye movement sleep.](https://www.ncbi.nlm.nih.gov/pubmed/26888107)
 
-`n.type` represent all rows of `Soil_Issue`s that occur throughout May 2007
+3. Oral use
 
-We then apply collect() function to turn them into a list, `i`, of the format, ['c','b', 'a']
-Next, we apply UNWIND clause to turn that list into a rows-based variable called `Issues` - this will allow sorting
+Vetiver can be used as a dietary supplement, either in form of capsules, bought or home-made, or  mixed with honey and added to a beverage like milk or soy. As an infusion it can assist with fever, inflammation and irritability of the stomach
 
-WITH clause then applies alphabetic sort to `Issues`, see `Issues ORDER BY Issues`
+[Other Uses, and Utilization of Vetiver: Vetiver Oil](http://naturalingredient.org/wp/wp-content/uploads/vetiver.pdf)
 
-RETURN clause applies another collect() function call to gather these ordered `Issues` into a list called `issues`, of the format, ['a','b', 'c']
 
-So what's with `size(filter(x IN Issues WHERE x= 'Erosion')) as Erosion`?
-We use filter() function to pull out only those soil issues of the type 'Erosion'. Every item `x` in the list `Issues` is tested to see if it contains 'Erosion', or not. If it does, then it's added to the new internal list. 
 
-Once all the `Issues` have been filtered, we apply size() function on the new list to arrive at the total number of Erosion issues captured. Size() function gives us the number of items in the list and this way we don't need to use any other aggregation function, such as count().
 
-```sql
-MATCH (y:Year {year: 2007})-[:HAS_MONTH]->(m:Month {month: 5})-[:HAS_DAY]->(d:Day)<-[r:REPORTED_ON]-()-[*1..2]-(n:Soil_Issue) 
-WITH y.year as Y, m.month as M, count(n) as all_issues , collect( n.type) as i
-UNWIND i as Issues
-WITH  Y, M, all_issues , Issues ORDER BY Issues
-RETURN Y, M, collect(Issues) as issues, 
-size(filter(x IN Issues WHERE x= 'Erosion')) as Erosion,
-size(filter(x IN Issues WHERE x= 'HighAlkalinity')) as HighAlkalinity,
-size(filter(x IN Issues WHERE x= 'LowOrganicBiota')) as LowOrganicBiota
+
+
+
+
+
 ```
 __Output:__
     
