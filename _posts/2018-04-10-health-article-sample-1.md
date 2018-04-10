@@ -10,7 +10,6 @@ keywords: "essential oils, vetiver, ADD, skin, hormones, aromatherapy"
 ---
 
 > #### *This is a writing sample for health-related publications:*{: style="color: red"}
-> - vetiver essential oil
 ---
 
 #### Historical, botanical and production background
