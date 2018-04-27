@@ -2,7 +2,7 @@
 layout: post
 title: "The Vetiver Guide"
 comments: true
-published: true
+published: false
 description: "Guid to using vetiver essential oil to support ADD/ADHD, hormonal balance and skin care issues"
 categories: [essential oil, vetiver, nervous system, skin, hormones]
 tags: [essential oils, vetiver, ADD, skin, hormones]
