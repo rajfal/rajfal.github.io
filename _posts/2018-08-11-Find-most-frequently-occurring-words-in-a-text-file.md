@@ -1,32 +1,23 @@
 ---
 layout: post
-title: "Extract data from a MySQL database into a CSV file format"
+title: "Find most frequently used words in a text file with sed"
 comments: false
-description: "step by step guide on extracting denormalized data in CSV format from a MySQL database"
-categories: data MySQL CSV SQL
-keywords: "neo4j, MySQL, csv, , CSV, data export, relational database, denormalized"
+description: "step by step guide on generating a word frequency list"
+categories: words file frequency sedL
+keywords: "sed, word frequency, text file, frequency"
 ---
 
 > #### *Prerequisites:*{: style="color: red"}
-> - SQL compliant relational database, such as MySQL
+> - a test file, e.g. test.txt
 > - an existing database schema where you can, or already have combined data from tables to obtain a denormalized dataset
 
 ---
 
-The idea here is to export records from a relational database, such as MySQL, into a CSV (comma separated values) file format that will then be used to import into a Neo4j graph.
+Quite often I need to analyze a block of text to find the most frequently occuring words. I found sed command as the perfect workhorse to do all the grunt work for me. Effectively, the ultimate command is a series chained pipes feeding output from one task to another.
 
-An example of a denormalized dataset sourced from several tables by combining selected fields
-
-```sql
-mysql> select * from soil_survey order by rand() limit 3;
-+-------------+------------+-----------+----------+--------------+----------+---------------+---------------+---------------+--------------+
-| Hort_Client | Contractor | Region    | Locality | Soil_Service | Solution | Soil_Issue    | Date_Reported | Date_Actioned | DaysToAction |
-+-------------+------------+-----------+----------+--------------+----------+---------------+---------------+---------------+--------------+
-|         168 |       2245 | Swifford  | 2130     |        51277 |     2118 | Compaction    | 2010-12-27    | 2011-03-14    |           77 |
-|         164 |       2503 | Northbury | 502      |          545 |     7866 | Acidification | 2010-06-28    | 2010-12-06    |          161 |
-|         157 |        777 | Swifford  | 22       |           67 |     5739 | Erosion       | 2013-12-23    | 2014-04-14    |          112 |
-+-------------+------------+-----------+----------+--------------+----------+---------------+---------------+---------------+--------------+
-3 rows in set (0.01 sec)
+This is the magic recipe:
+```bash
+sed -e 's/[^[:alpha:]]/ /g' test.txt | tr '\n' " " | tr -s " " | tr " " '\n' | sed '/^.$/d' | tr 'A-Z' 'a-z' | sort | uniq -c | sort -nr | nl | head -n 5
 
 ```
 
