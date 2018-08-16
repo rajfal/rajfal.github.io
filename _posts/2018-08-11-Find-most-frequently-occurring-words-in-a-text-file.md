@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Find most frequently used words in a text file with sed"
+title: "Find the most frequently used words in a text file with sed"
 comments: false
 description: "step by step guide on generating a word frequency list"
 categories: words file frequency sedL
@@ -21,7 +21,7 @@ sed -e 's/[^[:alpha:]]/ /g' test.txt | tr '\n' " " | tr -s " " | tr " " '\n' | s
 
 ```
 
-#### How to generate a CSV data file:
+#### Step by step insight into how this single command line works:
 
 1. Dump selected table to a CSV text file
 ```sql
