@@ -15,6 +15,15 @@ keywords: "sed, word frequency, text file, frequency"
 
 Quite often I need to analyze a block of text to find the most frequently occuring words. I found sed command as the perfect workhorse to do all the grunt work for me. Effectively, the ultimate command is a series chained pipes feeding output from one task to another.
 
+https://williamjturkel.net/2013/06/15/basic-text-analysis-with-command-line-tools-in-linux/
+
+https://stackoverflow.com/questions/10552803/how-to-create-a-frequency-list-of-every-word-in-a-file
+
+https://superuser.com/questions/661661/listing-all-words-in-a-text-file-and-finding-the-most-frequent-word
+
+https://stackoverflow.com/questions/33055663/removing-stopwords-from-text-corpus-using-linux-commandline
+
+
 This is the magic recipe:
 ```bash
 sed -e 's/[^[:alpha:]]/ /g' test.txt | tr '\n' " " | tr -s " " | tr " " '\n' | sed '/^.$/d' | tr 'A-Z' 'a-z' | sort | uniq -c | sort -nr | nl | head -n 5
